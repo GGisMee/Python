@@ -1,0 +1,67 @@
+#box1{
+    border: 1px, solid;
+    height: 300px;
+    width: 300px;
+    background-color: rgb(0, 0, 0);
+    
+    position: relative; /*I relativ form så kommer den att hoppa ned från sin plats*/
+    top: 150px;
+    left: 150px;
+}
+#box2{
+    border: 1px, solid;
+    height: 100px;
+    width: 100px;
+    background-color: rgb(123, 123, 123);
+    
+    position: absolute; /*I absolute form kommer den istället tänka från hela body*/
+    top: 0px;
+    left: 90px;
+
+}
+
+
+#boxin1{
+    border: 1px, solid;
+    height: 300px;
+    width: 300px;
+    background-color: rgb(255, 0, 0);
+    
+    position: relative;
+
+}
+#boxin2{
+    border: 1px, solid;
+    height: 100px;
+    width: 100px;
+    background-color: rgb(109, 0, 0);
+    position: absolute;
+    top: 0px;
+    left: 90px;
+} /*Då den befinner sig i boxin1 så kommer den inte att hoppa till toppen av allt utan istället stanna i toppen av boxin1*/
+
+#fixbox{ /* då den är fixed stannar den på samma plats*/
+    border: 1px, solid;
+    height: 100px;
+    width: 300px;
+    background-color: rgb(255, 0, 0);
+    
+    position: fixed;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 10px;
+}
+
+#stickbox{
+    border: 1px, solid;
+    height: 100px;
+    width: 100px;
+    background-color: rgb(136, 255, 0);
+    
+    position: sticky; /*I sticky form fastnar eller avfastnar den vid skärmen när man scrollar förbi*/
+    bottom: 0px;
+    left: 0;
+    right: 0;
+}

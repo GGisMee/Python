@@ -1,0 +1,17 @@
+#h1nr1{
+    text-shadow: 5px 5px 10px gray; /*För xyz leden och sist färg*/
+}
+
+/*X ger höger eller vänster offset*/
+/*Y ger upp, ned offset*/
+/*Z ger suddighet*/
+/*Att färg ger färg*/
+
+#h1nr2{
+    text-shadow: 0px 0px 5px yellow, 0px -5px 10px red, 0px -5px 10px red;
+} /*kan lägga till efter och ta flera stycken för att öka opasitet*/
+
+#h1nr2:hover{
+    box-shadow: 0px 5px  15px black;
+    
+}
