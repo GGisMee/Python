@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://kit.fontawesome.com/70c8e77483.js" crossorigin="anonymous"></script>
+    <style>
+        :root{
+            --y1:0;
+            --z1:0;
+
+            --y2:0;
+            --z2:0;
+
+            --y3:0;
+            --z3:0;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #överdel{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgb(230, 230, 230);
+            min-height: 80px;
+            border-bottom: 2px lightgray solid;
+        }
+        .child_of_överdel{
+            background-color: rgb(183, 183, 183);
+            width: 75px;
+            height: 50px;
+            border: 2px solid transparent;
+            margin-left: 5%;
+            margin-right: 5%;
+            border-radius: 10%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .icon{
+            height: 30px;
+            width: 30px;
+        }
+        #l3{
+            box-shadow: 0px 5px 1px black;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="överdel">
+        <a href="sida_1.html" id="l1" class="child_of_överdel">
+            <img src="video-solid.svg" alt="icon-video-solid" id="icon1" class="icon">
+        </a>
+        <a href="sida_2.html" id="l2" class="child_of_överdel">
+            <img src="info-solid.svg" alt="icon-info-solid" id="icon2" class="icon">
+        </a>
+        <a href="sida_3.html" id="l3" class="child_of_överdel">
+            <img src="image-regular.svg" alt="icon-image" id="icon3" class="icon">
+        </a>
+    </div>
+    <p>3</p>
+
+<script>
+page = 3
+document.getElementById("which").innerHTML = 1
+console.log("Du befinner dig på sida "+page);
+</script>
+</body>
+</html>

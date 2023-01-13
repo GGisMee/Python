@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>timer</title>
+    <script src="https://kit.fontawesome.com/70c8e77483.js" crossorigin="anonymous"></script>
+
+    <style>
+        :root{
+            --timer:white;
+            --ur:white;
+
+            --on:white;
+            --off: white;
+
+            --height_border: 100;
+        }
+
+        #timer{
+            background-color: var(--timer);
+        }
+        #stopp_ur{
+            background-color: var(--ur);
+        }
+        #on{
+            background-color: var(--on);
+        }
+        #off{
+            background-color: var(--off);
+        }
+
+        #beneath{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        #counter_body{
+            white-space: nowrap;
+        }
+
+        .counter_inside{
+            display: inline;
+        }
+
+        #above{
+            height: 60px;
+            background-color: rgb(235, 235, 235);
+            margin: 0;
+            border-bottom: 2px rgb(222, 222, 222) solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        body{
+            margin: 0px;
+        }
+        .mid{
+            background-color: lightblue;
+            height: 40px;
+            width: 120px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: row;
+            margin: 5%;
+        }
+        .right{
+            height: inherit;
+            border-top-left-radius: inherit;
+            border-bottom-left-radius: inherit;
+            width: 60px;
+            background-color: whitesmoke;
+            border-right: 1px gray solid;
+        }
+        .left{
+            height: inherit;
+            border-top-right-radius: inherit;
+            border-bottom-right-radius: inherit;
+            width: 60px;
+            background-color: white;
+            border-left: 1px gray solid;  
+        }
+
+        #stopp_ur:hover{
+            background-color: rgb(209, 209, 209);
+        }
+        #timer:hover{
+            background-color: rgb(209, 209, 209);            
+        }
+
+        #on:hover{
+            background-color: rgb(209, 209, 209);
+        }
+        #off:hover{
+            background-color: rgb(209, 209, 209);
+        }
+
+        #settings{
+            width: 45px;
+            height: 45px;
+            background-color: rgb(182, 182, 182);
+            position: fixed;
+            right: 10px;
+            border-radius: 22px;
+        }
+        .lefticon{
+            font-size:180%;
+            position: relative;
+            left: -5px;
+        }
+        .righticon{
+            font-size:xx-large;
+            position: relative;
+            left: 2px;
+        }
+        .midin{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .booleanicon{
+            width: 35px;
+            height: 35px;
+
+        }
+        #rightpart{
+            width: 5px;
+            height: 35px;
+            background-color: lightgreen;
+            border-radius: 4px;
+            position:absolute;
+            right: 10px;
+            bottom: 0px;
+            transform: rotate(30deg);
+        }
+        #leftpart{
+            width: 5px;
+            height: 20px;
+            background-color: lightgreen;
+            border-radius: 4px;
+            position:absolute;
+            bottom: 0px;
+            right: 68%;
+            transform: rotate(-40deg);
+        }
+        .c{
+            height: 40px;
+            width: 5px;
+            border-radius: 4px;
+            background-color: red;
+            position:absolute;
+            left: 40%;
+            top: -3px;
+        }
+        #c1{
+            transform: rotate(-45deg);
+        }
+        #c2{
+            transform: rotate(45deg);
+        }
+
+        .sidepart{
+            position:absolute;
+            width: 22.5%;
+            height: 100%;
+            background-color: rgb(235, 235, 235);;
+            top: 0px;
+        }
+        #right_settings_on{
+            right: -22.5%;
+        }
+        #left_ur{
+            display: flex;
+            justify-content: end;
+            left:-22.5%
+        }
+
+/*Animationer*/
+        .right_settings_active{
+            animation: 1.5s ease-in 0s 1 running MySlideR forwards 
+        }
+        .right_settings_deactive{
+            animation: 1.5s ease-in 0s 1 running MySlideRBack forwards 
+        }
+    @keyframes MySlideR{
+        from{margin-left: 0%;} /*startpunkt*/
+        to{margin-right:22.5%;}
+    }
+       
+    @keyframes MySlideRBack{
+        from{margin-right:22.5%;} /*startpunkt*/
+        to{margin-left: 0%;}
+    }
+
+        .timer_active{
+            animation: 1.5s ease-in-out 0s 1 running MySlideL forwards 
+        }
+    @keyframes MySlideL{
+        from{margin-right: 0%;} /*startpunkt*/
+        to{margin-left:22.5%;}
+    }
+
+    .timer_deactive{
+        animation: 1.5s ease-in-out 0s 1 running MySlideLBack forwards
+    }
+    @keyframes MySlideLBack{
+        from{margin-left: 22.5%;} /*startpunkt*/
+        to{margin-right:0%;}
+    }
+
+
+        .constrained_border{
+            background-color: rgb(222, 222, 222);
+            height:var(--height_border);
+            width: 2px;
+            position:absolute;
+            top: 60px;
+        }
+        #border_right{
+            border-top-left-radius: 10px;
+        }
+        #border_left{
+            border-top-right-radius: 10px;
+        }
+        .behind{
+            height: var(--height_border);
+            width: 55%;
+            position:fixed;
+            top: 62px;
+        }
+        #most_back{
+            z-index: -2;
+            background-color: rgb(222, 222, 222);
+        }
+        #shown_back{
+            z-index: -1;
+            background-color: white;
+            border-radius: 2px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div id="above">
+        <div class="mid">
+            <div id="stopp_ur" class="midin right">
+                <i class="fa-solid fa-stopwatch righticon"></i>
+            </div>
+            
+            <div id="timer" class="midin left">
+                <i class="fa-solid fa-hourglass lefticon"></i>
+            </div>
+            
+        </div>
+        <div class="mid">
+            <div id="on" class="midin right">
+                <div class="booleanicon righticon">
+                    <div id="rightpart"></div>
+                    <div id="leftpart"></div>
+                </div>
+            </div>
+            <div id="off" class="midin left" >
+                <div class="booleanicon lefticon">
+                    <div id="c1" class="c"></div>
+                    <div id="c2" class="c"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <br>
+    <div id="beneath">
+        <div id="most_back" class="behind"></div>
+        <div id="shown_back" class="behind"></div>
+
+
+        <div id="input">
+            <input type="button" value="Start" id="Start" onclick="Start()">
+            <input type="button" value="Stop" id="Stop" onclick="Stop()">
+            <input type="button" value="Restart" id="Restart" onclick="Restart()">
+        </div>
+
+        <div id="counter_body">
+            <div id="day" class="counter_inside"></div>
+            <div id="b_day" class="counter_inside"></div>
+
+            <div id="hour" class="counter_inside"></div>
+            <div id="b_hour" class="counter_inside"></div>
+
+            <div id="min" class="counter_inside"></div>
+            <div id="b_min" class="counter_inside"></div>
+
+            <div id="sek" class="counter_inside"></div>
+            <div id="b_sek" class="counter_inside"></div>
+
+            <div id="milli" class="counter_inside"></div>
+    </div>
+</div>
+
+<div id="sideparts">
+    <div id="left_ur" class="sidepart">
+        <div class="constrained_border" id="border_right"></div>
+    </div>
+    <div id="right_settings_on" class="sidepart">
+        <div class="constrained_border" id="border_left"></div>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+    // constrained_border:
+
+    function border_change(){
+    height_of_all = document.getElementById("left_ur").offsetHeight
+    height_of_border = height_of_all-60
+    console.log("height of border:", height_of_border);
+    document.querySelector(":root").style.setProperty('--height_border', height_of_border+"px")
+}
+addEventListener("resize", (event) => {});
+onresize = (event) => {border_change()};
+
+border_change()
+
+    // early config switches
+    Version = "ur"
+    Boolean_status = false // false = off, true = on
+    document.querySelector(':root').style.setProperty('--ur', "gray")
+    document.querySelector(':root').style.setProperty('--off', "gray")
+
+timer.onclick = function(){
+    if (Version != "timer"){
+    document.getElementById("left_ur").classList.toggle("timer_active")
+    document.getElementById("left_ur").classList.remove("timer_deactive")
+    console.log("hello?!");
+    }
+    Version = "timer"
+    console.log(Version);
+    document.querySelector(':root').style.setProperty('--timer', "gray")
+    document.querySelector(':root').style.setProperty('--ur', "white")
+}
+stopp_ur.onclick = function(){
+    if (Version == "timer"){
+    document.getElementById("left_ur").classList.remove("timer_active")
+    document.getElementById("left_ur").classList.toggle("timer_deactive")
+    console.log("hello?!");
+    }
+    Version = "ur"
+    console.log(Version);
+    document.querySelector(':root').style.setProperty('--ur', "gray")
+    document.querySelector(':root').style.setProperty('--timer', "white")
+}
+on.onclick = function() {
+    if (Boolean_status != true){
+        document.getElementById("right_settings_on").classList.toggle("right_settings_active")
+    document.getElementById("right_settings_on").classList.remove("right_settings_deactive")
+    }
+    Boolean_status = true
+    console.log(Boolean_status);
+    document.querySelector(':root').style.setProperty('--on', "gray")
+    document.querySelector(':root').style.setProperty('--off', "white")
+    
+}
+off.onclick = function() {
+    if (Boolean_status == true){
+        document.getElementById("right_settings_on").classList.remove("right_settings_active")
+        document.getElementById("right_settings_on").classList.toggle("right_settings_deactive")
+    }
+    Boolean_status = false
+    console.log(Boolean_status);
+    document.querySelector(':root').style.setProperty('--off', "gray")
+    document.querySelector(':root').style.setProperty('--on', "white")
+    
+}
+
+
+
+    // early config
+    var milli_shown = true
+    var milli_num = 0
+
+    var sek_shown = true // börjar med sek
+    var seks_num = 0
+
+    var min_shown = true
+    var min_num = 0
+
+    var hour_shown = false
+    var hour_num = 0
+
+    var day_shown = false
+    var day_num = 0
+
+    let activity_status = false // kör eller ej
+
+function Start(){
+ activity_status = true
+ console.log("activation");
+}
+function Stop(){
+    activity_status = false
+    console.log("deactivation");
+}
+function Restart(){
+    if (milli_shown==true){
+        milli_num = 0
+        document.getElementById("milli").innerHTML = milli_num
+    } 
+    if (sek_shown==true){
+    seks_num = 0
+    document.getElementById("sek").innerHTML = seks_num
+    }
+    if (min_shown == true){
+        min_num = 0
+        document.getElementById("min").innerHTML = min_num
+    }
+    if (hour_shown == true){
+        hour_num = 0
+        document.getElementById("hour").innerHTML = hour_num
+    }
+    if (day_shown== true){
+        day_num = 0
+        document.getElementById("day").innerHTML = day_num
+    } 
+}
+
+function Reconfig(){
+    if (milli_shown==true){
+        document.getElementById("milli").innerHTML = milli_num
+        document.getElementById("b_sek").innerHTML = ":"
+    } 
+    if (sek_shown==true){
+    document.getElementById("sek").innerHTML = seks_num
+    
+    }
+    if (min_shown == true){
+        document.getElementById("min").innerHTML = min_num
+        document.getElementById("b_min").innerHTML = ":"
+    }
+    if (hour_shown == true){
+        document.getElementById("hour").innerHTML = hour_num
+        document.getElementById("b_hour").innerHTML = ":"
+    }
+    if (day_shown== true){
+        document.getElementById("day").innerHTML = day_num
+        document.getElementById("b_day").innerHTML = ":"
+    } 
+}
+
+
+    setInterval(() => {
+        if (hour_num == 60) {
+            hour_num = 0
+            day_num++
+            if (day_num < 10){
+                document.getElementById("day").innerHTML = "0"+day_num 
+                }
+            else{
+            document.getElementById("day").innerHTML = day_num
+            }
+            if (hour_shown == true) {
+                document.getElementById("hour").innerHTML = 0
+            }
+        }
+
+        if (min_num == 20) {
+            min_num = 0
+            hour_num++
+            if (hour_num < 10){
+                document.getElementById("hour").innerHTML = "0"+hour_num 
+                }
+            else{
+            document.getElementById("hour").innerHTML = hour_num
+            }
+            if (min_shown == true) {
+                document.getElementById("min").innerHTML = 0
+            }
+        }
+
+        if (seks_num == 20) {
+            seks_num = 0
+            min_num++
+            if (min_num < 10){
+                document.getElementById("min").innerHTML = "0"+min_num 
+                }
+            else{
+            document.getElementById("min").innerHTML = min_num
+            }
+            if (sek_shown == true) {
+                document.getElementById("sek").innerHTML = 0
+            }
+        }
+
+        if (milli_num == 100-1) {
+            milli_num = -1
+            seks_num++
+            if (seks_num < 10){
+                document.getElementById("sek").innerHTML = "0"+seks_num 
+                }
+            else{
+                document.getElementById("sek").innerHTML = seks_num
+                }
+
+            if (milli_shown == true) {
+                document.getElementById("milli").innerHTML = 0
+            }
+        }
+
+        if (activity_status == true){
+        milli_num++
+        if (milli_shown == true) {
+            if (milli_num < 10){
+                document.getElementById("milli").innerHTML = "0"+milli_num 
+                }
+            else{
+                document.getElementById("milli").innerHTML = milli_num
+                }
+            }
+        }
+    }, 10);
+
+
+
+
+
+    Reconfig()
+</script>
+
+</body>
+</html>

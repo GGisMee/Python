@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>timer</title>
+    <script src="https://kit.fontawesome.com/70c8e77483.js" crossorigin="anonymous"></script>
+
+    <style>
+        :root{
+            --timer:white;
+            --ur:white;
+
+            --on:white;
+            --off: white;
+
+            --height_border: 100;
+        }
+
+        .shown{visibility: visible;}
+        .hidden{visibility: hidden;}
+
+        #timer{
+            background-color: var(--timer);
+        }
+        #stopp_ur{
+            background-color: var(--ur);
+        }
+        #on{
+            background-color: var(--on);
+        }
+        #off{
+            background-color: var(--off);
+        }
+
+        #beneath{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+        #counter_body{
+            white-space: nowrap;
+        }
+
+        .counter_inside{
+            display: inline;
+        }
+
+        #above{
+            height: 60px;
+            background-color: rgb(235, 235, 235);
+            margin: 0;
+            border-bottom: 2px rgb(222, 222, 222) solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        body{
+            margin: 0px;
+        }
+        .mid{
+            background-color: unset;
+            height: 40px;
+            width: 120px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: row;
+            margin: 5%;
+        }
+        .right{
+            height: inherit;
+            border-top-left-radius: inherit;
+            border-bottom-left-radius: inherit;
+            width: 60px;
+            background-color: whitesmoke;
+            border-right: 1px gray solid;
+        }
+        .left{
+            height: inherit;
+            border-top-right-radius: inherit;
+            border-bottom-right-radius: inherit;
+            width: 60px;
+            background-color: white;
+            border-left: 1px gray solid;  
+        }
+
+        #stopp_ur:hover{
+            background-color: rgb(209, 209, 209);
+        }
+        #timer:hover{
+            background-color: rgb(209, 209, 209);            
+        }
+
+        #on:hover{
+            background-color: rgb(209, 209, 209);
+        }
+        #off:hover{
+            background-color: rgb(209, 209, 209);
+        }
+
+        #settings{
+            width: 45px;
+            height: 45px;
+            background-color: rgb(182, 182, 182);
+            position: fixed;
+            right: 10px;
+            border-radius: 22px;
+        }
+        .lefticon{
+            font-size:180%;
+            position: relative;
+            left: -5px;
+        }
+        .righticon{
+            font-size:xx-large;
+            position: relative;
+            left: 2px;
+        }
+        .midin{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .booleanicon{
+            width: 35px;
+            height: 35px;
+
+        }
+        #rightpart{
+            width: 5px;
+            height: 35px;
+            background-color: lightgreen;
+            border-radius: 4px;
+            position:absolute;
+            right: 10px;
+            bottom: 0px;
+            transform: rotate(30deg);
+        }
+        #leftpart{
+            width: 5px;
+            height: 20px;
+            background-color: lightgreen;
+            border-radius: 4px;
+            position:absolute;
+            bottom: 0px;
+            right: 68%;
+            transform: rotate(-40deg);
+        }
+        .c{
+            height: 40px;
+            width: 5px;
+            border-radius: 4px;
+            background-color: red;
+            position:absolute;
+            left: 40%;
+            top: -3px;
+        }
+        #c1{
+            transform: rotate(-45deg);
+        }
+        #c2{
+            transform: rotate(45deg);
+        }
+
+        .sidepart{
+            position:absolute;
+            width: 22.5%;
+            height: 100%;
+            background-color: rgb(235, 235, 235);
+            top: 0px;
+        }
+        #right_settings_on{
+            right: -22.5%;
+        }
+        #left_ur{
+            display: flex;
+            justify-content: end;
+            left:-22.5%
+        }
+
+/*Animationer*/
+        .right_settings_active{
+            animation: 1.5s ease-in 0s 1 running MySlideR forwards 
+        }
+        .right_settings_deactive{
+            
+            animation: 1.5s ease-in 0s 1 running MySlideRBack forwards
+        }
+    @keyframes MySlideR{
+        from{margin-left: 0%;} /*startpunkt*/
+        to{margin-right:22.5%;}
+    }
+       
+    @keyframes MySlideRBack{
+        from{margin-right:22.5%;} /*startpunkt*/
+        to{margin-left: 0%;}
+    }
+
+        .timer_active{
+            animation: 1.5s ease-in-out 0s 1 running MySlideL forwards 
+        }
+    @keyframes MySlideL{
+        from{margin-right: 0%;} /*startpunkt*/
+        to{margin-left:22.5%;}
+    }
+
+    .timer_deactive{
+        animation: 1.5s ease-in-out 0s 1 running MySlideLBack forwards
+    }
+    @keyframes MySlideLBack{
+        from{margin-left: 22.5%;} /*startpunkt*/
+        to{margin-right:0%;}
+    }
+
+
+        .constrained_border{
+            background-color: rgb(222, 222, 222);
+            height:var(--height_border);
+            width: 2px;
+            position:absolute;
+            top: 60px;
+            
+        }
+        #border_right{
+            border-top-left-radius: 10px;
+        }
+        #border_left{
+            border-top-right-radius: 10px;
+        }
+        .behind{
+            height: var(--height_border);
+            width: 55%;
+            position:fixed;
+            top: 62px;
+        }
+        #most_back{
+            z-index: -2;
+            background-color: rgb(222, 222, 222);
+        }
+        #shown_back{
+            z-index: -1;
+            background-color: white;
+            border-radius: 2px;
+        }
+
+        #bs_left{
+            right: -2px;
+        }
+
+        .bodyside{
+            height:var(--height_border);
+            position:relative;
+            width: 100%;
+            top: 60px;
+        }
+        #overbody{
+            height: 60px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #listbody{
+            display: flex;
+            flex-direction:row;
+            height: 50%;
+        }
+        
+
+        #li_display{
+            background-color: unset;
+            height: 100%;
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .li_side{
+            height: 100%;
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+        }
+
+        #li_text{
+            background-color: unset;
+        }
+
+        /*Förändring av färg inom sidoknapparna*/
+        .li_off{
+            background-color: gray;
+            width: 30px;
+        }
+        .li_on{
+            background-color: white;
+            width: 30px; 
+        }
+        .li_between_off{
+            background-color: gray;
+            width: 20px;
+        }
+        .li_between_on{
+            background-color: white;
+            width: 20px; 
+        }
+
+        /*Förändring av betweening*/
+        .li_off_betweening{
+           background-color: gray; 
+        }
+        .li_on_betweening{
+           background-color: white; 
+        }
+
+        /*Mellan listobjekten, i betweening och lite över för snygghet*/
+        .li_betweening{
+            height: 15%;
+            width: 20px;
+        }
+        .buttonpart50{
+            height: 50%;
+            width: inherit;
+        }
+
+        .topping{
+            height: 30px;
+        }
+
+        /*Alla listobject och sidoknapparna*/
+        .liobj{
+            height: 30px;
+            display: flex;
+            align-items: center;
+        }
+        .liss{
+            width: 30px;
+        }
+
+        /*min och max checkboxen*/
+        .r_active{
+            background-color: gray;
+        }
+        
+        #r_min:hover{
+            background-color: rgb(209, 209, 209);
+        }
+        #r_max:hover{
+            background-color: rgb(209, 209, 209);
+        }
+        
+        
+    </style>
+
+</head>
+<body>
+
+    <div id="above">
+        <div class="mid">
+            <div id="stopp_ur" class="midin right" onclick="stopp_ur_oc()">
+                <i class="fa-solid fa-stopwatch righticon"></i>
+            </div>
+            
+            <div id="timer" class="midin left" onclick="timer_oc()">
+                <i class="fa-solid fa-hourglass lefticon"></i>
+            </div>
+            
+        </div>
+        <div class="mid">
+            <div id="on" class="midin right" onclick="on_oc()">
+                <div class="booleanicon righticon">
+                    <div id="rightpart"></div>
+                    <div id="leftpart"></div>
+                </div>
+            </div>
+            <div id="off" class="midin left" onclick="off_oc()">
+                <div class="booleanicon lefticon">
+                    <div id="c1" class="c"></div>
+                    <div id="c2" class="c"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <br>
+    <div id="beneath">
+        <div id="most_back" class="behind"></div>
+        <div id="shown_back" class="behind"></div>
+
+
+        <div id="input">
+            <input type="button" value="Start" id="Start" onclick="Start()">
+            <input type="button" value="Stop" id="Stop" onclick="Stop()">
+            <input type="button" value="Restart" id="Restart" onclick="Restart()">
+        </div>
+
+        <div id="counter_body"> 
+            <div id="day" class="counter_inside"></div>
+            <div id="b_day" class="counter_inside"></div>
+
+            <div id="hour" class="counter_inside"></div>
+            <div id="b_hour" class="counter_inside"></div>
+
+            <div id="min" class="counter_inside"></div>
+            <div id="b_min" class="counter_inside"></div>
+
+            <div id="sek" class="counter_inside"></div>
+            <div id="b_sek" class="counter_inside"></div>
+
+            <div id="milli" class="counter_inside"></div>
+    </div>
+</div>
+
+<div id="sideparts">
+    <div id="left_ur" class="sidepart innit">
+        <div class="bodyside">
+            <div id="overbody">
+                <div class="mid">
+                    <div id="r_min" class="midin right" onclick="minimize()">
+                        <i class="fa-solid fa-minimize righticon"></i>
+                    </div>
+                    
+                    <div id="r_max" class="midin left" onclick="maximize()">
+                        <i class=" fa-sharp fa-solid fa-maximize lefticon"></i>
+                    </div>
+                    
+                </div>
+
+            </div>
+            <div id="listbody">
+            <div class="li_side" id="li_display" style="list-style: none">
+                <div class="topping"></div>
+
+                <div class=" liobj liss" id="limilliseconds" onclick="milliseconds()"></div>
+                    <div class=" li_betweening" id="limilliseconds_betweening">
+                        <div class="buttonpart50" onclick="milliseconds()"></div>
+                        <div class="buttonpart50"  onclick="seconds()"></div>
+                    </div>
+                
+                <div class=" liobj liss" id="liseconds" onclick="seconds()"></div>
+                    <div class=" li_betweening" id="liseconds_betweening">
+                        <div class="buttonpart50" onclick="seconds()"></div>
+                        <div class="buttonpart50" onclick="minutes()"></div>
+                    </div>
+
+                <div class=" liobj" id="liminutes" onclick="minutes()"></div>
+                    <div class=" li_betweening" id="liminutes_betweening">
+                        <div class="buttonpart50" onclick="minutes()"></div>
+                        <div class="buttonpart50" onclick="hours()"></div>
+                    </div>
+
+                <div class=" liobj" id="lihours" onclick="hours()"></div>
+                    <div class=" li_betweening" id="lihours_betweening">
+                        <div class="buttonpart50" onclick="hours()"></div>
+                        <div class="buttonpart50" onclick="days()"></div>
+                    </div>
+                
+                    <div class=" liobj" id="lidays" onclick="days()"></div> 
+            </div> 
+            
+            <div class="li_side" id="li_text" style="list-style: none">
+                <div class="topping"></div>
+                <div class="liobj" onclick="milliseconds()">Milli</div>
+                    <div class="li_betweening"></div>
+                <div class="liobj" onclick="seconds()">Seconds</div>
+                    <div class="li_betweening"></div>
+                <div class="liobj" onclick="minutes()">Minutes</div>
+                    <div class="li_betweening"></div>
+                <div class="liobj" onclick="hours()">Hours</div>
+                    <div class="li_betweening"></div>
+                <div class="liobj" onclick="days()">Days</div>
+            </div>
+        </div>
+    </div>
+        <div class="constrained_border" id="border_right"></div>
+    </div>
+
+    <div id="right_settings_on" class="sidepart">
+<div class="bodyside" id="bs_left">
+
+</div>
+        <div class="constrained_border" id="border_left"></div>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+
+
+    // sidorange input allt ---------------------------------------
+    // early config
+change_tid = 0
+milli = "l_on"
+sek = "between"
+minut = "h_on"
+hour = "h_off"
+day = "h_off"
+
+milli_b = "between"
+sek_b = "between"
+minut_b = "h_off"
+hour_b = "h_off"
+
+Listofcssconfig = [[milli, 1, "limilliseconds"], [sek, 2, "liseconds"], [minut, 3, "liminutes"], [hour, 4, "lihours"], [day, 5, "lidays"]]
+Listofcssbetween = [[1.5, milli_b, "limilliseconds_betweening"],[2.5, sek_b, "liseconds_betweening"],[3.5, minut_b, "liminutes_betweening"],[4.5, hour_b, "lihours_betweening"]]
+
+Listoftimerparts = [day, hour, min, sek, milli]
+
+millitid = 1 // milli
+maxtid = 3 // min
+
+min_to_max = "max"
+
+
+// funktionerna ---------------------------------------
+// min max
+
+document.addEventListener('keydown', function(event) {
+  if (event.code === 'KeyW') {
+    maximize()
+  }
+  if (event.code === 'KeyS') {
+    minimize()
+  }
+  if (event.code === 'KeyE') {
+    timer_oc()
+  }
+  if (event.code === 'KeyQ') {
+    stopp_ur_oc()
+  }
+
+  if (event.code === 'KeyD') {
+    off_oc()
+  }
+  if (event.code === 'KeyA') {
+    on_oc()
+  }
+
+  if (event.code === 'ArrowUp') {
+
+  }
+  if (event.code === 'ArrowDown') {
+
+  }
+
+});
+
+
+function docchange(){
+    for (docindexB in Listofcssbetween){
+        docvalB = Listofcssbetween[docindexB][1]
+        docposB = Listofcssbetween[docindexB][2]
+        if (docvalB == "between"){
+            document.getElementById(docposB).classList.add("li_on_betweening")
+            document.getElementById(docposB).classList.remove("li_off_betweening")
+        }
+        else if (docvalB == "l_off" || docvalB == "h_off"){
+            document.getElementById(docposB).classList.remove("li_on_betweening")
+            document.getElementById(docposB).classList.add("li_off_betweening")
+        }
+        
+    }
+
+    for (docindex in Listofcssconfig){ // Listofcssconfig är en array
+        console.log(Listofcssconfig.indexOf(docindex)); // ger värdet -1????
+        console.log(Listofcssconfig[docindex]); 
+        docval = Listofcssconfig[docindex][0] // l_on
+        docpos = Listofcssconfig[docindex][2] // doc
+        if (docval == "l_on" || docval == "h_on" || docval == "between"){
+            document.getElementById(docpos).classList.add("li_on")
+            document.getElementById(docpos).classList.remove("li_off")
+
+        } else {
+            document.getElementById(docpos).classList.remove("li_on")
+            document.getElementById(docpos).classList.add("li_off")
+        }
+    }
+
+}
+
+function ConSta_Between(){
+    
+    for (index in Listofcssbetween){
+        elementB = Listofcssbetween[index][0]
+        valueofelementB = Listofcssbetween[index][1]
+        if  (elementB >= millitid && elementB <= maxtid){
+            valueofelementB = "between"
+            
+        } else if (elementB < millitid){
+            valueofelementB = "l_off"
+            
+            
+        } else if (elementB > maxtid){
+            valueofelementB = "h_off"
+            
+            
+        }
+        console.log(valueofelementB, elementB, millitid, maxtid);
+        Listofcssbetween[index][1] = valueofelementB
+    }
+    docchange()
+}
+
+function Configurestatus(){
+    console.log(" ");
+    console.log(millitid, maxtid, change_tid);
+    for (index in Listofcssconfig){
+        element = Listofcssconfig[index][0]
+        valueofelement = Listofcssconfig[index][1]
+        if (valueofelement < millitid){
+           element = "l_off" 
+        } else if (valueofelement == millitid){
+            element = "l_on"
+        } else if (valueofelement > maxtid){
+            element = "h_off"
+        } else if (valueofelement == maxtid){
+            element = "h_on"
+        } else {
+            element = "between"
+        }
+        Listofcssconfig[index][0] = element
+    }
+    console.log(Listofcssconfig);
+    ConSta_Between()
+}
+Configurestatus()
+function minimize(){
+    min_to_max = "min"
+console.log("min");
+document.getElementById("r_min").classList.add("r_active")
+document.getElementById("r_max").classList.remove("r_active")
+}
+function maximize(){
+    min_to_max = "max"
+    console.log("max");
+    document.getElementById("r_max").classList.add("r_active")
+    document.getElementById("r_min").classList.remove("r_active")
+}
+maximize()
+
+// konfigurering av milli-day
+function milliseconds(){
+    console.log("ms");
+    change_tid = 1
+    forAll(change_tid)
+}
+function seconds(){
+    console.log("s");
+    change_tid = 2
+    forAll(change_tid)
+
+}
+function minutes(){
+    console.log("m");
+    change_tid = 3
+    forAll(change_tid)
+}
+function hours(){
+    console.log("h");
+    change_tid = 4
+    forAll(change_tid)
+}
+function days(){
+    console.log("d");   
+    change_tid = 5
+    forAll(change_tid)
+}
+function forAll(change_tid){
+    if (min_to_max == "min"){ // förändrar minimi värde
+        if (!(change_tid >= maxtid)){
+            millitid = change_tid
+            
+        }
+
+    } else { // förändrar maxvärde
+        if (!(change_tid <= millitid)){
+            maxtid = change_tid
+            
+        }
+    }
+    Configurestatus()
+    
+}
+
+    // constrained_border:
+    function border_change(){
+    height_of_all = document.getElementById("left_ur").offsetHeight
+    height_of_border = height_of_all-60
+    console.log("height of border:", height_of_border);
+    document.querySelector(":root").style.setProperty('--height_border', height_of_border+"px")
+}
+addEventListener("resize", (event) => {});
+onresize = (event) => {border_change()};
+
+border_change()
+
+    // early config switches
+    Version = "ur"
+    Boolean_status = false // false = off, true = on
+    document.querySelector(':root').style.setProperty('--ur', "gray")
+    document.querySelector(':root').style.setProperty('--off', "gray")
+
+function timer_oc(){
+    if (Version != "timer"){
+    document.getElementById("left_ur").classList.toggle("timer_active")
+    document.getElementById("left_ur").classList.remove("timer_deactive")
+    console.log("hello?!");
+    }
+    Version = "timer"
+    console.log(Version);
+    document.querySelector(':root').style.setProperty('--timer', "gray")
+    document.querySelector(':root').style.setProperty('--ur', "white")
+}
+function stopp_ur_oc(){
+    if (Version == "timer"){
+    document.getElementById("left_ur").classList.remove("timer_active")
+    document.getElementById("left_ur").classList.toggle("timer_deactive")
+    console.log("hello?!");
+    }
+    Version = "ur"
+    console.log(Version);
+    document.querySelector(':root').style.setProperty('--ur', "gray")
+    document.querySelector(':root').style.setProperty('--timer', "white")
+}
+function on_oc() {
+    if (Boolean_status != true){
+        document.getElementById("right_settings_on").classList.toggle("right_settings_active")
+    document.getElementById("right_settings_on").classList.remove("right_settings_deactive")
+    }
+    Boolean_status = true
+    console.log(Boolean_status);
+    document.querySelector(':root').style.setProperty('--on', "gray")
+    document.querySelector(':root').style.setProperty('--off', "white")
+    
+}
+function off_oc() {
+    if (Boolean_status == true){
+        document.getElementById("right_settings_on").classList.remove("right_settings_active")
+        document.getElementById("right_settings_on").classList.toggle("right_settings_deactive")
+    }
+    Boolean_status = false
+    console.log(Boolean_status);
+    document.querySelector(':root').style.setProperty('--off', "gray")
+    document.querySelector(':root').style.setProperty('--on', "white")
+    
+}
+
+    // early config
+var early_config_num = { 
+    milli_num: 0,
+
+    sek_num: 0,
+
+    min_num: 0,
+
+    hour_num: 0,
+
+    day_num: 0,
+}
+var early_config_shown = { 
+    milli_shown: true,
+
+    sek_shown: true,
+
+    min_shown: true,
+
+    hour_shown: true,
+
+    day_shown: true,
+}
+
+
+    let activity_status = false // kör eller ej
+
+function Start(){
+ activity_status = true
+ console.log("activation");
+}
+function Stop(){
+    activity_status = false
+    console.log("deactivation");
+}
+function Restart(){
+    for (const key in early_config_num) {
+  console.log(key, early_config_num[key]);
+        early_config_num[key] = 0
+        keyofdom = key.slice(0, -4)
+        console.log(keyofdom);
+        
+        if (early_config_shown[keyofdom+"_shown"] == true)
+        document.getElementById(keyofdom).innerHTML = early_config_num[key]+"0"
+        
+    }
+    console.log(early_config_num);
+}
+
+
+function Reconfig(){
+    
+
+ // if shown == true, dom = num, b_dom = ":"
+
+}
+
+
+    setInterval(() => {
+        // (if num == 60)
+        // next++
+        // if nästa = mindre än tio, för 0 innan, lägg till 0 innan
+        // annars lägg in normalt
+
+        // om shown == true 
+        // ändra förra till 0
+        if (early_config_num["milli_num"] == 100-1){
+            
+            console.log("cycle");
+            for (const key in early_config_num) {
+                value = early_config_num[key]
+                i = Object.keys(early_config_num).indexOf(key)
+                
+                if (value == 20 || key == "milli_num" && value == 100-1){
+                    if (key == "milli_num" && value == 100-1){
+                        early_config_num[key] = -1
+                    }
+                    else{
+                    early_config_num[key] = 0
+                }
+                    //t.ex. key = sek_num
+                    // t.ex. value = 56
+                    i_one_more = i+1
+                    key_one_more = (Object.keys(early_config_num))[i_one_more]
+                    early_config_num[key_one_more]++
+                    value_one_more = early_config_num[key_one_more]
+                    
+                    
+                    
+
+                    keyofdom = key_one_more.slice(0, -4)
+                    console.log(i_one_more, key_one_more, value_one_more);
+                    if (value_one_more < 10){
+                        document.getElementById(keyofdom).innerHTML = "0"+value_one_more
+                        continue
+                    }
+                    document.getElementById(keyofdom).innerHTML = value_one_more
+                }
+            }
+        }
+        
+
+if (activity_status == true){
+    early_config_num["milli_num"]++
+    if (early_config_num["milli_num"] < 10){
+        document.getElementById("milli").innerHTML = "0"+early_config_num["milli_num"]
+    }
+    else{
+    document.getElementById("milli").innerHTML = early_config_num["milli_num"]
+}
+}
+
+    }, 10);
+
+
+
+
+
+    Reconfig()
+</script>
+
+</body>
+</html>

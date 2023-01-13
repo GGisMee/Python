@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+
+    <input type="text" id="name" value="">
+    <input type="button" onclick="texting()" value="Enter lösen">
+
+
+
+    <script>
+
+        function texting() {
+            name = "Off"
+            name = document.getElementById("name").value
+            if (name == "Gustav"){
+                alert("Welcome, Admin!")
+            } // Setting the value is normally used for input/form elements. innerHTML is normally used for div, span, td and similar elements
+            if (name != "Gustav"){
+                alert("You are not allowed")
+                while (1 == 1){
+                    console.log("writing here because i crash this")
+                }
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>

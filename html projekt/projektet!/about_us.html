@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BenchBuzz About us</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="icon" type="user-solid.svg" href="user-solid.svg">
+  <style>
+    #navbar{
+      border-bottom: 2px rgb(221, 221, 221) solid;
+      z-index: 0;
+    }
+
+    #info{
+      width: 10px;
+      height: 10000px;
+      background-color: blue;
+    }
+    #icon_nav:hover{ 
+      animation: 0.4s ease-in-out 0s forwards running IconAnimationIn;
+    }
+    @keyframes IconAnimationIn{
+      100%{transform: rotate(22.5deg) scale(1.2)}
+    }
+    #img_nav{
+      width: 50px;
+      height: 40px;
+    }
+    #about_us_nav{
+      position:absolute;
+      right: 5px;
+    }
+    #about_usID{
+      color: black;
+      font-weight: 450;
+    }
+
+    #underdel{
+      width: 100%;
+      height: 100%;
+      background-color: unset;
+      display: flex;
+      flex-direction: row;
+      flex-wrap:wrap;
+      align-items: center;
+      justify-content: center;
+    }
+
+  </style>
+  </head>
+<body>
+
+  <nav class="navbar navbar-expand-lg bg-light" id="navbar">
+    <div class="container-fluid">
+
+      <a class="navbar-brand" href="main.html" id="icon_nav">
+        <img src="logo.png" alt="Bootstrap" width="30" height="24" id="img_nav">
+      </a>
+      <a class="navbar-brand" href="main.html" id="mainID">BenchBuzz</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="video.html" id="videoID">Informational video</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="info.html" id="infoID">Product info</a>
+          </li>
+          <li class="nav-item" id="about_us_nav">
+            <a class="nav-link" href="about_us.html" id="about_usID">About us</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+<div id="underdel">
+  <div class="card" style="width: 18rem;">
+    <img src="allie.jpg" class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">Allie Botold</h5>
+      <p class="card-text">Skådespelare och ledande sekreterare</p>
+    </div>
+  </div>
+
+    <div class="card" style="width: 18rem;">
+      <img src="linus.jpg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Linus Bergstrand</h5>
+        <p class="card-text">Filmskapande och presentationsutvecklandes</p>
+      </div>
+    </div>
+
+      <div class="card" style="width: 18rem;">
+        <img src="petrus.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Petrus Chamoun</h5>
+          <p class="card-text">Cad expert and CEO</p>
+          <br>
+        </div>
+      </div>
+
+      <div class="card" style="width: 18rem;">
+        <img src="nils.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Nils Hammar</h5>
+          <p class="card-text">Cad expert</p>
+          <br>
+        </div>
+      </div>
+
+      <div class="card" style="width: 18rem;">
+        <img src="jag.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Gustav Gamstedt</h5>
+          <p class="card-text">Webutvecklare</p>
+          <br>
+        </div>
+      </div>
+
+      <div class="card" style="width: 18rem;">
+        <img src="loulia.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Loulia </h5>
+          <p class="card-text">Skådespelare och sekreterare</p>
+          <br>
+        </div>
+      </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+</body>
+</html>

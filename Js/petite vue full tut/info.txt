@@ -1,0 +1,19 @@
+Vue är en JavaScript framework för att bygga webbsidor och användarsidor
+
+Vue används generellt för att skapa ensidiga sidor som kör i klient (alltså på datorn),
+men kan även bli körd på server alltså internet med tillämpningsverktyg
+
+För min användning används Vue till att enkelt tillämpa js kod i html
+
+ över dom och vanlig javascript:
+Skapar mer dynamiska appar och hemsidor
+Lätt att lära sig
+
+Snabb och lätttillämpad
+Virituell dom som uppdateras automatiskt
+trevlig grupp som skapade
+
+
+Todo:
+ sök efter petite vue med html, 
+ hämta ned petite vue och klistra in i en fil för offline användning
