@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form action="action_page.php" method="POST">
+<div>
+  <label for="fname">first name</label>
+  <input type="text" id="fname" name="fname" placeholder="Your name" required>
+  </div>
+  <br>
+  <div>
+  <label for="lname">Last name</label>
+  <input type="text" id="lname" name="lname" placeholder="your last name" required>
+  </div>
+  <br>
+
+<div>
+  <input type="password" maxlength="12" required placeholder="passwrd">
+  </div>
+  <div>
+  <input type="email" placeholder="email">
+  </div>
+  <input type="date">
+
+  <div>
+    <input type="number" placeholder="quantity" min="0" max="999">
+  </div>
+<div>
+  <label>title: </label>
+  <label for="Mr.">Mr.</label>
+  <input type="radio" name="title" id="Mr." value="Mr.">
+
+  <label for="Mrs."> Mrs.</label>
+  <input type="radio" name="title" id="Mrs." value="Mrs.">
+
+  <label for="PhD.">PhD.</label>
+  <input type="radio" name="title" id="PhD." value="PhD.">
+</div>
+
+  <div>
+    <label for="payment">payment:</label>
+    <select name="payment" id="payment">
+      <option value="visa">visa</option>
+      <option value="mastercard">mastercard</option>
+      <option value="giftcard">giftcard</option>
+
+    </select>
+
+
+
+    <label for="subscribe">subscribe</label>
+    <input type="checkbox" id="subscribe" name="subscribe">
+
+  </div>
+ <br>
+    </div>
+  <br>
+  <input type="reset">
+  <input type="submit">
+
+  <div>
+
+</form>
+
+
+
+</body>
+</html>
