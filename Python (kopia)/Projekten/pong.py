@@ -43,11 +43,12 @@ def started(status):
         if (len(list(canvas.find_overlapping(600,600, 600, 0))))  > 3 or (len(list(canvas.find_overlapping(3,0, 3, 600))))  > 3:
             # status = False
             ball.direction += 180
-        
+        if len(list(canvas.find_overlapping(board_ai_info.x1, board_ai_info.y1, board_ai_info.x2, board_ai_info.y2))) > 1:
+            ball.direction += 180
         if (board_ai_info.y2-board_ai_info.y1)/2+board_ai_info.y1 > ball.posy:
-            board_ai_info.move(0, -4)
+            board_ai_info.move(0, -2)
         if (board_ai_info.y2-board_ai_info.y1)/2+board_ai_info.y1 < ball.posy:
-            board_ai_info.move(0, 4)
+            board_ai_info.move(0, 2)
 
 
         window.update()
