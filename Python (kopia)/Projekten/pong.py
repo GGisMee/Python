@@ -15,6 +15,7 @@ class ballC:
         self.diry = 300
         self.direction = 10
         self.speed = speed
+        self.obj = canvas.create_oval(0,0, 15, 15, fill="black")
         
 
 def started(status):
@@ -25,25 +26,29 @@ def started(status):
         speed = 500
     speed  = speed*tic_per_second
 
-    global ballinfo
-    ballinfo = ballC(speed)
+    global ball
+    ball = ballC(speed)
 
 
-    canvas.move(ball, ballinfo.dirx, ballinfo.diry)
+    canvas.move(ball.obj, ball.dirx, ball.diry)
     while status == True:
         
-        Vx = ballinfo.speed*round(sin(radians(ballinfo.direction)),2)
-        Vy = ballinfo.speed*round(cos(radians(ballinfo.direction)),2)
-        canvas.move(ball, Vx, Vy)
-        ballinfo.posy += Vy
-        print(ballinfo.posy)
+        Vx = ball.speed*round(sin(radians(ball.direction)),2)
+        Vy = ball.speed*round(cos(radians(ball.direction)),2)
+        canvas.move(ball.obj, Vx, Vy)
+        ball.posy += Vy
 
         if len(list(canvas.find_overlapping(0,3, 600, 3))) > 3 or len(list(canvas.find_overlapping(600,600, 0, 600))) > 3:
-            ballinfo.direction = 180-ballinfo.direction
+            ball.direction = 180-ball.direction
         if (len(list(canvas.find_overlapping(600,600, 600, 0))))  > 3 or (len(list(canvas.find_overlapping(3,0, 3, 600))))  > 3:
             # status = False
-            ballinfo.direction += 180
+            ball.direction += 180
         
+        if (board_ai_info.y2-board_ai_info.y1)/2+board_ai_info.y1 > ball.posy:
+            board_ai_info.move(0, -4)
+        if (board_ai_info.y2-board_ai_info.y1)/2+board_ai_info.y1 < ball.posy:
+            board_ai_info.move(0, 4)
+
 
         window.update()
         sleep(tic_per_second)
@@ -68,8 +73,6 @@ speedEnt.grid(row=1, column=0)
 
 canvas = Canvas(window, width=600, height=600, bg="#f0f0f0")
 
-ball = canvas.create_oval(0,0, 15, 15, fill="black")
-ballinfo = "ballinfo"
 
 border_upper = canvas.create_line(0,3, 600, 3, width=1, fill="black")
 border_down = canvas.create_line(600,600, 0, 600, width=1, fill="black")
