@@ -28,11 +28,30 @@ def started(status):
 
     global ball
     ball = ballC(speed)
-
-
+    iterations = 0
+    no = 0
     canvas.move(ball.obj, ball.dirx, ball.diry)
     while status == True:
-        
+        # status = False
+        def runaichange(no, iterations):
+            if len(list(canvas.find_overlapping(board_ai_info.x1, board_ai_info.y1, board_ai_info.x2, board_ai_info.y2))) > 1:
+                if 0 < no:
+                    return no, iterations
+                    
+                
+                if iterations < 2:
+                    no = 100
+            
+                ball.direction += 180
+                iterations += 1
+                return no, iterations
+            else:
+                iterations = 0
+                no = 0
+                return no, iterations
+                
+
+
         Vx = ball.speed*round(sin(radians(ball.direction)),2)
         Vy = ball.speed*round(cos(radians(ball.direction)),2)
         canvas.move(ball.obj, Vx, Vy)
@@ -41,10 +60,8 @@ def started(status):
         if len(list(canvas.find_overlapping(0,3, 600, 3))) > 3 or len(list(canvas.find_overlapping(600,600, 0, 600))) > 3:
             ball.direction = 180-ball.direction
         if (len(list(canvas.find_overlapping(600,600, 600, 0))))  > 3 or (len(list(canvas.find_overlapping(3,0, 3, 600))))  > 3:
-            # status = False
             ball.direction += 180
-        if len(list(canvas.find_overlapping(board_ai_info.x1, board_ai_info.y1, board_ai_info.x2, board_ai_info.y2))) > 1:
-            ball.direction += 180
+        no, iterations = runaichange(no, iterations)
         if (board_ai_info.y2-board_ai_info.y1)/2+board_ai_info.y1 > ball.posy:
             board_ai_info.move(0, -2)
         if (board_ai_info.y2-board_ai_info.y1)/2+board_ai_info.y1 < ball.posy:
