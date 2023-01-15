@@ -3,53 +3,78 @@ from time import *;
 from math import *; 
 from random import *
 import threading
-
+import os
+os.system('xset r off')
 window = Tk()
 window.geometry("800x800")
 status = False
+direction = None
 class ballC:
     def __init__(self, speed):
         self.posy = 300
         # early config
         self.dirx = 100
         self.diry = 300
-        self.direction = 10
+        self.direction = 120
         self.speed = speed
         self.obj = canvas.create_oval(0,0, 15, 15, fill="black")
         
+def get_input():  
+    def on_key_press(event):
+        global direction
+        if event.keysym == 'w':
+            direction = "up"
+        elif event.keysym == 's':
+            direction = 'down'
+        elif event.keysym == "space":
+            direction = None
+    window.bind('<KeyPress>', on_key_press)
+
 
 def started(status):
+    input_thread = threading.Thread(target=get_input)
+    input_thread.start()
     tic_per_second = 1/60
+    speedai = 8
+    speedplayer = 5
     try:
         speed = int(speedEnt.get())*10
     except ValueError:
         speed = 500
     speed  = speed*tic_per_second
 
-    global ball
+    global ball, direction
     ball = ballC(speed)
-    iterations = 0
+    ball_iterations = 0
     no = 0
+    noplayer =0
+    minus_speed = False
+    plus_speed = False
     canvas.move(ball.obj, ball.dirx, ball.diry)
     while status == True:
+        window.update()
+        def dir():
+            # print(ball.direction)
+            pass
         # status = False
-        def runaichange(no, iterations):
-            if len(list(canvas.find_overlapping(board_ai_info.x1, board_ai_info.y1, board_ai_info.x2, board_ai_info.y2))) > 1:
+        def runaichange(board ,no, ball_iterations, minus_speed, plus_speed):
+            if len(list(canvas.find_overlapping(board_ai.x1, board_ai.y1, board_ai.x2, board_ai.y2))) > 1 and board_ai.y2 < 600 and board_ai.y1 > 5:
+                print("r")
                 if 0 < no:
-                    return no, iterations
-                    
-                
-                if iterations < 2:
+                    return no, ball_iterations         
+
+                if ball_iterations < 2:
                     no = 100
-            
-                ball.direction += 180
-                iterations += 1
-                return no, iterations
+
+                ball.direction = abs((270-ball.direction)+90)
+                dir()
+
+                ball_iterations += 1
+                return no, ball_iterations
             else:
-                iterations = 0
+                ball_iterations = 0
                 no = 0
-                return no, iterations
-                
+                return no, ball_iterations
 
 
         Vx = ball.speed*round(sin(radians(ball.direction)),2)
@@ -57,17 +82,63 @@ def started(status):
         canvas.move(ball.obj, Vx, Vy)
         ball.posy += Vy
 
-        if len(list(canvas.find_overlapping(0,3, 600, 3))) > 3 or len(list(canvas.find_overlapping(600,600, 0, 600))) > 3:
-            ball.direction = 180-ball.direction
-        if (len(list(canvas.find_overlapping(600,600, 600, 0))))  > 3 or (len(list(canvas.find_overlapping(3,0, 3, 600))))  > 3:
-            ball.direction += 180
-        no, iterations = runaichange(no, iterations)
-        if (board_ai_info.y2-board_ai_info.y1)/2+board_ai_info.y1 > ball.posy:
-            board_ai_info.move(0, -2)
-        if (board_ai_info.y2-board_ai_info.y1)/2+board_ai_info.y1 < ball.posy:
-            board_ai_info.move(0, 2)
+        # övre
+        if len(list(canvas.find_overlapping(0,1, 600, 1))) >= 3:
+            if not ball.direction >180:
+                ball.direction = (180-ball.direction)
+            else:
+                ball.direction = (90+ball.direction)
+            dir()
+            
+        # undre
+        if len(list(canvas.find_overlapping(600,600, 0, 600))) > 3:   
+            if ball.direction >270:
+                ball.direction = ((270-ball.direction))
+            else:
+                ball.direction = (90+ball.direction)
+
+            dir()
+
+        # r and l 
+        if (len(list(canvas.find_overlapping(600,600, 600, 0)))) > 3:
+            if ball.direction >90:
+                ball.direction+= 90
+            else:
+                ball.direction-=90
+            dir()
+        if(len(list(canvas.find_overlapping(3,0, 3, 600)))) > 3:
+            ball.direction -= 180
+            dir()
+        
+        # if ai touches ball...
+        no, ball_iterations = runaichange(board_ai, no, ball_iterations, minus_speed, plus_speed)
+        noplayer, ball_iterations = runaichange(board_ai, noplayer, ball_iterations, minus_speed, plus_speed)
 
 
+        # movement ai
+        if (board_ai.y2-board_ai.y1)/2+board_ai.y1 > ball.posy:
+            if (board_ai.y1) > 10:
+                board_ai.move(0, -speedai)
+                minus_speed = True
+                plus_speed = False
+
+        if (board_ai.y2-board_ai.y1)/2+board_ai.y1 < ball.posy:
+            if board_ai.y2 < 597:
+                board_ai.move(0, speedai)
+                plus_speed = True
+                minus_speed = False
+        
+        if direction == "down":
+            if board_player.y2 < 595:
+                board_player.move(0, speedplayer)
+            
+        if direction == "up":
+            if (board_player.y1) > 5:
+                board_player.move(0, -speedplayer)
+
+
+
+        ball.direction = abs(ball.direction)
         window.update()
         sleep(tic_per_second)
 
@@ -104,7 +175,7 @@ class board:
         self.x2 = x2
         self.y1 = y1
         self.y2 = y2
-        self.obj = canvas.create_rectangle(0,0, 10, 50, fill="black")
+        self.obj = canvas.create_rectangle(x1,y1, x2, y2, fill="black")
     def move(self, mx, my):
         self.x1 += mx
         self.x2 += mx
@@ -113,8 +184,11 @@ class board:
         canvas.move(self.obj, mx, my)
 
 
-board_ai_info = board(0,0, 10, 50)
-board_ai_info.move(10, 275)
+board_ai = board(0,0, 10, 50)
+board_ai.move(10, 275)
+
+board_player = board(0,0, 10,100)
+board_player.move(580, 275)
 
 
 
