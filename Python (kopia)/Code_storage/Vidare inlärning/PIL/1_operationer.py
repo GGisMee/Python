@@ -3,7 +3,7 @@ import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 try:
-    inp = int(input("1,2,3: \n"))
+    inp = int(input("[...]: \n"))
 except TypeError:
     print("wrong type")
 
@@ -24,3 +24,17 @@ if inp == 3:
     image_blank = Image.new("RGB", (1000,600))
     image_blank.show()
 
+if inp == 4:
+    image_name = Image.open("pic.jpg")
+
+    # spara som namnet...
+    image_name.save("save.png") # val över vilken typ
+                                # funkar för att ändra filtyp
+
+if inp == 5:
+    image_name = Image.open("pic.jpg")
+    # visar olika info
+    print(image_name.size)
+    print(image_name.filename)
+    print(image_name.format)
+    print(image_name.format_description)
