@@ -3,6 +3,9 @@ import time
 import random
 from PIL import Image, ImageTk
 
+import os
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 window = Tk()
 WIDTH = 1000
 HEIGHT = 1000
