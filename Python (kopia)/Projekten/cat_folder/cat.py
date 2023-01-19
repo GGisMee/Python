@@ -1,29 +1,35 @@
 from tkinter import *
 import time
 import random
+from PIL import Image, ImageTk
 
 window = Tk()
-WIDTH = 500
-HEIGHT = 500
+WIDTH = 1000
+HEIGHT = 1000
 window.geometry(f"{WIDTH}x{HEIGHT}")
 
-canvas = Canvas(window, width=WIDTH, height=HEIGHT)
+canvas = Canvas(window, width=WIDTH, height=HEIGHT, bg="white")
 canvas.pack()
  
 class cat:
     def __init__(self, obj,dirx, diry):
+        global catpic
         # early config
         self.obj = obj
         self.x = HEIGHT
-        self.y = random.randint(0, 500)
+        self.y = random.randint(0+200, WIDTH-200)
         self.dirx = dirx
         self.diry = diry
-        self.catpic = f"cat folder/cat{random.randint(1,4)}.png"
+        self.cat_nr = random.randint(1,3)
+        self.og_catpic = Image.open("/Users/gustavgamstedt/Desktop/Hemma_folder/programmering/Python (kopia)/Projekten/cat_folder/cat1.png")
+        self.edited_catpic=self.og_catpic.resize((100, 100))
 
-        photo_image = PhotoImage(file=self.catpic)
-
+        self.photo_image = ImageTk.PhotoImage(file=self.edited_catpic)
+        self.obj = canvas.create_image(self.y, HEIGHT-100, image=self.photo_image)
+        window.update_idletasks()
         # creation
-        self.obj = canvas.create_image(0,0, image=photo_image, anchor=NW)
+        
+
     def move(self):
         self.x += self.dirx
         self.y += self.diry
@@ -37,6 +43,5 @@ listofcat = []
 listofcat.append("cat"+str(cat_index))
 thiscat = "cat"+str(cat_index)
 thiscat = cat(thiscat,0,0)
-print(thiscat.obj)
 
 window.mainloop()  
