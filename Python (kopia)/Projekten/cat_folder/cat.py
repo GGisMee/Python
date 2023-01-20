@@ -19,16 +19,17 @@ class cat:
         global catpic
         # early config
         self.obj = obj
-        self.x = HEIGHT
-        self.y = random.randint(0+200, WIDTH-200)
+        self.x = random.randint(0, HEIGHT-100)
+        self.y = WIDTH-(WIDTH/10)# random.randint(0+200, WIDTH-200)
         self.dirx = dirx
         self.diry = diry
-        self.cat_nr = random.randint(1,3)
-        self.og_catpic = Image.open("/Users/gustavgamstedt/Desktop/Hemma_folder/programmering/Python (kopia)/Projekten/cat_folder/cat1.png")
-        self.edited_catpic=self.og_catpic.resize((100, 100))
+        self.cat_nr = random.randint(1,5)
+        self.og_catpic = Image.open(f"cat{self.cat_nr}.png")
 
-        self.photo_image = ImageTk.PhotoImage(file=self.edited_catpic)
-        self.obj = canvas.create_image(self.y, HEIGHT-100, image=self.photo_image)
+        self.edited_catpic=self.og_catpic.resize((int(WIDTH/10), int(HEIGHT/10)))
+
+        self.photo_image = ImageTk.PhotoImage(self.og_catpic)
+        self.obj = canvas.create_image(self.x, self.y, image=self.photo_image)
         window.update_idletasks()
         # creation
         
@@ -40,11 +41,24 @@ class cat:
         self.dirx -= 1
         self.diry -= 0.1
 
+ 
+def newcat():
+    global cat_index, listofcat
+    thiscat = cat("cat"+str(cat_index),0,0)
+    listofcat.append(thiscat)
+    cat_index += 1
+    print(thiscat.cat_nr)
+
 cat_index = 0
 listofcat = []
 
-listofcat.append("cat"+str(cat_index))
-thiscat = "cat"+str(cat_index)
-thiscat = cat(thiscat,0,0)
+for i in range(3):
+    newcat()
+    
 
+
+while True:
+    
+    
+    time.sleep(2)
 window.mainloop()  
