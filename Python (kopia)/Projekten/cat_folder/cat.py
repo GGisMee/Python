@@ -2,6 +2,7 @@ from tkinter import *
 import time
 import random
 from PIL import Image, ImageTk
+import threading
 
 import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -55,10 +56,22 @@ listofcat = []
 for i in range(3):
     newcat()
     
+def get_input():
+    def spacefunc(event):
+        print("spacefunc")
+        newcat()
+
+    window.bind("<space>", spacefunc)   
+        # window.bind("<Left>", leftfunc)   
+        # window.bind("<Up>", upfunc)   
+    
+get_input()
 
 
 while True:
+    for cat in listofcat:
+        cat.move()
     
+    time.sleep(0.1)
     
-    time.sleep(2)
 window.mainloop()  
