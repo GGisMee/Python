@@ -50,14 +50,20 @@ class cat:
             self.movefunc(movement_x, movement_y)
 
     def movefunc(self, movement_x, movement_y):
-        canvas.move(self.obj, movement_x, movement_y)
-        self.x1 += movement_x
-        self.x2 += movement_x
-        self.y1 += movement_y
-        self.y2 += movement_y
-        print(movement_x, movement_y, left_button_on)
-        if left_button_on:
-            window.after(20, self.movefunc, movement_x, movement_y)
+        def moving():
+            while left_button_on:
+                canvas.move(self.obj, movement_x, movement_y)
+                self.x1 += movement_x
+                self.x2 += movement_x
+                self.y1 += movement_y
+                self.y2 += movement_y
+                print(movement_x, movement_y, left_button_on)
+                time.sleep(0.1)
+        moving_thread = threading.Thread(target=moving)
+        moving_thread.start()  
+
+        
+            
                 
         # canvas.move(self.obj, self.dirx, self.diry)
         # self.dirx -= 1
