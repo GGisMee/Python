@@ -28,10 +28,13 @@ elif inp == 3:
 
 elif inp == 4:
     # image resize
-    resized_image = image.resize((600,1000)) # simple version
+    
 
     scale_factor = 0.5
     resized_image = image.resize((int(float(image.size[0])*scale_factor), int(float(image.size[1])*scale_factor)))
+    
+    resized_image = image.resize((100,100)) # simple version
+    
     resized_image.show()
 else: 
     print("error. "+ str(inp))
