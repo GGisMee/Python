@@ -35,7 +35,7 @@ def betweening(row, column):
 def config():
     global apple_sub, geometry, size_sub, speed_sub
     if "" != entry_px.get():
-        if int(entry_px.get()) >= 7:
+        if int(entry_px.get()) >= 10:
             print("too large")
             print(f"{int(entry_px.get())} >= 7")
             return
