@@ -10,4 +10,4 @@ fil_df = fil_df.reset_index(drop=True, inplace=True) # gör en ny indexskala,
 print(fil_df)
 
 mega_df = df.loc[~df["Name"].str.contains('Mega')]
-print(mega_df)
+print(mega_df) # ~ ger not
