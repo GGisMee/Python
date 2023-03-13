@@ -1,0 +1,15 @@
+Create table products(
+    product_id INT,
+    product_name VARCHAR(25),
+    price DECIMAL(4, 2) NOT NULL
+); # NOTNULL gör så att den ej får vara null
+
+
+# i efterhand
+ALTER TABLE products
+MODIFY price DECIMAL(4,2) NOT NULL;
+
+# denna går ej pga NOT NULL
+insert into products
+values(104, "Cookie", NULL);
+# 0 går dock
