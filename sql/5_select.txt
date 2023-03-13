@@ -1,0 +1,2 @@
+# tar första och sista namnet
+SELECT first_name, last_name FROM employees

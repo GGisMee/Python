@@ -1,0 +1,3 @@
+gå till mySQL hemsidan ladda ned server och eller workbench. prob båda om man vill ha allt.
+Därefter måste du skriva in lösenordet i Workbench, sen klar
+Tip titta på Bro Codes video om det

@@ -1,0 +1,13 @@
+# insert 1 row
+INSERT INTO employees
+VALUES (1, "Eugene", "Krabs", 25.50, "2023-01-02");
+
+# insert 4 rows: # krävs alla kolumner annars krävs under under här
+
+INSERT INTO employees
+VALUES (2, "Squidward", "Tentacles", 15.00, "2023-01-03" ),
+       (3, "Spongebob", "Squarepants", 12.50, "2023-1-04"),
+       (4, "Patric", "Star", 12.50, "2023-01-05"),
+       (5, "Sandy", "Cheeks", 17.25, "2023-01-06");
+
+INSERT INTO employees (employee_id, first_name, last_name) # då blir det null på det andra

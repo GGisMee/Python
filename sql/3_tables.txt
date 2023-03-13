@@ -1,0 +1,33 @@
+CREATE TABLE employees (
+	employee_id INT,
+    first_name VARCHAR(30),
+    last_name VARCHAR(40),
+    hourly_pay DECIMAL(5, 2),
+    hire_date DATE
+); # skapar ett table med olika innehåll 40 står för max gräns i bokstäver
+
+RENAME TABLE workers TO employees; # byter namn på tabellen
+
+
+# Alterings
+ALTER DATABASE
+ADD Phone_number VARCHAR(15) # lägger till en ny kolumn
+
+ALTER TABLE employees
+RENAME COLUMN phone_number to email;
+
+alter table employees
+modify email VARCHAR(100); # byter typ + längd
+
+Positioning:
+alter table employees
+modify email VARCHAR(100)
+AFTER last_name;
+
+alter table employees
+modify email VARCHAR(100)
+FIRST;
+
+# droppa kolumn
+alter table employees
+DROP COLUMN email;
