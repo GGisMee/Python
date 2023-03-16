@@ -1,0 +1,16 @@
+# En identifierare
+    # bara en kolumn kan vara primär
+    # bara en av värderna i kolumnen kan ha ett visst värde
+    # kan ej vara null
+
+# skapar en tabel med en primär nyckel
+CREATE TABLE transactions(
+    transaction_id INT PRIMARY KEY,
+    amount DECIMAL(5, 2)
+)
+
+# i efterhand:
+ALTER TABLE transactions 
+ADD CONSTRAINT
+PRIMARY KEY (transaction_id);
+

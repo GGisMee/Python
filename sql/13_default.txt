@@ -1,0 +1,38 @@
+# normal värde som kan implementeras när inget värde är givet
+
+# långsamma sättet: 
+Insert into products
+values (104, "straw", 0.00),
+		(105, "napkin", 0.00),
+        (106, "fork", 0.00),
+        (107, "spoon", 0.00);
+
+# i början
+Create table products (
+		product_id INT,
+        product_name varchar(25),
+        price decimal(4,2) DEFAULT 0.00
+);
+
+# i efterhand
+alter table products
+alter price set default 0
+
+# funkar och blir samma som långsamma sättet pga default
+INSERT INTO products (product_id, product_name)
+values (104, "straw"),
+		(105, "napkin"),
+        (106, "fork"),
+        (107, "spoon");
+
+# annan variant med funktion:
+CREATE TABLE transactions(
+    transaction_id INT,
+    amount DECIMAL (5,2),
+    transaction_date DATETIME DEFAULT NOW()
+)
+
+# användningsområde:
+INSERT INTO transactions (transaction_id, amount)
+VALUES (2, 2.89);
+# output visar klockan nu i transaction_date
