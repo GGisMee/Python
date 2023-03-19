@@ -1,0 +1,20 @@
+# hur man gör en auto_increment när man skapar ett table
+CREATE TABLE transactions(
+	transaction_id INT PRIMARY KEY auto_increment,
+    amount DECIMAL(5,2)
+    
+);
+
+
+# lägga in värden:
+INSERT INTO transactions (amount)
+VALUES (4.99);
+
+SELECT * FROM transactions
+# nu blir andra värdet alltså transaction_id en auto_increment, först 1, sedan när andra värdet på amount läggs in blir det 2 osv.
+# Alltså som en automatiskt index med ökande värde +1 för varje ny rad
+
+
+# man kan välja att den börjar på ex 1000 istället för 1 genom
+ALTER TABLE transactions
+AUTO_increment = 1000;
