@@ -4,7 +4,7 @@ import numpy as np
 import time
 
 window = Tk()
-geometry = 1400
+geometry = 1000
 
 canvas = Canvas(window, height=geometry, width=geometry, bg="lightgray")
 canvas.pack()

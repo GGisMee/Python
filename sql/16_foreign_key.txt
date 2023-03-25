@@ -1,0 +1,21 @@
+# en primär nyckel som finns i ett annat table 
+
+# skapar lite
+Create table customers( 
+	customer_id int primary key auto_increment,
+    first_name varchar(50),
+    last_name VARCHAR (50)
+    );
+
+INSERT INTO customers
+VALUES 	("Fred", "Fish"),
+		("Larry", "Lobbster"),
+		("Chris", "Chiwuawua);
+
+CREATE TABLE transactions (
+	transaction_id INT PRIMARY KEY AUTO_INCREMENT,
+	amount DECIMAL(5,2),
+    customer_id INT,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+); # här skapar vi en foreign key med en koppling mellan customer_id på de båda
+
