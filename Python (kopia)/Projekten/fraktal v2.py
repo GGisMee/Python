@@ -4,7 +4,7 @@ import numpy as np
 import time
 
 window = Tk()
-geometry = 1000
+geometry = 1400
 
 canvas = Canvas(window, height=geometry, width=geometry, bg="lightgray")
 canvas.pack()
@@ -105,5 +105,5 @@ for i in range(10):
     print(hex)
     new_triangles(hex)
     window.update()
-    time.sleep(0.5)
+    time.sleep(4)
 window.mainloop()
