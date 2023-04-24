@@ -111,3 +111,16 @@ class point:
         counting_lib("point",self)
     def length (self):
         return math.sqrt(self.xy[0]**2+self.xy[1]**2)
+
+class shape:
+    def __init__(self, xy):
+        self.xy = np.array([xy])
+        counting_lib("shape",self)
+    def format(points, length=1, sidelen=True, midpoint=[0,0]): # length är längden av sidorna om sidelen=true, annars är den avstånd från hörn till vinkel
+        degrees = 180*(points-2)/points
+        if sidelen == True:
+            length = length/2/math.cos(math.radians(degrees/2))
+        # nu är length säkert avstånd från hörn till vinkel
+        print(degrees,length)
+        # implementera kordinater + kalkylerad x+y till varje
+shape.format(4,4)
