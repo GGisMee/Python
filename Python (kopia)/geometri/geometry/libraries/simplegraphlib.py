@@ -1,4 +1,5 @@
 print("simplegeometrylib in use")
+#><
 import numpy as np
 import math
 counting_lib_dic = {}
@@ -8,6 +9,24 @@ def counting_lib(idholder, variable):
         return
     if variable not in counting_lib_dic[idholder]:
         counting_lib_dic[idholder].append([len(counting_lib_dic[idholder]), variable]) 
+
+class degrees:
+    def shorten_deg(deg, show=False):
+        while deg < 0:
+            deg+=360
+        while deg > 360:
+            deg-=360
+        if show:
+            print(deg)
+        return deg
+
+
+class point:
+    def __init__(self, xy):
+        self.xy = xy
+        counting_lib("point",self)
+    def length (self):
+        return math.sqrt(self.xy[0]**2+self.xy[1]**2)
 
 class Line:
 
@@ -66,61 +85,94 @@ class Line:
         return new_coords
 
 class Linear:
-    def Linear_point_changer(k=None,m=None,xy=None, show = False):
-        if xy[0] == None or xy[0] == None:
+    def Linear_point_changer(k=None,m=None,xy=None, show = False): # tar basically alla förutom 1 och ger tillbaka den saknade
+        if xy[1] == None or xy[0] == None:
             if xy[0] == None:
-                xy[0] = (xy[0]-m)/k
-            if xy[0] == None:
-                xy[0] = k*xy[0]+m
+                xy[0] = (xy[1]-m)/k
+            if xy[1] == None:
+                xy[1] = k*xy[0]+m
             if show:
                 print([xy[0],xy[0]])
-            return xy[0],xy[0]
+            return xy[0],xy[1]
         else:
             if k == None:
-                k = (xy[0]-m)/xy[0]
+                k = (xy[1]-m)/xy[0]
             if m == None:
-               m =  xy[0]-k*xy[0]
+               m =  xy[1]-k*xy[0]
             if show:
                 if m < 0:
-                    print(f"xy[0] = {k}x{m}")
+                    print(f"y = {k}x{m}")
                 else:
-                    print(f"xy[0]={k}x+{m}")
+                    print(f"y={k}x+{m}")
             return k,m
     
-    def k_to_degrees(k, show = False):
+    def k_to_degrees(k, show = False): # k värde till grader den är 
         degrees = math.degrees(math.atan(k))
         if show:
             print(f"deg={degrees}")
         return degrees
-    def change_k_to_degrees(k, degrees, show = False):
+    def change_k_with_degrees(k, degrees, show = False):
         deg=Linear.k_to_degrees(k)
         deg+=degrees
         new_k = math.tan(math.radians(deg))
         if show:
             print(new_k)
         return new_k
-    def degrees_to_k(degrees, show = False):
+    def degrees_to_k(degrees, show = False): # grader till ett k värde
         k = math.tan(math.radians(degrees))
         if show:
             print(k)
         return k
 
-class point:
-    def __init__(self, xy):
-        self.xy = xy
-        counting_lib("point",self)
-    def length (self):
-        return math.sqrt(self.xy[0]**2+self.xy[1]**2)
+
+class newcoord:
+    def from_k_xy_x(x, xy, k, show = False): # tar in x värdet för nya punkten, punkten själv och k
+        k,m = Linear.Linear_point_changer(k, xy=xy, show=True)
+        y = k*x+m
+        if show:
+            print([x,y])
+        return x,y
+    def from_deg_xy_len(deg, xy, len, show=False):
+        deg = degrees.shorten_deg(deg)
+        quadrant_deg = deg
+        while deg>90:
+            deg-=90
+
+        xchange = len*math.cos(math.radians(deg))
+        ychange = len*math.sin(math.radians(deg))
+
+        if 0<quadrant_deg<=90:
+            xy = [xy[0]+xchange, xy[1]+ychange]
+        if 90<quadrant_deg<=180:
+            xy = [xy[0]-ychange, xy[1]+xchange]
+        if 180<quadrant_deg<=270:
+            xy = [xy[0]-xchange, xy[1]-ychange]
+        if 270<quadrant_deg<=360:
+            xy = [xy[0]+ychange, xy[1]-xchange]
+        if show:
+            print(f"change: {[xchange, ychange]}")
+            print(f"new coords: {xy}")
+        return xy[0], xy[1]
+
+
 
 class shape:
     def __init__(self, xy):
         self.xy = np.array([xy])
         counting_lib("shape",self)
+
     def format(points, length=1, sidelen=True, midpoint=[0,0]): # length är längden av sidorna om sidelen=true, annars är den avstånd från hörn till vinkel
         degrees = 180*(points-2)/points
         if sidelen == True:
             length = length/2/math.cos(math.radians(degrees/2))
         # nu är length säkert avstånd från hörn till vinkel
+        new_degrees=0 # för att kunna iterera över ökande grader krävs denna
+        for i in range(points):
+            if not i:
+                new_degrees+=degrees/2
+                Linear.change_k_with_degrees(0, new_degrees, True)
+            else:
+                new_degrees+=degrees
+                Linear.change_k_with_degrees(0, new_degrees, True)
         print(degrees,length)
         # implementera kordinater + kalkylerad x+y till varje
-shape.format(4,4)
