@@ -1,4 +1,4 @@
-print("simplegeometrylib in use")
+print("simplegraphlib in use")
 #><
 import numpy as np
 import math
