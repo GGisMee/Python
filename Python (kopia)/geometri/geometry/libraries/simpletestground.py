@@ -1,13 +1,18 @@
-from tkinter import *
-from simplegeometrylib import *
+import numpy as np
+from simplegraphlib import *
+import matplotlib.pyplot as plt
 
-window = Tk()
-geometry = 200
-canvas = Canvas(window, width=geometry, height=geometry, bg="white")
-canvas.pack()
+coords = shape.format_from_middle([0,0],4,1,True, True)
 
-line1 = canvas.create_line(10,10,200,200, fill="blue", width=2) 
-mid = Line.length_of_points([10,10], [200,200], show=True)
+coords = np.array([coords])
+coords = coords.reshape((-1,2))
+coords = np.hsplit(coords, 2)
+plt.figure(figsize=(5,5), dpi=150)
+plt.scatter(coords[0], coords[1])
+
+plt.xticks(np.linspace(-1, 1, 10))
+plt.yticks(np.linspace(-1, 1, 10))
 
 
-window.mainloop()
+plt.show()
+

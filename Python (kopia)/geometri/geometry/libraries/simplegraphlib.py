@@ -137,7 +137,6 @@ class newcoord:
         quadrant_deg = deg
         while deg>90:
             deg-=90
-
         xchange = len*math.cos(math.radians(deg))
         ychange = len*math.sin(math.radians(deg))
 
@@ -161,18 +160,36 @@ class shape:
         self.xy = np.array([xy])
         counting_lib("shape",self)
 
-    def format(points, length=1, sidelen=True, midpoint=[0,0]): # length är längden av sidorna om sidelen=true, annars är den avstånd från hörn till vinkel
-        degrees = 180*(points-2)/points
+    def format_from_middle(xy=[0,0], points=3, length=1, sidelen=False, show=False): # length är längden av sidorna om sidelen=true, annars är den avstånd från hörn till hörn
+        degrees = 360/points
         if sidelen == True:
             length = length/2/math.cos(math.radians(degrees/2))
         # nu är length säkert avstånd från hörn till vinkel
-        new_degrees=0 # för att kunna iterera över ökande grader krävs denna
+        new_degrees=[0] # för att kunna iterera över ökande grader krävs denna
+        coords = []
         for i in range(points):
             if not i:
-                new_degrees+=degrees/2
-                Linear.change_k_with_degrees(0, new_degrees, True)
+                new_degrees.append(degrees/2+new_degrees[-1])
             else:
-                new_degrees+=degrees
-                Linear.change_k_with_degrees(0, new_degrees, True)
-        print(degrees,length)
+                new_degrees.append(degrees+new_degrees[-1])      
+            coords.append(newcoord.from_deg_xy_len(new_degrees[-1], xy, length, True))
+        if show:
+            print(f"coords: {coords}")
+            print(f"degrees: {new_degrees}")
         # implementera kordinater + kalkylerad x+y till varje
+        return coords
+    def format_from_corner(xy=[0,0], dgr=0, points=3, length=1, show=False):
+        # dgr mellan 0-360 motklocks 0 = rakt höger
+        angle_of_corner = 180*(points-2)/points
+        list_of_angles = angle_of_corner*(np.arange(points))+dgr
+        list_of_coords = [xy]
+
+        if dgr>angle_of_corner:
+            print("too long")
+            for i in range(len(list_of_angles)):
+                list_of_angles[i] = degrees.shorten_deg(list_of_angles[i])
+        for i in range(len(list_of_angles)):
+            list_of_coords.append(newcoord.from_deg_xy_len(list_of_angles[i], list_of_coords[-1],length))
+        print(list_of_coords)
+        # fixa uppfudgning
+shape.format_from_corner()
