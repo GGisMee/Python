@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>    
+    <input type="number" name="range" id="range" onchange="range()">
+
+    <div id="myPlot" style="width:100%;max-width:700px"></div>
+        
+<script>
+    function range(){
+        console.log("(in range): "+document.getElementById("range").value)
+    rangeVar = Number(document.getElementById("range").value)
+
+    listofprime = []
+
+    for (z=0;z<rangeVar;z++){
+    prime_hmm = ""
+    var x = true
+    for (i=2; i<Math.sqrt(z); i++){ 
+        n = z/i
+        var result = (n - Math.floor(n)) !== 0;
+        if (result != true){
+            x=false
+        }
+    }
+    if (x!=false){
+        if (z != 0){
+            prime_hmm += z
+        } 
+    }
+    listofprime.push(Number(prime_hmm))
+    }
+    listofprime = listofprime.filter(Number)
+    console.log(listofprime)
+    listofprimeMax = (Math.max(...listofprime))
+    listofprimeMin = (Math.min(...listofprime))
+    console.log(listofprimeMax, listofprimeMin)
+
+    var xArray = listofprime;
+    var listofprime_length = listofprime.length
+    var yArray = [];
+    for (indx=0; indx < listofprime_length; indx++){
+        yArray.push(indx)
+    }
+    console.log(yArray)
+
+
+    // Define Data
+    var data = [{
+        x: yArray,
+        y: xArray,
+        mode:"lines"
+    }];
+        
+    // Define Layout
+    var layout = {
+        xaxis: {range: [1, listofprime_length], title: "prime numbers"},
+        yaxis: {range: [1, listofprimeMax], title: "number position"},  
+        title: "Primenumbers"
+    };
+        
+// Display using Plotly
+    Plotly.newPlot("myPlot", data, layout);
+    } 
+</script>
+</body>
+</html>
+        

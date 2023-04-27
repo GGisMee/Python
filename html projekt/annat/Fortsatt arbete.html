@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<link rel="stylesheet" href="styles.css">
+<body>
+<p>dddd</p>
+<!--spanntag, alltså en Kommentar-->
+    <hr>
+    <p>det var det!</p>
+   <div><img src="img folder/download.jpg"></div>
+    <a class="css1"> lol </a>
+    <h1 id="H1zzz"> Hejsan </h1>
+    <a href="about.html">tap here</a>
+    <br>
+    <blockquote cite="www.ne.se"> we are all in the gutter, but some of us are looking at the stars</blockquote>
+    <p style="color:blue">style me :)</p>
+
+    <li>detta är en del av en lista</li>
+    <li>den innehåller ingen ordning</li>
+    <li>eller ordningshållare</li>
+    <li>därför är det prickar</li>
+    <br>
+    <ul>denna listan ska innehålla 123</ul>
+<hr>
+    <form action="">
+        <input type="text" placeholder="Skriv in meddelande">
+        <br><br>
+        <input type="date" name="" id="">
+        <br><br>
+        <button>Klicka för godis</button>
+        <br><br>
+        <div><input type="radio" name="gender" value="male">Male
+        <input type="radio" name="gender" value="">Female<!--det kan bara finnas ett gender, denna ger name alltså liknar name pythons name = "?" -->
+        <input type="radio" name="gender">Other</div>
+        <br>
+
+        <label for="username">Enter username:</label> <!-- en label är som en koppling som pekar mot username om man trycker på labeln-->
+        <input type="text" id="username" name="username" placeholder="Username">
+        <br><br>
+        <label for="email">Enter email:</label>
+        <input type="email" id="email" name="email" placeholder="Email">
+        <br><br>
+        <label for="password">password:</label> <!--denna for är samma som när man gör css och gör # för ett visst id-->
+        <input type="password" id="password" name="password" placeholder="Password" required> <!--required gör att man måste skriva in något för att kunna submitta-->
+        <br><br>
+        <input type="radio" name="age" value=age id="option-1"> <!--här används id för att ge dem labels, som förklarat finns det bara ett id-->
+        <label for="option-1">0-25</label>
+        <input type="radio" name="age" value=age id="option-2"><!--class kan gruppera, men sparar då flera values medan name bara kan ha ett värde-->
+        <label for="option-2">26-50</label>
+        <input type="radio" name="age" value=age id="option-3"><!--value används för att kunna kika på vad som valts i efterhand och visas ibland på inputfieldet-->
+        <label for="option-3">51-75</label>
+        <input type="radio" name="age" value=age id="option-4"><!---->
+        <label for="option-4">76-100</label>
+
+        <br><br><br>
+
+        <label for="">Security Questions:</label>
+        <select name="question" id="question">
+            <option value="sq-v1">Vilken färg är ditt husdjur?</option>
+            <option value="sq-v2">Varför flyttade ni till Västerås?</option>
+            <option value="sq-v3">Vad är den bästa säkerhetsfrågan</option>
+        </select>
+        <br><br>
+        <label for="answer">Security question answer:</label>
+        <input type="text" id="answer">
+
+        <br><br>
+        <label for="bio">Your bio:</label> <br>
+        <textarea name="bio" id="bio" cols="30" rows="11" placeholder="About you..."></textarea><br>
+        <input type="submit" value="submit the form">
+
+    </form>
+</body>
+</html>

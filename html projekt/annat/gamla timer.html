@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="timer.css">
+</head>
+<body>
+<input type="button" name="Start" id="Start" onclick="Start()" value="Start" class="buttons">
+<input type="button" name="Stop" id="Stop" onclick="Stop()" value="Stop" class="buttons">
+<input type="button" name="Restart" id="Restart" onclick="Restart()" value="Restart" class="buttons">
+
+<div id="my_header">
+    <div>
+        <h1 id="minutes_counter"></h1>
+    </div>
+
+    <div>    
+        <h1>:</h1>
+    </div>
+
+    <div>
+        <h1 id="counter"></h1>
+    </div>
+</div>
+
+    <script>
+        let sekcounter = 0
+        let mincounter = 0
+        let kör = false
+        
+        let mincounterElement = document.getElementById("minutes_counter")
+        mincounterElement.innerText = 0
+        let counterElement = document.getElementById("counter")
+        counterElement.innerText = sekcounter = 0
+
+        function Start() {
+            kör = true
+        }
+
+        function Stop() {
+            kör = false
+        }
+
+        function Restart() {
+            sekcounter = -1
+            document.getElementById("minutes_counter").innerHTML = 0
+            
+            mincounter = 0
+        }
+        
+        setInterval(() => {
+            if (kör == true){
+            let counterElement = document.getElementById("counter")
+            counterElement.innerText = sekcounter+=1
+            }
+
+            if (sekcounter == 59) {
+                sekcounter = 0
+                let mincounterElement = document.getElementById("minutes_counter")
+                mincounterElement.innerText = mincounter +=1
+            }
+        }, 1000)
+
+        
+        
+
+    </script>
+</body>
+</html>

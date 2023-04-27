@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BenchBuzz info</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/70c8e77483.js" crossorigin="anonymous"></script>
+
+    <link rel="icon" type="info-solid.svg" href="info-solid.svg"> <!--Detta för över icon-->
+  <style>
+    :root{
+      --Hemleverans:hidden;
+      --Varuhus: hidden;
+      --Montering:hidden;
+      --Purschase:hidden;
+      --height_bench:0px;
+    }
+    
+    #navbar{
+      border-bottom: 2px rgb(221, 221, 221) solid;
+      z-index: 0;
+    }
+
+    #icon_nav:hover{ 
+      animation: 0.4s ease-in-out 0s forwards running IconAnimationIn;
+    }
+    @keyframes IconAnimationIn{
+      100%{transform: rotate(22.5deg) scale(1.2)}
+    }
+    #img_nav{
+      width: 50px;
+      height: 40px;
+    }
+    #about_us_nav{
+      position:absolute;
+      right: 5px;
+    }
+    #infoID{
+      color: black;
+      font-weight: 450;
+    }
+
+    #division{
+      display: flex;
+      flex-direction: row;
+    }
+    #leftside{
+      background-color: unset;
+      min-height: 10px;
+      width: 72%;
+      margin-left: 10%;
+    }
+    #rightside{
+      
+      min-height: 500px;
+      width: 28%;
+      margin-right: 10%;
+      margin-left: 5%;
+    }
+
+    .breaking{
+      width: 1px;
+      height: 5px;
+    }
+
+    #discription{
+
+      width: 100%;
+    }
+
+    #txt1{
+      font-size: large;
+      font-weight: bold;
+    }
+    #txt3{
+      font-size: x-large;
+      font-weight: bold;
+    }
+    #txt4{
+      font-size: small;
+    }
+    .disc_txt{
+      margin-bottom: 0px;
+      margin-top: 0px;
+    }
+
+    #Tilljänglighet_box{
+
+      min-height: 10px;
+      border: 1.5px rgb(203, 203, 203) solid;
+      border-radius: 10px;
+    }
+    .Tilljänglighet_innehåll{
+      min-height: 10px;
+      display: flex;
+      flex-direction: row;
+      padding: 5px;
+    }
+    .bolder{
+      font-weight: 500;
+    }
+    #varuhus{
+
+      border-top: 1.5px rgb(203, 203, 203) solid;
+    }
+    .tilljänglighet_icon{
+      display: flex;
+      align-self: center;
+      margin-right: 5px;
+    }
+
+    #btn{
+      height: 40px;
+      background-color: rgb(0,88,163,255);
+      border-radius: 15px;
+      display: flex;
+      justify-content: center;
+      box-shadow: 2px 2px 0px black;
+    }
+    #btn:hover{
+      background-color: rgb(8,76,148);
+      box-shadow: 0px 0px 0px black;
+    }
+    #buy{
+      color: white;
+      font-weight: bold;
+      display: flex;
+      align-self: center;
+      justify-self: center;
+      position: relative;
+      top: 7px;
+    }
+    #montering{
+      display: flex;
+      flex-direction: row;
+    }
+
+    #icon_screw{
+      position: relative;
+      top: 5.5px;
+    }
+
+    #color{
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    .button{
+      width: 25px;
+     height: 25px;
+     margin-right: 15px;
+     margin-left: 15px;
+     border: 10px solid transparent;
+     border-radius: 12.5px;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     box-shadow: 2px 2px 1px rgb(78, 78, 78);
+    }
+
+    .button:hover{
+      box-shadow: 0px 0px 0px rgb(0, 0, 0);
+    }
+
+    #b1{
+      background-color: rgb(0, 0, 0); 
+    }
+    #b2{
+      background-color: rgb(0, 26, 255); 
+    }
+    #b3{
+      background-color: rgb(163, 163, 163); 
+    }
+
+    #picture_bench{
+      width: 100%;
+      height: var(--height_bench);
+    }
+
+    #underdel{
+      border-top: rgb(221, 221, 221) 2px solid;
+      border-width: 70%;
+      width: 100%;
+      height: 100px;
+      display: flex;
+    }
+    .popup{
+      
+      height: 70%;
+      width: 70%;
+      background-color: rgb(255, 255, 255);
+      border: 2px solid rgb(123, 123, 123);
+      border-radius: 15px;
+    }
+    #Hemleverans_popup{
+      visibility:var(--Hemleverans);
+      position:fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    #Montering_popup{
+      visibility:var(--Montering);
+      position:fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    #Varuhus_popup{
+        visibility:var(--Varuhus);
+        position:fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    #Purschase_popup{
+        visibility:var(--Purschase);
+        position:fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .cancel_popup{
+        position: fixed;
+        right: 7px;
+        top: 4px;
+        height: 28px;
+        width: 27px;
+    }
+    .cancel_popup:hover{
+        animation: 0.2s ease-in-out 0s forwards running ScaleUp;
+    }
+
+    @keyframes ScaleUp{
+        100%{transform: scaleX(1.1) scaleY(1.1);};
+    }
+
+    .popup_innehåll{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction:column;
+        padding-top: 30px;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .popup_text{
+      width: 65%;
+    }
+
+    #hemleverans_popup_bild{
+      height:60%;
+    }
+
+    .sidepart_class{
+      width: 30%;
+      height: 100%;
+      background-color: unset;
+    }
+
+    #popup_with_side{
+      display: flex;
+      flex-direction: row;
+    }
+
+    
+    #Purschase_popup_innehåll_methods{
+      background-color: unset;
+      width: 80%;
+      height: 100%;
+    }
+    #betalningsmetod_över{
+      background-color: unset;
+      text-align: center;
+    }
+    #purschase_continue{
+      background-color: rgb(8,76,148);
+      width: 100px;
+      height: 40px;
+      border: 0px transparent solid;
+      border-radius: 15px;
+      display: flex;
+      justify-content: center;
+      box-shadow: 2px 2px 0px black;
+    }
+    #purschase_continue:hover{
+      box-shadow: 0px 0px 0px black;
+    }
+
+    #p_purschase_continue{
+      position: relative;
+      top: 7px;
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+  </head>
+<body>
+
+  <nav class="navbar navbar-expand-lg bg-light" id="navbar">
+    <div class="container-fluid">
+
+      <a class="navbar-brand" href="main.html" id="icon_nav">
+        <img src="logo.png" alt="Bootstrap" width="30" height="24" id="img_nav">
+      </a>
+      <a class="navbar-brand" href="main.html" id="mainID">BenchBuzz</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="video.html" id="videoID">Informational video</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="info.html" id="infoID">Product info</a>
+          </li>
+          <li class="nav-item" id="about_us_nav">
+            <a class="nav-link" href="about_us.html" id="about_usID">About us</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+<div id="division">
+  <div id="leftside">
+    <img id="picture_bench" src="svartbänk.png" alt="svartbänk">
+  </div>
+
+
+  <div id="rightside">
+    <div id="discription">
+      <div class="disc_txt" id="txt"></div>
+      <div class="disc_txt" id="txt1">Our Bench</div id>
+      <div class="disc_txt" id="txt2">Komfortabel bänk med rotations funktion</div>
+      <div class="disc_txt" id="txt3">10 000:-</div>
+      <div class="disc_txt" id="txt4">7 500:- exkl. moms</div>
+      <div class="disc_txt" id="txt6">Delbetala fr. 1 000 kr/mån </div>
+      <div class="disc_txt" id="txt5">
+        <div class="breaking"></div>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+      </div>
+      <div class="breaking"></div>
+    </div>
+    <div class="breaking"></div><div class="breaking"></div>
+
+    <div id="color">
+      <div id="b1" class="button" onclick="btn1()">
+        <div class="color_button" onclick="btn1()"></div>
+      </div>
+      <div id="b2" class="button" onclick="btn2()">
+        <div class="color_button" onclick="btn2()"></div>
+      </div>
+      <div id="b3" class="button" onclick="btn3()">
+        <div class="color_button" onclick="btn3()"></div>
+      </div>
+    </div>
+    <div class="breaking"></div><div class="breaking"></div>
+
+    <div id="Tilljänglighet">
+      <p id="txt_tilljänglighet" class="bolder">Tillgänglighet</p>
+      <div id="Tilljänglighet_box">
+        <div id="hemleverans" class="Tilljänglighet_innehåll">
+          <div class="tilljänglighet_icon"><i class="fa-solid fa-truck"></i></div>
+          <p>Hemleverans
+            <br>
+            <a href="#" onclick="Hemleverans()" style="color:rgb(83, 83, 83);">Levererar produkt till dig</a>
+          </p>
+        </div>
+        <div id="inbetween"></div>
+        <div id="varuhus" class="Tilljänglighet_innehåll">
+          <div class="tilljänglighet_icon"><i class="fa-solid fa-warehouse"></i></div>
+          <p>Varuhus
+            <br>
+            <a class="tilljänglighet_color" href="#" onclick="Varuhus()" style="color:rgb(83, 83, 83) ;">Kolla lagerstatus i närliggande varuhus</a>
+          </p>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="breaking"></div>
+
+    <div id="btn" onclick="Purschase()">
+      <p id="buy">Köp!</p>
+    </div>
+
+<div class="breaking"></div>
+
+    <div id="montering">
+      <i class="fa-solid fa-screwdriver" id="icon_screw"></i>
+      <p id="">Hjälp med montering?
+        <br>
+        <a href="#" onclick="Montering()" style="color:rgb(83, 83, 83)">Läs mer</a>
+      </p>
+    
+    </div>
+  </div>
+</div>
+
+<div class="breaking"></div><div class="breaking"></div>
+
+<div id="underdel"></div>
+
+
+<div id="popups_divs">
+  <div id="Hemleverans_popup" class="popup">
+    <i class="fa-solid fa-square-xmark cancel_popup fa-2x" id="Hemleverans_popup_cancel" onclick="Hemleverans_cancel()"></i>
+    <div class="popup_innehåll">
+        <h2 class="h2Class">Hemleverans</h2>
+        <p class="popup_text">Våra bänkar kan skickas hem till dig om det behövs och det är det du önskar. Det kostar bara 10 000 mer per bänk som levereras. I sådana fall kan du kontakta oss eller så kan du trycka i alternativet som finns på vår köpsida.</p>
+        <img src="homedelivery.png" alt="homedelivery.png" id="hemleverans_popup_bild">
+      </div>
+</div>
+
+<div id="Varuhus_popup" class="popup">
+  <i class="fa-solid fa-square-xmark cancel_popup fa-2x" id="Varuhus_popup_cancel" onclick="Varuhus_cancel()"></i>
+  <div class="popup_innehåll">
+    <h1 class="h2Class">Varuhus</h1>
+    <p class="popup_text">Våra bänkar finns i flera varuhus runt om i sverige. Konktakta oss för att få information om närmsta butik eller lagerhus där du kan köpa eller hämta din bänk ifrån. Närmsta lagerbutiken i Västerås alltså nuvarande plats ligger vid ABB gymnasiet på Finnslätten</p>
+  </div>
+</div>
+
+  <div id="Montering_popup" class="popup">
+    
+    <i class="fa-solid fa-square-xmark cancel_popup fa-2x" id="Montering_popup_cancel" onclick="Montering_cancel()"></i>
+    <div class="popup_innehåll">
+      <h1 class="h2Class">Montering</h1>
+      <p class="popup_text">För att montera bänkarna krävs flera verktyg. Det krävs bland annat lim, skruvstäd, skruvmejsel mm. Vidare information finns på våra bruksanvisningar som kan hämtas i butik mot efterfrågan eller genom att gå till närmsta butik. </p>
+      </div>
+  </div>
+
+  <div id="Purschase_popup" class="popup">
+    <i class="fa-solid fa-square-xmark cancel_popup fa-2x" id="Montering_popup_cancel" onclick="Purschase_cancel()"></i>
+    <div class="popup_innehåll" id="popup_with_side">
+      <div class="sidepart_class"></div>
+
+      <div id="Purschase_popup_innehåll_methods">
+      <h1 class="h1Class" id="betalningsmetod_över">Välj betalningsmetod nedan</h1>
+      <select name="payment_selection" id="payment_selection">
+        <option value="Paypal">Paypal</option>
+        <option value="Klarna">Klarna</option>
+        <option value="Webmoney">Webmoney</option>
+        <option value="Pay safe card">Pay safe card</option>
+        <option value="Visa">Visa</option>
+        <option value="Mastercard">Mastercard</option>
+        <option value="JCB">JCB</option>
+        <option value="Skrill">Skrill</option>
+        <option value="Trustly">Trustly</option>
+        <option value="Bitcoin">Bitcoin</option>
+      </select>
+      <br>
+      <input type="checkbox" value="" id="check_payment">
+      <label for="check_payment">Verifiera att du bor i Sverige och beställer till Sverige.</label>
+      <br>
+      <input type="checkbox" value="" id="radio_payment">
+      <label for="radio_payment">Spara dina betalningsinställningar för nästa betalning</label>
+      <br>
+      <div id="purschase_continue">
+        <p id="p_purschase_continue">Fortsätt</p>
+      </div>
+    </div>
+
+    <div class="sidepart_class"></div>
+
+    </div>
+  </div>
+</div>
+<script>
+
+  // pictures
+  picture = ""
+  function btn1(){
+    picture = "svart"
+    activation(picture)
+  }
+
+  function btn2(){
+    picture = "blå"
+    activation(picture)
+  }
+
+  function btn3(){
+    picture = "grå"
+    activation(picture)
+  }
+
+function activation(picture){
+  width = document.getElementById("picture_bench").offsetWidth
+  console.log("height: "+width*0.75);
+
+
+  console.log(picture)
+  picture += "bänk.jpg"
+  document.getElementById("picture_bench").src = picture
+  
+  document.querySelector(':root').style.setProperty('--height_bench', Number(width)*0.75+"px")
+}
+activation(picture="svart")
+
+
+
+addEventListener("resize", (event) => {});
+onresize = (event) => {activation(picture = "svart")};
+
+
+// olika popups
+function Hemleverans(){
+  console.log("active");
+  document.querySelector(':root').style.setProperty('--Hemleverans', "visable")
+}
+function Hemleverans_cancel(){
+  console.log("hidden");
+  document.querySelector(':root').style.setProperty('--Hemleverans', "hidden")
+}
+
+function Varuhus(){
+  console.log("active");
+  document.querySelector(':root').style.setProperty('--Varuhus', "visable")
+}
+function Varuhus_cancel(){
+  console.log("hidden");
+  document.querySelector(':root').style.setProperty('--Varuhus', "hidden")
+}
+
+function Montering(){
+  console.log("active");
+  document.querySelector(':root').style.setProperty('--Montering', "visable")
+}
+function Montering_cancel(){
+  console.log("hidden");
+  document.querySelector(':root').style.setProperty('--Montering', "hidden")
+}
+
+function Purschase(){
+  console.log("active");
+  document.querySelector(':root').style.setProperty('--Purschase', "visable")
+}
+function Purschase_cancel(){
+  console.log("hidden");
+  document.querySelector(':root').style.setProperty('--Purschase', "hidden")
+}
+
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, 1000));
+}
+
+delay(1).then(() => 
+activation(picture="svart")
+);
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+</body>
+</html>

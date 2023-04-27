@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="">
+    
+
+    <style>
+    :root{
+        --cardheight:0;
+        --cardwidth:0;
+        --halfcardheigh:0;
+        --cardpadding:0;
+        --picturecardheight:0;
+    }
+
+
+    #card{
+        height: var(--cardheight);
+        width: var(--cardwidth);
+        background-color:transparent;
+    }
+    #picture{
+        background-color: aqua;
+        width: var(--cardwidth);
+        height: var(--halfcardheigh);
+        border:hidden;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        background: url(gustav.jpg);
+    }
+
+    #text{
+        background-color: lavender;
+        width: var(--cardwidth);
+        height: var(--halfcardheigh);
+
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        background: pink;
+        position:relative;
+        display: flex;
+        align-items: 5px;
+        flex-direction: column;
+        top: -5px;
+        padding: var(--cardpadding);
+    }
+    </style>
+</head>
+<body>
+    <!-- fixa font -->
+<div id="card">
+    <img id="picture" src="gustav.jpg"></img>
+    <div id="text">
+        <h3>Detta är Gustav</h3>
+        <p>Detta är en av skaparna till roterbara bänken. Hans namn är Gustav Gamstedt. Han kommer från Västerås och är för närvarande 16 år gammal</p>
+        <div id="button"></div>
+    </div>
+<script>
+
+cardheight = 400
+picturecardheight = cardheight
+cardpadding = cardheight/80
+cardheight = cardheight-2*cardpadding
+console.log(cardheight, cardpadding);
+
+document.querySelector(':root').style.setProperty('--picturecardheight', picturecardheight+"px")
+document.querySelector(':root').style.setProperty('--cardheight', cardheight+"px")
+document.querySelector(':root').style.setProperty('--cardwidth', cardheight/1.5+"px")
+document.querySelector(':root').style.setProperty('--halfcardheigh', cardheight/2+"px")
+document.querySelector(':root').style.setProperty('--cardfont', cardpadding+"px")
+</script>
+</body>
+</html>

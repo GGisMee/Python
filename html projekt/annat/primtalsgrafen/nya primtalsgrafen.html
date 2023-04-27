@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>    
+    <input type="number" name="range" id="range" onchange="range()">
+
+    <div id="myPlot" style="width:100%;max-width:700px"></div>
+        
+<script>
+    function range(rangeVar){
+        console.log("(in range): "+document.getElementById("range").value)
+    rangeVar = Number(document.getElementById("range").value)
+
+    oppositeprime = [2]
+    listofprime = [1, 2]
+
+        for (z=2;z<rangeVar;z++){ // nummer 1-100
+            for (i=0; oppositeprime[i] < Math.sqrt(z); i++){ // nytt nummer mindre än z 
+                x = true
+                n = z/oppositeprime[i]
+                var result = (n - Math.floor(n)) == 0;
+                if (result == true){
+                    oppositeprime.push(z)
+                    x = false
+                    break
+                }
+                else{
+                    listofprime.push(z)
+                    break
+                }
+            }
+        }
+        listofprime.splice(2, 0, 3)
+        console.log(oppositeprime)
+        console.log(listofprime)   
+    }
+
+</script>
+</body>
+</html>
+        

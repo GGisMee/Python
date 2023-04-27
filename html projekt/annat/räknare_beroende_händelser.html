@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+    <style>
+
+        #table{
+            border: 1px black solid;
+        }
+
+    </style>
+<body>
+
+<label for="sannorlikhet">
+    Sannorlikheten:
+    <input type="text" id="sannorlikhetUpper">
+    <input type="text" onchange="sanDown()" id="sannorlikhetDown">
+</label>
+<br>
+<label for="gånger">
+    gånger:
+<input type="text" name="gånger" id="gånger" onchange="ggr()">
+</label>
+
+<br><br>
+
+<table id="table">
+    
+    
+</table>
+
+<div id="results">
+</div>
+
+<script>
+    function sanDown(){
+        sanUpperValue = Number(document.getElementById("sannorlikhetUpper").value)
+        sanDownValue = Number(document.getElementById("sannorlikhetDown").value)
+
+        console.log("sanUpperValue: "+sanUpperValue, "sanDownValue: "+sanDownValue);
+        
+    }
+
+function ggr(){
+    ggrVal = document.getElementById("gånger").value
+    console.log("gånger: "+ggrVal);
+    activation()
+}
+
+function activation(){
+    console.log("activated")
+    var lista = Array()
+    for (let i=0; i<ggrVal; i++) {
+        totprocent = (sanUpperValue-i)/(sanDownValue-i)
+        lista.push(totprocent)
+    }
+    listakompakt = 1
+    lista.forEach(element => {
+        listakompakt *= element
+    });
+    listakompakt *= 100
+    console.log(lista);
+    console.log(listakompakt)
+    
+    document.getElementById("results").innerHTML = "Resultat: "+listakompakt+"%"
+    document.getElementById("table").innerHTML += lista
+    
+    
+ 
+
+}
+
+
+
+
+
+document.getElementById("table").innerHTML = "<tr><th>gång</th><th>procent</th></tr>"
+// fixa valbar round och try samt val mellan 1- eller ej 
+</script>
+
+</body>
+</html>

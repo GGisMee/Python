@@ -1,0 +1,37 @@
+för sida 1: video där vi visar produkten
+
+för sida 2: info om produkten, t.ex. mått, material, pris, guide, mm se ikea
+
+för sida 3: bilder på produkten från olika vinklar
+
+för till höger: skriv om oss i hörnet, samt lägg till info om produkten i mitten
+
+dela upp sida 1,2,3 med eget för varje då det blir mer enkelt att förstå 
+
+delar:
+bootstrap:
+radioknappar till stolfärger:
+<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+  <label class="btn btn-outline-primary" for="btnradio1">Radio 1</label>
+
+  <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+  <label class="btn btn-outline-primary" for="btnradio2">Radio 2</label>
+
+  <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+  <label class="btn btn-outline-primary" for="btnradio3">Radio 3</label>
+</div>
+
+stäng ned sidan knappar:
+<button type="button" class="btn-close btn-close-white" aria-label="Close"></button>
+<button type="button" class="btn-close btn-close-white" disabled aria-label="Close"></button>
+
+kort:
+<div class="card" style="width: 18rem;">
+  <img src="..." class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+</div>
