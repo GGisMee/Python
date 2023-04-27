@@ -1,0 +1,9 @@
+lär klart mysql
+gör exempelvis en dagsjournal
+
+börja med matplotlib
+lär dig allt
+
+inplementera i dagsjournal
+
+kanske gör något liknande 3D
