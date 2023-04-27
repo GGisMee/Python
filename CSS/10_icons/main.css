@@ -1,0 +1,11 @@
+#link:hover{
+    color: black;
+    box-shadow: 0px 0px 5px black;
+}
+
+.fa-youtube{
+    color: red;
+}
+.fa-house{
+    color:rgb(158, 158, 0)
+}

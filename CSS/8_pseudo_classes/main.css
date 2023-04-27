@@ -1,0 +1,47 @@
+a:link{ /*Varje länk blir grön som är en hyperlänk*/
+    color: green;
+}
+
+a:visited{ /*När man redan har tryckt på länken en gång blir den grå*/
+    color: gray;
+}
+
+a:hover{
+    color: tomato;
+} /*När en länk hålls över blir den röd*/
+
+a:active{
+    color: yellow;
+} /*När en länk trycks på blir den gul*/
+
+
+
+button:hover{
+    background-color:lightgray
+}
+
+button:active{
+    color: white;
+}
+
+
+/*
+li:nth-child(2){ 
+    background-color: yellow;
+}
+*/  /*för att välja ut en av barnen i nummer ordning*/
+
+/*
+li:nth-child(even){
+    background-color: skyblue;
+    width: 100px;
+}
+
+li:nth-child(odd){
+    background-color: powderblue;
+    width: 100px;
+}*/
+
+li:nth-child(3n-1){ /*som en formel*/ 
+    background-color:green;
+}

@@ -1,0 +1,81 @@
+/*These are the containers*/
+html{
+    width: 100%;
+    height: 100%;
+}
+body{
+    display: flex; /*Viktigt att inte glömma display:flex*/
+    background-color: lightsalmon;
+
+    width:100%;
+    flex-direction: column;
+    margin: 0;
+}
+
+
+
+#row_up_container{
+    background-color: lightblue;
+    order: 1;
+}
+#row_down_container{
+    background-color: lightcoral;
+
+    height: 100%;
+
+    order: 2;
+
+    display: flex;
+    /*Viktigt att inte glömma display:flex*/
+}
+
+
+
+
+
+/*This is the different boxes*/
+#upperpart{
+    background-color: blue;
+
+    border: 10%;
+    border-style: dashed;
+    border-radius: 10px;
+    margin: 10px;
+    border-width: 10px;
+}
+
+
+#otherbox{
+    border: solid, red;
+    background-color: blue;
+    border-radius: 10px;
+    padding: 20px;
+    border-style:solid;
+
+    min-width: 10px;
+    min-height: 10px;
+    height: 280px;
+    width: 50%;
+
+}
+
+#boxing{
+    background-color: rgb(160, 89, 226);
+    width: 50%;
+}
+
+#box{
+    background-color: black;
+    padding: 20px;
+
+    min-width: 10px;
+    min-height: 10px;
+    height: 100px;
+
+    border-width: 10px;
+    border-style: solid;
+    border-color: blue;
+    border-radius: 10px;
+    border-color: gold;
+
+}

@@ -1,0 +1,19 @@
+body{
+    padding-left: 10%;
+    padding-right: 10%;
+    position: fixed;
+    
+}
+p{
+    background-color: bisque;
+    color: rgb(54, 60, 65);
+}
+#p1{
+    background-color: brown;
+} 
+.odd{
+    background-color: aquamarine;
+}
+.even{
+    background-color: cadetblue;
+}

@@ -1,0 +1,10 @@
+h1{
+font-family: 'Courier New', Courier, monospace; /* There needs to be a few if one does not work*/
+}/*Ett tips är att använda fonts.google.com*/
+p{
+    font-family: 'Raleway', sans-serif, "consolas", "sans-serif";
+    font-style: italic;
+    font-weight: lighter;
+    text-decoration: cyan dotted underline;
+    font-size: 15px;
+}
