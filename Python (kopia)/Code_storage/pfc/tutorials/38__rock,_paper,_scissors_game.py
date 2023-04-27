@@ -1,2 +1,0 @@
-# 38__rock,_paper,_scissors_game
-from Python.Projekten import Projekt_Rock_Paper_Scissors_till_38
