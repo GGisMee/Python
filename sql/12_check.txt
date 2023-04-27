@@ -1,0 +1,21 @@
+# lägger till en check constraint med namnet check_hourly_pay
+CREATE TABLE employees (
+	employee_id INT,
+    first_name VARCHAR(30),
+    last_name VARCHAR(40),
+    hourly_pay DECIMAL(5, 2),
+    hire_date DATE,
+    CONSTRAINT check_hourly_pay CHECK (hourly_pay >= 10.00)
+); 
+
+# i efterhand
+ALTER TABLE employees
+ADD CONSTRAINT chk_hourly_pay CHECK (hourly_pay >= 10.00);
+
+# funkar ej pga check constrainten  (5.00 >= 10.00);
+INSERT INTO employees
+VALUES (6, "Sheldon", "Plankton", 5.00, "2023-01-07");
+
+# radera
+ALTER TABLE employees 
+Drop Check chk_hourly_pay;

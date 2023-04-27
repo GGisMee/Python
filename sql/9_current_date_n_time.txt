@@ -1,0 +1,15 @@
+# creating type
+CREATE Table test(
+    my_date DATE
+    my_time TIME
+    my_datetime DATETIME
+);
+
+INSERT INTO test
+Values(	current_date(),
+		current_time(),
+        now()
+        );
+# ger tiderna
++1 på date ger en dag fram, +1 på time och now ger 1 min fram
+

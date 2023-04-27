@@ -1,0 +1,12 @@
+Först och främst hämtades MySQL från SQL:s hemsida med community både server och workbench.
+Därefter öppnades workbench genom applikationer och myDB Skapades genom kommandot: (CREATE DATABASE myDB)
+
+USE myDB # använd den
+
+DROP DATABASE myDB # tar bort
+
+ALTER DATABASE myDB READ ONLY = 1 gör att man bara kan läsa innehållet och inte ändra
+
+DROP DATABASE myDB # nu går ej denna
+
+# en databas är som en folder som kan hålla filer, vilka är tabeller

@@ -1,0 +1,17 @@
+# update
+update employees
+set hourly_pay = 10.25,
+    hire_date = "2023-01-07",
+    last_name = null
+where employee_id = 6;
+
+# ändra för alla, något farligt!!!! ingen where...
+update employees
+set hourly_pay = 10.50,
+    hire_date = "2023-01-07"
+
+
+# raderar
+Delete from employees
+where employee_id = 6;
+

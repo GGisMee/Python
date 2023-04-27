@@ -1,0 +1,14 @@
+# tar första och sista namnet
+SELECT first_name, last_name FROM employees
+
+# selectar en specifik 
+SELECT *
+FROM employees
+where employee_id = 3; 
+
+# andra metoder
+where first_name = "Spongebob";
+where hourly_pay >= 20;
+where hire_date <= "2023-01-03";
+where employee_id != 1;
+where hire_date is not null

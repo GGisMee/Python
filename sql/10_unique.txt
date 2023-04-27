@@ -1,0 +1,19 @@
+Create table products(
+    product_id INT,
+    product_name VARCHAR(25) UNIQUE,
+    price DECIMAL(4, 2)
+); # UNIQUE gör att man inte kan ha flera med samma product_name
+
+# i efterhand
+ALTER TABLE products
+ADD CONSTRAINT
+UNIQUE(product_name);
+
+# därför funkar ej denna pga 2
+INSERT INTO products
+VALUES 	(100, "hamburger", 3.99),
+		(101, "fries", 1.89),
+		(102, "soda", 1.00),
+		(103, "icecream", 1.49),
+        (104, "fries", 1.89);
+# utan denna sista igen går det^ !!!
