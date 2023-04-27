@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+<p id="p"></p>
+
+<script>
+function doc(text_here){
+    document.getElementById("p").innerHTML = text_here
+}
+
+takeimp = +prompt("Write here:      Some are window name(1), basic writing, which is same2 (2), etc")
+switch(takeimp){
+case 1:
+    let url = window.document.URL;
+    document.getElementById("p").innerHTML = url;
+    break;
+case 2:
+    imp2 = prompt("Write what should be written here: ")
+    doc(imp2)
+    
+}
+</script>
+
+
+
+</body>
+</html>

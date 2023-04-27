@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body id="body">
+    
+
+<br>
+<input type="button" value="Change" @click="byte" v-model="title">
+
+<script src="https://unpkg.com/petite-vue"></script> 
+<script>
+const data = {
+            title: "kalle kula",
+        
+         byte:function(){
+                console.log("testar")
+                if (this.title == "kalle kula") {
+                    this.title = "pelle kula"
+                }
+                else{
+                    this.title = "kalle kula"
+                }
+            }
+
+        }
+
+        
+
+    
+PetiteVue.createApp(data).mount("#body")
+</script>
+<style>
+
+
+</style>
+</body>
+</html>

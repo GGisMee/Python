@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <label for="multi">
+    <p id="multi2"></p>
+</label>
+
+<label for="multi"></label>
+<p id="multi"></p>
+<script>
+
+
+    myFunction = (a, b)=> a * b;
+document.getElementById("multi").innerHTML = ("Arrow function: "+ myFunction(5,2))
+
+// förkortat sätt att skriva en funktion
+
+function myFunction2(a, b) {
+    sum = a*b
+    return sum
+}
+
+document.getElementById("multi2").innerHTML = ("Normal function: "+myFunction2(5,2))
+
+
+
+</script>
+
+</body>
+</html>
