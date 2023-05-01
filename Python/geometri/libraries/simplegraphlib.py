@@ -192,4 +192,4 @@ class shape:
             list_of_coords.append(newcoord.from_deg_xy_len(list_of_angles[i], list_of_coords[-1],length))
         print(list_of_coords)
         # fixa uppfudgning
-shape.format_from_corner()
+newcoord.from_deg_xy_len(-45, [1,1], 1.414, show=True)
