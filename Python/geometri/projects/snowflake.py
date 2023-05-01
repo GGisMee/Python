@@ -21,11 +21,16 @@ for i in range(10):
         index_save = a
 
 
-    coords2 = np.vstack((new_coords, coords))
+    coords2 = np.array(coords)
     coords2 = coords2.reshape((-1,2))
     coords2 = np.hsplit(coords2, 2)
+
+    coords3 = np.array(new_coords)
+    coords3 = coords3.reshape((-1,2))
+    coords3 = np.hsplit(coords3, 2)
     plt.figure(figsize=(5,5), dpi=150)
-    plt.scatter(coords2[0], coords2[1], s=1)
+    plt.scatter(coords2[0], coords2[1], s=3, c="blue")
+    plt.scatter(coords3[0], coords3[1], s=1, c="orange")
     # plt.scatter(coords2[0][-1], coords2[1][-1], s=3)
     # plt.scatter(coords2[0][-2], coords2[1][-2], s=2)
 
