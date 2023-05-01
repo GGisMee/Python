@@ -74,7 +74,7 @@ class Line:
 
         hyp = (xlen**2+ylen**2)**(1/2)
         if show:
-            print(f"line between is {hyp} steps long")
+            print(f"line between is {hyp} l.e long")
         return hyp
     
     # prickar på linje
