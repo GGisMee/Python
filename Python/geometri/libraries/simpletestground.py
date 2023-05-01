@@ -2,8 +2,7 @@ import numpy as np
 from simplegraphlib import *
 import matplotlib.pyplot as plt
 
-coords = shape.format_from_middle([0,0],4,1,True, True)
-
+coords = shape.format_from_middle(xy=[0,0], points=3, length=1, sidelen=False, show=True)
 coords = np.array([coords])
 coords = coords.reshape((-1,2))
 coords = np.hsplit(coords, 2)

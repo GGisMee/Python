@@ -104,8 +104,6 @@ class Line:
         return xy
 
 
-Line.specific_point_between_points([1,1], [-1,-2], 0.5, True)
-
 
 class Linear:
     def Linear_point_changer(k=None,m=None,xy=None, show = False): # tar basically alla förutom 1 och ger tillbaka den saknade

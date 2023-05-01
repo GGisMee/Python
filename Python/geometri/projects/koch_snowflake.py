@@ -1,5 +1,5 @@
 # sg2 = simplegeometrylib.py 
-from sg2 import *
+from sgl import *
 import numpy as np
 import matplotlib.pyplot as plt
 from math import sqrt
