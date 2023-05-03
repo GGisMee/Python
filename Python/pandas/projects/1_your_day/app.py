@@ -12,12 +12,14 @@ compact = [current_year, current_month, current_day]
 
 # fixa att df.iloc[-1,0] alltså sista datumet blir lista. Därefter jämföre med datumet idag och avsluta eller fortsätt
 
-
-print(df.iloc[[-1]])
+if list(df.iloc[[-1, 0]]) == compact:
+    print("today")
+    exit()
 print("Scale 1-10")
 inp1_food = input("Food: ")
 inp2_sleep = input("Sleep: ")
 inp3_school = input("School: ")
 
-df.loc[len(df)] = [inp1_food, inp2_sleep, inp3_school]
+df.loc[len(df)] = [compact, inp1_food, inp2_sleep, inp3_school]
 print(df)
+
