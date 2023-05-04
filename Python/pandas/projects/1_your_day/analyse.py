@@ -10,11 +10,8 @@ for i in range(len(Date)):
     Date[i] = np.fromstring(Date[i][1:-1], dtype=int, sep=",")
 Date = np.array(Date)
 
-dic = {}
-for i in range(7):
-    for i2 in range(len(Date)):
-        if Date[i2][3] == i:
-            print("yes", i)
+Date = np.reshape()
+# print([arr[1] for arr in Date])
 
 # medelvärde
 Food = np.array(df.iloc[:, 1])
