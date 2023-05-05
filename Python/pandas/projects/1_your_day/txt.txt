@@ -3,9 +3,15 @@ appen där man enkelt kan inputa hur dan är (kanske en tkinter sida där man ka
 analyse: 
 
 Välja mellan sker genom terminal och sen tkinter
+
+datetime modulen ska användas, gör en 
+
+
 funktioner: 
 Check 1. graf över alla värden 
 2. jämför dagarnas värden
+    tabeller med de 4 värdena bredvid varandra
+    Ha så man kan se senaste dan, veckan, månaden
 3. jämför veckan med medel (procent till ord) ex 10% sämre - lite sämre, 20% sämre - sämre, 40% ganska mycket sämre, 60% mycket sämre
 4. massa stats (medel, standardavvikelse, antal dagar, mm)
 5. tabell med allt

@@ -1,32 +1,40 @@
 import pandas as pd
 import os
 import numpy as np
+import datetime
+#<>
 df = pd.read_csv("Python/pandas/projects/1_your_day/mydata.csv", index_col='ID')
 
-
-import time
-current_year = time.gmtime().tm_year
-current_month = time.gmtime().tm_mon
-current_day = time.gmtime().tm_mday
-current_type_of_day = time.localtime().tm_wday # alltså typ idag är det måndag, torsdag, söndag eller annat
-compact = [current_year, current_month, current_day, current_type_of_day]
-# print(compact)
-
-# fixa att df.iloc[-1,0] alltså sista datumet blir lista. Därefter jämföre med datumet idag och avsluta eller fortsätt
-last = np.fromstring(df.iloc[-1][0][1:-1], dtype=int, sep=",")
-# print(df.iloc[-1][0][1:-1])
-# print(last, compact, np.array_equal(last, compact))
-
-if np.array_equal(np.array(last), compact):
-    print("today")
+# Format the date
+now = datetime.datetime.now()
+today = now.strftime("%Y-%m-%d")
+daytype = int(now.strftime("%w"))
+if daytype == 0: daytype = 7
+# ger tids skillnaden mellan senaste dagen och idag
+time_diff = datetime.datetime.strptime(today, "%Y-%m-%d")- datetime.datetime.strptime(np.array(df["Date"])[-1], "%Y-%m-%d")
+if time_diff.days != 0:
+    tomorrow = now.replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=1)
+    time_diff2 = tomorrow - now
+    total_seconds = int(time_diff2.total_seconds())
+    hours = (total_seconds // 3600)
+    minutes = ((total_seconds % 3600) // 60)
+    seconds = (total_seconds % 60)
+    print("You have already logged your day, please come back tomorrow if you have the time")
+    print(f"You can try again in {hours}:{minutes}:{seconds}")
     exit()
-    
+
+
 print("Scale 1-10")
 inp1_food = input("Food: ")
 inp2_sleep = input("Sleep: ")
 inp3_school = input("School: ")
+inp4_mood = input("Mood: ")
 
-df.loc[len(df)] = [compact, inp1_food, inp2_sleep, inp3_school]
+if (bool(filter(lambda x: isinstance(x, int) and x < 10 , [inp1_food,inp2_sleep,inp3_school,inp4_mood]))):
+    print("One value was to high")
+    exit()
+
+df.loc[len(df)] = [today,daytype, inp1_food, inp2_sleep, inp3_school, inp4_mood]
 print(df)
 dir_path = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(dir_path, 'mydata.csv')
