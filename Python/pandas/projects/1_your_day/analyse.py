@@ -34,20 +34,23 @@ for i,element in enumerate(Date):
     l = l[1:]
     Date2 = np.vstack((Date2, l))
 Date = Date2[1:]
-# Medel per dag
+# Medel per dag kan nog förbättras med lite precis numpying
+days1_7 = []
 for i in range(1,7):
     true = np.where(Date[:,3] == i, True, False)
     List_of_that_day = Date[true]
+    days_one_day = []
     for i2, element in enumerate(List_of_that_day):
         element = str(element.tolist())
         print(element)
-        print(df.index[df['Date'] == element][0])
-        exit()
-        print(df.loc[df['Date'] == element])
-        
-
-    
-
+        index = df.index[df['Date'] == element][0]
+        array = np.array(df.loc[index])[1:]
+        print(array)
+        days_one_day.append(array)
+    days1_7.append(days_one_day)
+print(days1_7)
+# lambda + map som tittar på medel av dagar
+mean_f = lambda: m
 
 # medelvärde
 F_mean = np.array(df.iloc[:, 1]).mean()
