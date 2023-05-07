@@ -2,6 +2,8 @@ import pandas as pd
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 
 df = pd.read_csv("Python/pandas/projects/1_your_day/mydata.csv", index_col='ID')
 
@@ -17,4 +19,36 @@ for i in range(1,8):
     day_mood_mean = one_day_all_data[:, 3].mean()
     ordered_day = np.vstack((ordered_day, [day_food_mean, day_sleep_mean, day_school_mean, day_mood_mean]))
 ordered_day = ordered_day[1:]
-print(ordered_day)
+
+# re orders them to be all average food for all days in one list
+food_od = ordered_day[:,0]
+sleep_od = ordered_day[:,1]
+school_od = ordered_day[:,2]
+mood_od = ordered_day[:,3]
+names = ["M", "T", "W", "T", "F", "S", "W"]
+
+
+
+print(food_od)
+
+fig, axs = plt.subplots(2, 2, figsize=(8, 6))
+
+print(names[:len(food_od)])
+
+# Create the four bar plots
+axs[0, 0].bar(np.arange(len(food_od)), food_od, tick_label=names, color="r")
+axs[0, 0].set_title('Food')
+axs[0, 1].bar(np.arange(len(sleep_od)), sleep_od, tick_label=names, color="g")
+axs[0, 1].set_title('Sleep')
+axs[1, 0].bar(np.arange(len(school_od)), school_od, tick_label=names, color="b")
+axs[1, 0].set_title('School')
+axs[1, 1].bar(np.arange(len(mood_od)), mood_od, tick_label=names,color="y")
+axs[1, 1].set_title('Mood')
+
+
+
+# Add some padding between subplots
+plt.subplots_adjust(hspace=0.4)
+
+# Show the figure
+plt.show()
