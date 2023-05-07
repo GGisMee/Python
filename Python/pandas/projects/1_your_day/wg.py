@@ -1,30 +1,36 @@
-import matplotlib.pyplot as plt
-import numpy as np
+import tkinter as tk
 
-# Data for the bar charts
-data1 = np.array([10, 15, 20, 25])
-data2 = np.array([5, 10, 15, 20])
-data3 = np.array([8, 12, 16, 20])
-x = np.arange(len(data1))
-width = 0.25
+# Create the root window
+root = tk.Tk()
 
-# Set up the figure and subplot
-fig, ax = plt.subplots(figsize=(6, 4))
+# Create the submission page frame
+submission_frame = tk.Frame(root)
 
-# Create the grouped bar chart
-ax.bar(x - width, data1, width, label='Bar Chart 1')
-ax.bar(x, data2, width, label='Bar Chart 2')
-ax.bar(x + width, data3, width, label='Bar Chart 3')
+# Create the "submit" button
+submit_button = tk.Button(submission_frame, text="Submit", command=lambda: show_new_screen(new_screen_frame))
 
-# Add axis labels and a title
-ax.set_xlabel('Category')
-ax.set_ylabel('Value')
-ax.set_title('Grouped Bar Chart')
+# Add the button to the submission frame
+submit_button.pack()
 
-# Add a legend
-ax.legend()
+# Create the new screen frame and make it invisible
+new_screen_frame = tk.Frame(root)
+new_screen_frame.pack_forget()
 
-# Show the figure
-plt.show()
+# Create the widgets for the new screen frame
+new_screen_label = tk.Label(new_screen_frame, text="This is the new screen!")
 
+# Add the widgets to the new screen frame
+new_screen_label.pack()
 
+# Function to show the new screen
+def show_new_screen(frame):
+    # Remove the submission page frame
+    submission_frame.pack_forget()
+    # Show the new screen frame
+    frame.pack()
+
+# Add the submission page frame to the root window
+submission_frame.pack()
+
+# Start the main loop
+root.mainloop()
