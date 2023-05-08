@@ -4,7 +4,7 @@ def submittion_func():
     print("submitted")
     submission_frame.pack_forget()
     # Show the new screen frame
-    after_frame.pack()
+    after_frame.pack(fill=BOTH, expand=True)
 
 
 window = Tk()
@@ -40,9 +40,9 @@ button.pack()
 
 
 # after frame, when done with submittion
-after_frame = Frame(window)
+after_frame = Frame(window, bg="blue")
 label = Label(after_frame, text="Nice")
-label.pack()
+label.pack(anchor=CENTER)
 
 
 
@@ -61,6 +61,6 @@ photo = ImageTk.PhotoImage(image)
 
 # Scale the photo object down by a factor
 photo_label = Label(after_frame, image=photo)
-photo_label.pack()
+photo_label.pack(side=BOTTOM, anchor=CENTER)
 
 window.mainloop()
