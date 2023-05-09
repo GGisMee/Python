@@ -1,14 +1,15 @@
-import tkinter as tk
+from tkinter import *
 
-root = tk.Tk()
-root.geometry("200x200")
-# create a frame that will fill the entire interface
-frame = tk.Frame(root)
+root = Tk()
 
-frame.pack(fill=tk.BOTH, expand=True)
+# create a menu
+menu = Menu(root)
+menu.add_command(label="Item 1")
+menu.add_command(label="Item 2")
+menu.add_command(label="Item 3")
 
-# create a widget and center it within the frame
-widget = tk.Label(frame, text="Hello, World!")
-widget.place(anchor="center", relx=0.5, rely=0.5)
+# create a menubutton to display the menu
+menubutton = Menubutton(root, text="Menu", menu=menu)
+menubutton.pack()
 
 root.mainloop()

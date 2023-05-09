@@ -30,32 +30,35 @@ Date = (list(map(lambda element:datetime.strptime(element, '%Y-%m-%d'), Date)))
 last = 0
 # array with the indexes of the devided information
 ind_arr = np.array([0,0])
-for i,element in enumerate(Date):
+for i,element in enumerate(Date): # ! error i denna fixa, grupperar fel med sista, ex [6,6] även om [6, 7] går i gruppering 2
     # print(Date[last]-element)
-    if (element-Date[last]).days >= 1.25*(input-1):
+    if (element-Date[last]).days >= 0.5*(input): # om skillnaden i dagar är större än ett halvt tidsinterval
         ind_arr = np.vstack((ind_arr, [last, i-1]))
-        # print(np.vstack((last, i-1)))
+        print(np.vstack((last, i-1)))
         last = i
     elif (element-Date[last]).days >= (input-1): # -1 pga index
         ind_arr = np.vstack((ind_arr, [last, i]))
         # print(np.vstack((last, i)))
         last = i+1
 ind_arr = ind_arr[1:]
-
+print(ind_arr)
 # print(ind_arr)
 # print()
 
 # makes the index array into an actual array with dates 
 fixed_arr = np.array(np.arange(input))
 for i, element in list(enumerate(ind_arr)):
+    print(fixed_arr, arr_date[element[0]:element[1]+1])
+    if len(arr_date[element[0]:element[1]+1]) != input:
+        break
     fixed_arr = np.vstack((fixed_arr, arr_date[element[0]:element[1]+1]))
 fixed_arr = fixed_arr[1:]
-print(fixed_arr)
+# print(fixed_arr)
 mean_arr = to_mean(fixed_arr)
 
 # för att få dem i ordning efter typ alltså Food list, Sleep list... istället för vecka 1 list, vecka 2 list 
 mean_arr = np.transpose(mean_arr)
-print(mean_arr)
+# print(mean_arr)
 
 x = np.arange(0, len(mean_arr[0]))*input
 plt.title("Your day")
