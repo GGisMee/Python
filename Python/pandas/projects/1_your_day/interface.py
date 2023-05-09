@@ -40,9 +40,9 @@ button.pack()
 
 
 # after frame, when done with submittion
-after_frame = Frame(window, bg="blue")
-label = Label(after_frame, text="Nice")
-label.pack(anchor=CENTER)
+after_frame = Frame(window)
+in_after_frame = Frame(after_frame, width=400, height=400, bg="blue")
+in_after_frame.place(anchor="center", relx=.5, rely=.5)
 
 
 
@@ -60,7 +60,12 @@ photo = ImageTk.PhotoImage(image)
 
 
 # Scale the photo object down by a factor
-photo_label = Label(after_frame, image=photo)
-photo_label.pack(side=BOTTOM, anchor=CENTER)
-
+photo_label = Label(in_after_frame, image=photo)
+photo_label.pack()
+label_beneath_photo = Label(in_after_frame, text="Submitted", font=("Consolas", 30, "bold"), width=10, height=1)
+label_beneath_photo.pack()
+text_to_description = Label(in_after_frame, 
+                            text=f"Your submission has been accepted, next submittion may be sent in: ", 
+                            font=("Consolas", 20, "normal"), width=100, height=2) # fixa så den wrappar kanske genom wraplength
+text_to_description.pack()
 window.mainloop()
