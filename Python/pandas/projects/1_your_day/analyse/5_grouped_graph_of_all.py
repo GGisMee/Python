@@ -31,6 +31,7 @@ last = 0
 # array with the indexes of the devided information
 ind_arr = np.array([0,0])
 for i,element in enumerate(Date): # ! error i denna fixa, grupperar fel med sista, ex [6,6] även om [6, 7] går i gruppering 2
+    error = # skriver så du minns
     # print(Date[last]-element)
     if (element-Date[last]).days >= 0.5*(input): # om skillnaden i dagar är större än ett halvt tidsinterval
         ind_arr = np.vstack((ind_arr, [last, i-1]))

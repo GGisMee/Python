@@ -1,5 +1,6 @@
 from tkinter import *
 from PIL import Image, ImageTk
+import numpy as np
 
 window = Tk()
 geometry = 800
@@ -8,19 +9,24 @@ window.geometry(f"{geometry}x{geometry}")
 
 def interface1():
     def submittion_func():
+        
+        print(list(map(lambda x: x.get(), list_of_scale)))
+
+        # weiter arbeiten
+
         print("submitted")
         submission_frame.pack_forget()
         # Show the new screen frame
         after_frame.pack(fill=BOTH, expand=True)
-
     submission_frame = Frame(window)
     submission_frame.pack()
 
     scale_frame = Frame(submission_frame, background="blue")
     scale_frame.pack()
     l = ["Food", "Sleep", "School", "Mood"]
+    list_of_scale = []
     for i in range(0,4):
-        scale = Scale(  scale_frame, 
+        scale = Scale(scale_frame, 
                     from_=0,
                     to=10,
                     length=geometry/2,
@@ -34,6 +40,8 @@ def interface1():
                     bg="#ebebeb"
                     )
         scale.grid(column=1, row=i)
+        
+        list_of_scale.append(scale)
 
         label = Label(scale_frame, text=l[i], font=("Consolas", 20))
         label.grid(column=0, row=i)
