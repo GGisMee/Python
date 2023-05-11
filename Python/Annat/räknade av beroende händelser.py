@@ -1,1 +1,1 @@
-antalet_händelser = input("Nummer av händelser:")
+print("helo")
