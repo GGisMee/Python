@@ -2,6 +2,8 @@ from tkinter import *
 from PIL import Image, ImageTk
 import numpy as np
 
+# för att skriva >< kan man använda knappen till vänster om 1
+
 window = Tk()
 geometry = 800
 window.geometry(f"{geometry}x{geometry}")
