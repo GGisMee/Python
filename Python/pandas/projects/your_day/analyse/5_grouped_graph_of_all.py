@@ -21,7 +21,7 @@ def to_mean(arr):
 
 # input = int(input("Write the groupation: "))
 input = 2
-df = pd.read_csv("Python/pandas/projects/1_your_day/mydata.csv", index_col='ID')
+df = pd.read_csv("Python/pandas/projects/your_day/mydata.csv", index_col='ID')
 
 Date = np.array(df["Date"])
 arr_date = Date

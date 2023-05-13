@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
-df = pd.read_csv("Python/pandas/projects/1_your_day/mydata.csv", index_col='ID')
+df = pd.read_csv("Python/pandas/projects/your_day/mydata.csv", index_col='ID')
 
 # fix date formater
 # print(df["Daytype"])

@@ -3,7 +3,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("Python/pandas/projects/1_your_day/mydata.csv", index_col='ID')
+df = pd.read_csv("Python/pandas/projects/your_day/mydata.csv", index_col='ID')
 n_df = np.sort(np.array(df)[:,2:])
 print(n_df)
 print("\n", len(n_df))

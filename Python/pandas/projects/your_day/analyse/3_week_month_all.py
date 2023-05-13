@@ -12,7 +12,7 @@ def get_mean(df):
     return F_mean, Sl_mean, Sc_mean, M_mean
 
 
-df = pd.read_csv("Python/pandas/projects/1_your_day/mydata.csv", index_col='ID')
+df = pd.read_csv("Python/pandas/projects/your_day/mydata.csv", index_col='ID')
 
 
 date = np.array(df["Date"])
