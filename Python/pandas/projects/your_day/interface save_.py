@@ -25,7 +25,7 @@ done_today: bool
 
 # inlämning av data sidan
 def interface1():   
-    global sub_notebook_frame 
+    global submission_frame 
     def upload(list_of_input):
         global df
         global time_until_next
@@ -104,9 +104,9 @@ def interface1():
 
 
     
-    sub_notebook_frame = Frame(window)
+        
     
-    submission_frame = Frame(sub_notebook_frame)
+    submission_frame = Frame(window)
     scale_frame = Frame(submission_frame, background="#ebebeb")
     scale_frame.pack()
     l = ["Food", "Sleep", "School", "Mood"]
@@ -137,7 +137,7 @@ def interface1():
 
     # after frame, when done with submittion
     def after_frame_func():
-        after_frame = Frame(sub_notebook_frame)
+        after_frame = Frame(window)
         after_frame.pack(fill=BOTH, expand=True)
         in_after_frame = Frame(after_frame, width=400, height=400, bg="#ebebeb")
         in_after_frame.place(anchor="center", relx=.5, rely=.5)
@@ -176,16 +176,12 @@ def interface1():
         text_to_description.pack()
         text_to_description.after(1000, update_label(text_to_description))
         
-Val_bar = Notebook(window)    
+        
 interface1()
 
 
 
 # baren med val av sidor
-
-Val_bar.add(sub_notebook_frame, text="Submittion")
-Val_bar.pack(expand=True,fill="both") 
-# Label(tab2, text="This is in tab 2", width=50, height=25).pack()
-
+Val_bar = Notebook(window)
 
 window.mainloop()
