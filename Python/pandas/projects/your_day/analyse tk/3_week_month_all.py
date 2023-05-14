@@ -4,6 +4,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime 
 
+from tkinter import *
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+
+window = Tk()
+window.title("Matplotlib in Tkinter")
+
 def get_mean(df):
     F_mean = np.array(df["Food"]).mean()
     Sl_mean = np.array(df["Sleep"]).mean()
@@ -51,7 +58,7 @@ df_week = get_mean(df_week)
 x = np.arange(len(df_all))
 width = 0.25
 
-fig, ax = plt.subplots(figsize=(6, 4))
+fig, ax = plt.subplots(figsize=(6, 4), dpi=50)
 
 ax.bar(x - width, df_all, width, label='All')
 ax.bar(x, df_month, width, label='Month')
@@ -64,5 +71,9 @@ ax.set_title('Grouped Bar Chart')
 
 ax.legend()
 
-# Show the figure
-plt.show()
+canvas = FigureCanvasTkAgg(fig, master=window)
+canvas.draw()
+canvas.get_tk_widget().pack()
+
+# Run the Tkinter event loop
+window.mainloop()

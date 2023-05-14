@@ -2,8 +2,14 @@ import pandas as pd
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+
+from tkinter import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+
+
+window = Tk()
+window.title("Matplotlib in Tkinter")
 
 df = pd.read_csv("Python/pandas/projects/your_day/mydata.csv", index_col='ID')
 
@@ -31,7 +37,7 @@ names = ["M", "T", "W", "T", "F", "S", "W"]
 
 print(food_od)
 
-fig, axs = plt.subplots(2, 2, figsize=(8, 6))
+fig, axs = plt.subplots(2, 2, figsize=(8, 6), dpi=50)
 
 print(names[:len(food_od)])
 
@@ -51,4 +57,9 @@ axs[1, 1].set_title('Mood')
 plt.subplots_adjust(hspace=0.4)
 
 # Show the figure
-plt.show()
+canvas = FigureCanvasTkAgg(fig, master=window)
+canvas.draw()
+canvas.get_tk_widget().pack()
+
+# Run the Tkinter event loop
+window.mainloop()
