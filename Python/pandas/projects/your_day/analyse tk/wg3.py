@@ -1,6 +1,3 @@
-from datetime import datetime 
-import calendar
-year = datetime.now().year
-month = datetime.now().month
-cal = calendar.monthcalendar(year, month)
-print(cal)
+import numpy as np
+arr = np.arange(4)
+print(np.array(list(map(lambda el: el+2, arr))))

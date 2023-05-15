@@ -3,11 +3,11 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
-
+from vec import vec
 
 # input = int(input("Write the groupation: "))
 input = 3
-df = pd.read_csv("Python/pandas/projects/your_day/mydata_ext.csv", index_col='ID')
+df = pd.read_csv("Python/pandas/projects/your_day/mydata.csv", index_col='ID')
 Date = np.vectorize(lambda element:datetime.strptime(element, '%Y-%m-%d'))(np.array(df.sort_index()["Date"]))
 day_date = np.vectorize(lambda element: element.day)(Date)
 # print(day_date)
@@ -23,14 +23,34 @@ for i,element in enumerate(Date):
         ind_arr = np.vstack((ind_arr, np.hstack((np.where(Date==start_day)[0], np.where(Date==Date[i-1])[0]))))
         # print("new startvar", element)
         start_day = element
+    if i == len(Date)-1:
+        ind_arr = np.vstack((ind_arr, np.hstack((np.where(Date==start_day)[0], np.where(Date==Date[i])[0]))))
+
 ind_arr = ind_arr[1:]
-print(ind_arr)
-print()
+# print(ind_arr)
+# print("\n\n")
 list_of_formated_dates = np.array(np.zeros(input))
 for el in ind_arr:
     list = Date[el[0]:el[1]+1]
     list = np.pad(list, (0,(input-(len(Date[el[0]:el[1]])+1))), mode="constant")
-    # print(list, "ddd")
+    list[np.where(list==0)] = datetime(1,1,1)
+    list = vec(lambda el2: el2.strftime("%Y-%m-%d"), list)
     list_of_formated_dates = np.vstack((list_of_formated_dates, list))
 list_of_formated_dates = list_of_formated_dates[1:]
+print("\n\n")
+# print(list_of_formated_dates)
+
 print(list_of_formated_dates)
+print("\n\n")
+
+mean_list_tot = np.zeros(4)
+for el in list_of_formated_dates:
+    list = np.transpose(np.array(df[df['Date'].isin(el)])[:,2:])
+    mean_list = vec(lambda el2: np.mean(el2), list)
+    print(mean_list, "\n")
+    mean_list_tot = np.vstack((mean_list_tot, mean_list))
+print("\n\n")
+print(mean_list_tot)
+
+exit()
+

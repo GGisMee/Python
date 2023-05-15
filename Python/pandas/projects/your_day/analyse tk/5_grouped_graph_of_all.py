@@ -3,6 +3,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
+import vec
 #<>
 
 def to_mean(arr):
