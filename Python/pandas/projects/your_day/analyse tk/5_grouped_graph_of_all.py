@@ -56,10 +56,12 @@ for i, element in list(enumerate(ind_arr)):
 fixed_arr = fixed_arr[1:]
 # print(fixed_arr)
 mean_arr = to_mean(fixed_arr)
-
+print(mean_arr)
 # för att få dem i ordning efter typ alltså Food list, Sleep list... istället för vecka 1 list, vecka 2 list 
 mean_arr = np.transpose(mean_arr)
 # print(mean_arr)
+print()
+print(mean_arr)
 
 x = np.arange(0, len(mean_arr[0]))*input
 plt.title("Your day")
