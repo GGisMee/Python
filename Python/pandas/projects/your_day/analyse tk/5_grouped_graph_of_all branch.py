@@ -39,8 +39,6 @@ for el in ind_arr:
 list_of_formated_dates = list_of_formated_dates[1:]
 # print("\n\n")
 # print(list_of_formated_dates)
-
-# print(list_of_formated_dates)
 # print("\n\n")
 
 mean_list_tot = np.zeros(4)
@@ -50,13 +48,17 @@ for el in list_of_formated_dates:
     # print(mean_list, "\n")
     mean_list_tot = np.vstack((mean_list_tot, mean_list))
 mean_list_tot = np.transpose(mean_list_tot[1:])
-print("\n\n")
-print(list_of_formated_dates)
+# print("\n\n")
+# print(list_of_formated_dates)
 
-print()
+# felet just nu är att x_axeln ger 0001-01-01 på de som inte är fulla, den måste tas bort nu
+# kanske en while loop som kör näst närmaste till inga 0001-01-01 finns kvar och om den är samma så skriver den bara samma
+
+
+# print()
 # för x axeln
-x_axel = (vec(lambda el: f"{el[0]} - {el[2]}", list_of_formated_dates))
-print(x_axel)
+x_axel = (vec(lambda el: f"{el[0]} - {el[-1]}", list_of_formated_dates))
+# print(x_axel)
 
 plt.title("Your day")
 plt.xlabel("Day")
