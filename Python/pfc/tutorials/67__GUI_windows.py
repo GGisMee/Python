@@ -12,7 +12,7 @@ icon = PhotoImage(file="") # ikon över bilden, kräver att
 # window.iconphoto(True, icon)
 
 window.geometry("400x400")
-window.title("GGs first GUI program in PY, HTML kinda better tbh")
+window.title("GGs first GUI program in PY, HTML kinda better tbh, still my thought tbh 2023 17 Mai")
 
 window.config(background="blue") # kan också ha hexadecimal värde i färg (#) är viktigt
 

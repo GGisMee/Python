@@ -3,74 +3,86 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
-import vec
-#<>
-
-def to_mean(arr):
-    global df
-    # print()
-    new_arr = np.array([0,0,0,0])
-    for part in arr:
-        arr_part = np.array(df[df['Date'].isin(part)])[:,2:]
-        arr_part = np.transpose(arr_part)
-        # print(arr_part, "\n")
-        arr_part = np.array(list(map(lambda element: np.mean(element), arr_part)))
-        new_arr = np.vstack((new_arr, arr_part))
-    new_arr = new_arr[1:]
-    # print(new_arr)
-    return new_arr
 
 # input = int(input("Write the groupation: "))
-input = 2
+input = 3
 df = pd.read_csv("Python/pandas/projects/your_day/mydata.csv", index_col='ID')
-
-Date = np.array(df["Date"])
-arr_date = Date
-Date = (list(map(lambda element:datetime.strptime(element, '%Y-%m-%d'), Date)))
-# print(Date)
-last = 0
-# array with the indexes of the devided information
-ind_arr = np.array([0,0])
-for i,element in enumerate(Date): # ! error i denna fixa, grupperar fel med sista, ex [6,6] även om [6, 7] går i gruppering 2
-    print(Date[last]-element)
-    if (element-Date[last]).days >= 0.5*(input): # om skillnaden i dagar är större än ett halvt tidsinterval
-        ind_arr = np.vstack((ind_arr, [last, i-1]))
-        print(np.vstack((last, i-1)))
-        last = i
-    elif (element-Date[last]).days >= (input-1): # -1 pga index
-        ind_arr = np.vstack((ind_arr, [last, i]))
-        # print(np.vstack((last, i)))
-        last = i+1
-ind_arr = ind_arr[1:]
-print(ind_arr)
-# print(ind_arr)
+Date = np.vectorize(lambda element:datetime.strptime(element, '%Y-%m-%d'))(np.array(df.sort_index()["Date"]))
+day_date = np.vectorize(lambda element: element.day)(Date)
+# print(day_date)
 # print()
 
-# makes the index array into an actual array with dates 
-fixed_arr = np.array(np.arange(input))
-for i, element in list(enumerate(ind_arr)):
-    print(fixed_arr, arr_date[element[0]:element[1]+1])
-    if len(arr_date[element[0]:element[1]+1]) != input:
-        break
-    fixed_arr = np.vstack((fixed_arr, arr_date[element[0]:element[1]+1]))
-fixed_arr = fixed_arr[1:]
-# print(fixed_arr)
-mean_arr = to_mean(fixed_arr)
-print(mean_arr)
-# för att få dem i ordning efter typ alltså Food list, Sleep list... istället för vecka 1 list, vecka 2 list 
-mean_arr = np.transpose(mean_arr)
-# print(mean_arr)
-print()
-print(mean_arr)
+start_day = Date[0]
+# print(Date)
+ind_arr = np.array([0,0])
+for i,element in enumerate(Date):
+    if (element-start_day).days > input-1:
+        # print(np.hstack((np.where(Date==start_day)[0], np.where(Date==Date[i-1])[0])))
+        # print(ind_arr)
+        ind_arr = np.vstack((ind_arr, np.hstack((np.where(Date==start_day)[0], np.where(Date==Date[i-1])[0]))))
+        # print("new startvar", element)
+        start_day = element
+    if i == len(Date)-1:
+        ind_arr = np.vstack((ind_arr, np.hstack((np.where(Date==start_day)[0], np.where(Date==Date[i])[0]))))
 
-x = np.arange(0, len(mean_arr[0]))*input
+ind_arr = ind_arr[1:]
+# print(ind_arr)
+# print("\n\n")
+list_of_formated_dates = np.array(np.zeros(input))
+for el in ind_arr:
+    list = Date[el[0]:el[1]+1]
+    list = np.pad(list, (0,(input-(len(Date[el[0]:el[1]])+1))), mode="constant")
+    list[np.where(list==0)] = datetime(1,1,1)
+    list = np.vectorize(lambda el2: el2.strftime("%Y-%m-%d"))(list)
+    list_of_formated_dates = np.vstack((list_of_formated_dates, list))
+list_of_formated_dates = list_of_formated_dates[1:]
+# print("\n\n")
+# print(list_of_formated_dates)
+# print("\n\n")
+
+mean_list_tot = np.zeros(4)
+x_axeln = np.array(0)
+# print(list_of_formated_dates, "\n")
+for el in list_of_formated_dates:
+    x_obj: str
+    el1 = datetime.strptime(el[0], '%Y-%m-%d').day
+    el2 = datetime.strptime(el[-1], '%Y-%m-%d').day
+    l = len(el)
+    while el2 == 1:
+        l-=1
+        el2 = datetime.strptime(el[l], '%Y-%m-%d').day
+    # print(el1, el2)
+    if el1 == el2:
+        x_obj = el1
+    else:
+        x_obj = f"{el1}-{el2}"
+    x_axeln = np.vstack((x_axeln, x_obj))
+    list = np.transpose(np.array(df[df['Date'].isin(el)])[:,2:])
+    mean_list = np.mean(list, axis=1)
+    # print(mean_list)
+    mean_list_tot = np.vstack((mean_list_tot, mean_list))
+mean_list_tot = np.transpose(mean_list_tot[1:])
+x_axeln = x_axeln.reshape((1,-1))[0][1:]
+print(x_axeln)
+
+# print("\n\n")
+# print(mean_list_tot)
+# felet just nu är att x_axeln ger 0001-01-01 på de som inte är fulla, den måste tas bort nu
+# kanske en while loop som kör näst närmaste till inga 0001-01-01 finns kvar och om den är samma så skriver den bara samma
+# print(mean_list_tot)
+
+# print()
+# för x axeln
+
+# print(mean_list_tot)
 plt.title("Your day")
 plt.xlabel("Day")
 plt.ylabel("Grade")
-plt.plot(x,mean_arr[0], "ro-",  label="Food", linewidth=3)
-plt.plot(x,mean_arr[1], "go-",  label="Sleep", linewidth=3)
-plt.plot(x,mean_arr[2], "bo-",  label="School", linewidth=3)
-plt.plot(x,mean_arr[3], "yo-",  label="Mood", linewidth=3)
-plt.xticks(x) # de kommer visas korrekt
+plt.plot(x_axeln,mean_list_tot[0], "ro-",  label="Food", linewidth=3)
+plt.plot(x_axeln,mean_list_tot[1], "go-",  label="Sleep", linewidth=3)
+plt.plot(x_axeln,mean_list_tot[2], "bo-",  label="School", linewidth=3)
+plt.plot(x_axeln,mean_list_tot[3], "yo-",  label="Mood", linewidth=3)
+plt.xticks(x_axeln) # de kommer visas korrekt
 plt.legend()
 plt.show()
+
