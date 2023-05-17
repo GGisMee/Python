@@ -3,7 +3,6 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
-from vec import vec
 
 # input = int(input("Write the groupation: "))
 input = 3
@@ -34,7 +33,7 @@ for el in ind_arr:
     list = Date[el[0]:el[1]+1]
     list = np.pad(list, (0,(input-(len(Date[el[0]:el[1]])+1))), mode="constant")
     list[np.where(list==0)] = datetime(1,1,1)
-    list = vec(lambda el2: el2.strftime("%Y-%m-%d"), list)
+    list = np.vectorize(lambda el2: el2.strftime("%Y-%m-%d"))(list)
     list_of_formated_dates = np.vstack((list_of_formated_dates, list))
 list_of_formated_dates = list_of_formated_dates[1:]
 # print("\n\n")
@@ -42,24 +41,39 @@ list_of_formated_dates = list_of_formated_dates[1:]
 # print("\n\n")
 
 mean_list_tot = np.zeros(4)
+x_axeln = np.zeros(len(list_of_formated_dates))
+# print(list_of_formated_dates, "\n")
 for el in list_of_formated_dates:
+    x_obj: str
+    el1 = datetime.strptime(el[0], '%Y-%m-%d').day
+    el2 = datetime.strptime(el[-1], '%Y-%m-%d').day
+    l = len(el)
+    while el2 == 1:
+        l-=1
+        el2 = datetime.strptime(el[l], '%Y-%m-%d').day
+    print(el1, el2)
+    if el1 == el2:
+        # lägg in x obj om de är samma då 17
+    else:
+        # annars lägg in el1-el2
+
+
     list = np.transpose(np.array(df[df['Date'].isin(el)])[:,2:])
-    mean_list = vec(lambda el2: np.mean(el2), list)
-    # print(mean_list, "\n")
+    mean_list = np.mean(list, axis=1)
+    # print(mean_list)
     mean_list_tot = np.vstack((mean_list_tot, mean_list))
 mean_list_tot = np.transpose(mean_list_tot[1:])
 # print("\n\n")
-# print(list_of_formated_dates)
 # print(mean_list_tot)
+
 # felet just nu är att x_axeln ger 0001-01-01 på de som inte är fulla, den måste tas bort nu
 # kanske en while loop som kör näst närmaste till inga 0001-01-01 finns kvar och om den är samma så skriver den bara samma
-
-
+# print(mean_list_tot)
+exit()
 # print()
 # för x axeln
-x_axel = (vec(lambda el: f"{el[0]} - {el[-1]}", list_of_formated_dates))
-print(x_axel)
 
+# print(mean_list_tot)
 plt.title("Your day")
 plt.xlabel("Day")
 plt.ylabel("Grade")
