@@ -11,10 +11,8 @@ from tkinter.ttk import Notebook
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.figure import Figure
 
 import calendar
-from dateutil.relativedelta import relativedelta
 
 
 
@@ -30,7 +28,11 @@ s_df = np.array(s_df_s)[0]
 window = Tk()
 geometry = 800
 window.geometry(f"{geometry}x{geometry}")
+window.title("Your Day")
 
+# icon = PhotoImage(file="Python/pandas/projects/your_day/final/day.png") # ikon över bilden, kräver att 
+#* fix so it shows
+window.iconbitmap("Python/pandas/projects/your_day/final/day.ico")
 
 time_until_next: str
 done_today: bool
@@ -79,7 +81,7 @@ def inp_page_1():
         file_path = os.path.join(dir_path, 'mydata.csv')
         df.to_csv(file_path, index=True)
 
-        print(s_df_s, "\n")
+        # print(s_df_s, "\n")
         s_df_s.loc[0] = store_variable
         file_path2 = os.path.join(dir_path, 'status_df.csv')
         s_df_s.to_csv(file_path2, index=True)
@@ -426,7 +428,7 @@ def box_all_4():
     global box_all_frame
     box_all_frame = Frame(window)
     n_df = (np.array(df)[:,2:])
-    print(n_df)
+    # print(n_df)
 
     # Set up the figure and subplots
     fig, axs = plt.subplots(figsize=(8, 6), dpi=40)
@@ -566,7 +568,6 @@ def calendar_all_6():
                     label = Label(frame, text=day, bg='#dedede', font=("Helvetica",13))
                 label.pack()
                 frame.grid(row=i, column=i2)
-        print("done")
     create_calendar(datetime_obj)
 
 
