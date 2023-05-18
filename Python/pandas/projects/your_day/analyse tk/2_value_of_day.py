@@ -35,11 +35,11 @@ names = ["M", "T", "W", "T", "F", "S", "W"]
 
 
 
-print(food_od)
+# print(food_od)
 
 fig, axs = plt.subplots(2, 2, figsize=(8, 6), dpi=50)
 
-print(names[:len(food_od)])
+# print(names[:len(food_od)])
 
 # Create the four bar plots
 axs[0, 0].bar(np.arange(len(food_od)), food_od, tick_label=names, color="r")

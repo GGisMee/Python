@@ -10,15 +10,28 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 
-#* fixa så den raderar gamla inputs
+# om någon av de övre alternativ knapparna trycks på
+def b_fixed(inp):
+    global graph_frame
+    try:
+        graph_frame_l.pop(-1).pack_forget()
+    except IndexError:
+        print("err")
+        return 1
+    prod_graph(inp)
+    return 0
 
+
+# när man submittar ett nummer i gruppering
 def submittion_b():
+    global graph_frame
     inp = (inp_t.get())
     try:
         inp = int(inp)
     except ValueError:
         print("Not right class, must be number")
         return 1
+    graph_frame_l.pop(-1).pack_forget()
     prod_graph(inp)
     return 0
 
@@ -26,15 +39,28 @@ def submittion_b():
 window = Tk()
 inp_frame = Frame(window)
 inp_frame.pack()
-inp_t = Entry(inp_frame)
+top_frame = Frame(inp_frame)
+top_frame.pack()
+inp_t = Entry(top_frame)
 inp_t.grid(row=0, column=0)
-but_t = Button(inp_frame, text="Submit", command=submittion_b)
+but_t = Button(top_frame, text="Submit", command=submittion_b)
 but_t.grid(row=0,column=1)
+graph_frame_l = []
+down_frame = Frame(inp_frame)
+down_frame.pack()
+choices_intervals = ["Day","Half week", "Week","2 Week", "Month", "4 Month"]
+choices_numbs = [1,3,7,14,30,120]
+for i,el in enumerate(choices_intervals):
+    n = (choices_numbs[i])
+    b = Button(down_frame, text=el, command=lambda n=n:b_fixed(n))
+    b.grid(row=0, column=i)
+del choices_numbs, choices_intervals
 
-graph_frame = Frame(window)
-graph_frame.pack()
 # input = int(input("Write the groupation: "))
 def prod_graph(inp):
+    graph_frame = Frame(window)
+    graph_frame.pack()
+    graph_frame_l.append(graph_frame)
     if inp == 1:
         x_axeln = np.vectorize(lambda element: element.day)(np.vectorize(lambda element:datetime.strptime(element, '%Y-%m-%d'))(np.array(df.sort_index()["Date"])))
         Food = np.array(df["Food"])
@@ -108,7 +134,7 @@ def prod_graph(inp):
         # kanske en while loop som kör näst närmaste till inga 0001-01-01 finns kvar och om den är samma så skriver den bara samma
         # print(mean_list_tot)
 
-        # print()
+    print(x_axeln, mean_list_tot)
         # för x axeln
     fig, axs = plt.subplots(figsize=(8, 6), dpi=50)
         # print(mean_list_tot)
