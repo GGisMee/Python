@@ -4,9 +4,11 @@ import numpy as np
 import calendar
 from tkinter import *
 from dateutil.relativedelta import relativedelta
+
+#* idea have with year view as well maybe gradient white to black depending on use
 global datetime_obj, marked_dates, frame_pack
 
-df = pd.read_csv("Python/pandas/projects/your_day/mydata.csv", index_col='ID')
+df = pd.read_csv("Python/pandas/projects/your_day/final/mydata.csv", index_col='ID')
 marked_dates = list(df["Date"])
 window = Tk()
 window.geometry("400x400")

@@ -13,12 +13,16 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
+import calendar
+from dateutil.relativedelta import relativedelta
+
+
 
 def vec(func, arr):
     return (np.array(list(map(func, arr))))
 
-df = pd.read_csv("Python/pandas/projects/your_day/mydata.csv", index_col='ID')
-s_df_s = pd.read_csv("Python/pandas/projects/your_day/status_df.csv", index_col='ID')
+df = pd.read_csv("Python/pandas/projects/your_day/final/mydata.csv", index_col='ID')
+s_df_s = pd.read_csv("Python/pandas/projects/your_day/final/status_df.csv", index_col='ID')
 s_df = np.array(s_df_s)[0]
 
 # för att skriva >< kan man använda knappen till vänster om 1
@@ -70,7 +74,7 @@ def inp_page_1():
         store_variable = (vec(lambda x: x.get(), store_variable))
 
         df.loc[len(df)] = [today,daytype, list_of_input[0], list_of_input[1], list_of_input[2], list_of_input[3]]
-        print(df)
+        # print(df)
         dir_path = os.path.dirname(os.path.abspath(__file__))
         file_path = os.path.join(dir_path, 'mydata.csv')
         df.to_csv(file_path, index=True)
@@ -174,9 +178,9 @@ def inp_page_1():
         in_after_frame = Frame(after_frame, width=400, height=400, bg="#ebebeb")
         in_after_frame.place(anchor="center", relx=.5, rely=.5)
         if done_today:
-            image = Image.open("Python/pandas/projects/your_day/alr_done.png")
+            image = Image.open("Python/pandas/projects/your_day/final/alr_done.png")
         else:
-            image = Image.open("Python/pandas/projects/your_day/check_bok.png")
+            image = Image.open("Python/pandas/projects/your_day/final/check_bok.png")
 
         # Scale the image to 50% of its original size
         new_width = int(geometry/4)
@@ -325,7 +329,7 @@ def grouped_graph_all_2():
                 mean_list_tot = np.vstack((mean_list_tot, mean_list))
             mean_list_tot = np.transpose(mean_list_tot[1:])
             x_axeln = x_axeln.reshape((1,-1))[0][1:]
-            print(x_axeln)
+            # print(x_axeln)
 
             # print("\n\n")
             # print(mean_list_tot)
@@ -333,7 +337,7 @@ def grouped_graph_all_2():
             # kanske en while loop som kör näst närmaste till inga 0001-01-01 finns kvar och om den är samma så skriver den bara samma
             # print(mean_list_tot)
 
-        print(x_axeln, mean_list_tot)
+        # print(x_axeln, mean_list_tot)
             # för x axeln
         fig, axs = plt.subplots(figsize=(8, 6), dpi=50)
             # print(mean_list_tot)
@@ -352,10 +356,219 @@ def grouped_graph_all_2():
         canvas.get_tk_widget().pack()
         graph_frame.update()
     prod_graph(7)
-    # Run the Tkinter event loop
 def week_month_all_3():
+    global week_month_all_frame
+    week_month_all_frame = Frame(window)
     pass
     #* insert week_mont_all
+
+    def get_mean(df):
+        F_mean = np.array(df["Food"]).mean()
+        Sl_mean = np.array(df["Sleep"]).mean()
+        Sc_mean = np.array(df["School"]).mean()
+        M_mean = np.array(df["Mood"]).mean()
+        return F_mean, Sl_mean, Sc_mean, M_mean
+
+
+    date = np.array(df["Date"])
+    ldate = datetime.strptime(date[-1], '%Y-%m-%d')
+
+    # get the week
+    for i,element in list(enumerate(reversed(date)))[1:]:
+        element2 = datetime.strptime(element, '%Y-%m-%d')
+        if ((ldate - element2).days) >= 7:
+            break
+    i_of_first = np.where(date == element)[0][0]
+    which_date_week = date[i_of_first:]
+    df_week = df[df['Date'].isin(which_date_week)]
+
+    # get the month
+    for i,element in list(enumerate(reversed(date)))[1:]:
+        element2 = datetime.strptime(element, '%Y-%m-%d')
+        if ((ldate - element2).days) >= 30:
+            break
+    i_of_first2 = np.where(date == element)[0][0]
+    which_date_month = date[i_of_first2:]
+    df_month = df[df['Date'].isin(which_date_month)]
+
+    # all
+    df_all = df
+
+    # print(df_week)
+    # print()
+    # print(df_month)
+    # print()
+    # print(df_all)
+    df_all = get_mean(df_all)
+    df_month = get_mean(df_month)
+    df_week = get_mean(df_week)
+
+    x = np.arange(len(df_all))
+    width = 0.25
+
+    fig, ax = plt.subplots(figsize=(6, 4), dpi=50)
+
+    ax.bar(x - width, df_all, width, label='All')
+    ax.bar(x, df_month, width, label='Month')
+    ax.bar(x + width, df_week, width, label='Week')
+
+
+    ax.set_xlabel('Grade')
+    ax.set_ylabel('Value')
+    ax.set_title('Grouped Bar Chart')
+
+    ax.legend()
+
+    canvas = FigureCanvasTkAgg(fig, master=week_month_all_frame)
+    canvas.draw()
+    canvas.get_tk_widget().pack()
+def box_all_4():
+    global box_all_frame
+    box_all_frame = Frame(window)
+    n_df = (np.array(df)[:,2:])
+    print(n_df)
+
+    # Set up the figure and subplots
+    fig, axs = plt.subplots(figsize=(8, 6), dpi=40)
+
+    # Create the boxplot
+    axs.boxplot(n_df, labels=['Food', 'Sleep', 'School', 'Mood'])
+
+    # Add some padding to the plot
+    plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)
+
+    canvas = FigureCanvasTkAgg(fig, master=box_all_frame)
+    canvas.draw()
+    canvas.get_tk_widget().pack()
+def value_of_day_all_5():
+    global value_of_day_frame
+    value_of_day_frame = Frame(window)
+    # fix date formater
+    # print(df["Daytype"])
+    ordered_day = np.array([0,0,0,0])
+    for i in range(1,8):
+        one_day_all_data = (np.array(df.loc[df["Daytype"] == i]))[:,2:]
+        # print(one_day_all_data, "ddd")
+        day_food_mean = one_day_all_data[:, 0].mean()
+        day_sleep_mean = one_day_all_data[:, 1].mean()
+        day_school_mean = one_day_all_data[:, 2].mean()
+        day_mood_mean = one_day_all_data[:, 3].mean()
+        ordered_day = np.vstack((ordered_day, [day_food_mean, day_sleep_mean, day_school_mean, day_mood_mean]))
+    ordered_day = ordered_day[1:]
+
+    # re orders them to be all average food for all days in one list
+    food_od = ordered_day[:,0]
+    sleep_od = ordered_day[:,1]
+    school_od = ordered_day[:,2]
+    mood_od = ordered_day[:,3]
+    names = ["M", "T", "W", "T", "F", "S", "W"]
+
+    # print(food_od)
+
+    fig, axs = plt.subplots(2, 2, figsize=(8, 6), dpi=50)
+
+    # print(names[:len(food_od)])
+
+    # Create the four bar plots
+    axs[0, 0].bar(np.arange(len(food_od)), food_od, tick_label=names, color="r")
+    axs[0, 0].set_title('Food')
+    axs[0, 1].bar(np.arange(len(sleep_od)), sleep_od, tick_label=names, color="g")
+    axs[0, 1].set_title('Sleep')
+    axs[1, 0].bar(np.arange(len(school_od)), school_od, tick_label=names, color="b")
+    axs[1, 0].set_title('School')
+    axs[1, 1].bar(np.arange(len(mood_od)), mood_od, tick_label=names,color="y")
+    axs[1, 1].set_title('Mood')
+
+
+
+    # Add some padding between subplots
+    plt.subplots_adjust(hspace=0.4)
+
+    # Show the figure
+    canvas = FigureCanvasTkAgg(fig, master=value_of_day_frame)
+    canvas.draw()
+    canvas.get_tk_widget().pack()
+def calendar_all_6():
+    global calendar_all_frame
+    global datetime_obj, marked_dates, frame_pack
+
+    calendar_all_frame = Frame(window)
+    marked_dates = list(df["Date"])
+    datetime_obj = datetime.now()
+    calendar_frame = Frame(calendar_all_frame)
+    calendar_frame.pack()
+    frame_pack = []
+
+    def forward():
+        global datetime_obj
+        if datetime_obj.month == 12:
+            datetime_obj = datetime_obj.replace(year=datetime_obj.year + 1, month=1)
+        else:
+            datetime_obj = datetime_obj.replace(month=datetime_obj.month + 1)
+        for_back(datetime_obj)
+    def backward():
+        global datetime_obj
+        if datetime_obj.month == 1:
+            datetime_obj = datetime_obj.replace(year=datetime_obj.year - 1, month=12)
+        else:
+            datetime_obj = datetime_obj.replace(month=datetime_obj.month - 1)
+        for_back(datetime_obj)
+
+    def for_back(datetime_obj):
+        # print(datetime_obj.month)
+        frame_pack.pop().pack_forget()
+        create_calendar(datetime_obj)
+
+    # indicator labels
+    indication_label = Label(calendar_frame, text="Year-Month",  font=("Helvetica",13, "bold"))
+    indication_label.pack()
+
+
+    # knapparna
+    button_frame = Frame(calendar_frame)
+    button_frame.pack()
+    back_button = Button(button_frame, text="back", bg="green", command=backward)
+    back_button.grid(column=0,row=0)
+    forward_button = Button(button_frame, text="forward", bg="yellow", command=forward)
+    forward_button.grid(column=1,row=0)
+
+    def create_calendar(datetime_obj):
+        month = datetime_obj.month
+        year = datetime_obj.year
+        cal = calendar.monthcalendar(year, month)
+
+        indication_label.config(text=(f"{year} {calendar.month_name[month]}"))
+
+        dates_frame = Frame(calendar_frame)
+        dates_frame.pack()
+        frame_pack.append(dates_frame)
+        # print(cal)
+        # Veckorna försig
+        for i, week in enumerate(cal):
+            # print("new week: ", i)
+            # dagarna försig
+            for i2, day in enumerate(week):
+                # print(year, month, day)
+                if not day:
+                    # om den veckodagen inte finns hoppas den över t.ex. 2023-7-0
+                    continue
+                else:
+                    date = datetime(year, month, day)
+                if date.strftime('%Y-%m-%d') in marked_dates:
+                    # Svart bakgrund
+                    frame = Frame(dates_frame, width=20, height=20, bg='#b5b5b5')
+                    frame.pack_propagate(False)
+                    label = Label(frame, text=day, bg='#b5b5b5', font=("Helvetica",13))
+                    # print(label)
+                else:
+                    frame = Frame(dates_frame, width=20, height=20, bg='#dedede')
+                    frame.pack_propagate(False)
+                    label = Label(frame, text=day, bg='#dedede', font=("Helvetica",13))
+                label.pack()
+                frame.grid(row=i, column=i2)
+        print("done")
+    create_calendar(datetime_obj)
+
 
 
 # baren med val av sidor
@@ -364,17 +577,19 @@ Val_bar = Notebook(window)
 # Skapar allt
 inp_page_1()
 grouped_graph_all_2()
-
-
-
-
+week_month_all_3()
+box_all_4()
+value_of_day_all_5()
+calendar_all_6()
 
 # sub for submittion, in inp_page_1
 Val_bar.add(sub_notebook_frame, text="Submittion")
 Val_bar.add(grouped_graph_main_frame, text="grouped graph")
+Val_bar.add(week_month_all_frame, text="Week Month All")
+Val_bar.add(box_all_frame, text="Box All")
+Val_bar.add(value_of_day_frame, text="Value of day")
+Val_bar.add(calendar_all_frame, text="Calendar")
 
 Val_bar.pack(expand=True,fill="both") 
 # Label(tab2, text="This is in tab 2", width=50, height=25).pack()
-
-
 window.mainloop()

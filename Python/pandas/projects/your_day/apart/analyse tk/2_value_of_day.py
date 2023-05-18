@@ -33,8 +33,6 @@ school_od = ordered_day[:,2]
 mood_od = ordered_day[:,3]
 names = ["M", "T", "W", "T", "F", "S", "W"]
 
-
-
 # print(food_od)
 
 fig, axs = plt.subplots(2, 2, figsize=(8, 6), dpi=50)

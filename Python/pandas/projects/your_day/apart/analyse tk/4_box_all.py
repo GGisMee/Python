@@ -14,8 +14,6 @@ df = pd.read_csv("Python/pandas/projects/your_day/mydata.csv", index_col='ID')
 n_df = (np.array(df)[:,2:])
 print(n_df)
 
-
-
 # Set up the figure and subplots
 fig, axs = plt.subplots(figsize=(8, 6), dpi=40)
 
