@@ -584,7 +584,7 @@ value_of_day_all_5()
 calendar_all_6()
 
 # sub for submittion, in inp_page_1
-Val_bar.add(sub_notebook_frame, text="Submittion")
+Val_bar.add(sub_notebook_frame, text="Submission")
 Val_bar.add(grouped_graph_main_frame, text="grouped graph")
 Val_bar.add(week_month_all_frame, text="Week Month All")
 Val_bar.add(box_all_frame, text="Box All")
