@@ -9,13 +9,15 @@ namespace two{
 
 int main(){
     using std::string;
-    using namespace first;
+    // alt
+    //using namespace two;
+
     // för att slippa specifisiera i kod
     string y = "hello";
 
     // std::string x = "hello";
 
-    std::cout << x << " and " << y;
+    std::cout << two::x << " and " << y;
 
 
 
