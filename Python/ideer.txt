@@ -1,0 +1,24 @@
+Denna foldern innehåller ideer om vad jag kan tänkas göra:
+1. Spelrekordshanterare: Skapa en applikation som tillåter användare att registrera och spåra sina spelrekord för olika spel. Du kan använda tkinter för att bygga gränssnittet och pandas för att spara och hantera data i en CSV-fil.
+
+2. Väderapplikation: Bygg en applikation som hämtar och visar aktuell väderinformation för en specifik plats. Du kan använda tkinter för att skapa användargränssnittet och numpy för att analysera och visualisera väderdata från en CSV-fil.
+
+3. Kalenderapplikation: Skapa en kalenderapplikation som låter användare lägga till, visa och hantera händelser och möten. Använd tkinter för att skapa gränssnittet och pandas för att spara och hantera händelsedata.
+
+4. Färgpalettgenerator: Bygg en applikation som genererar och visar olika färgpaletter baserat på användarens val eller slumpmässiga kombinationer. Använd tkinter för gränssnittet och numpy för att generera och manipulera färgdata.
+
+5. BMI-kalkylator: Skapa en applikation där användare kan ange sin vikt och längd och få ut sitt Body Mass Index (BMI). Du kan använda tkinter för gränssnittet och numpy för att beräkna och analysera BMI-värden.
+
+6. Budgethanterare: Bygg en applikation som hjälper användare att hantera sin ekonomi och budget. Använd tkinter för att skapa gränssnittet och pandas för att spara och hantera budgetdata i en CSV-fil.
+
+7. Ordläraapplikation: Skapa en applikation som hjälper användare att lära sig och öva på nya ord och deras betydelser. Använd tkinter för gränssnittet och pandas för att lagra och hämta ordlistor och deras definitioner.
+
+8. Musikspelare: Bygg en enkel musikspelare som kan spela upp ljudfiler. Använd tkinter för gränssnittet och pandas för att lagra och hantera spellistor och låtinformation.
+
+9. Dagbok: Skapa en applikation där användare kan skriva och spara sina dagliga tankar och upplevelser. Använd tkinter för gränssnittet och pandas för att spara och hämta dagboksinlägg.
+
+10. Quizapplikation: Bygg en applikation som låter användare skapa och spela quizar. Använd tkinter för gränssnittet och pandas för att lagra och hantera frågor och svaralternativ.
+
+11. 3D stuff?
+
+12. 2D spelskapare med rotation och rörelse likt den med scratch

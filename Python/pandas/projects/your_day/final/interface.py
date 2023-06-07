@@ -15,9 +15,9 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import calendar
 
 
-
 def vec(func, arr):
     return (np.array(list(map(func, arr))))
+
 
 df = pd.read_csv("Python/pandas/projects/your_day/final/mydata.csv", index_col='ID')
 s_df_s = pd.read_csv("Python/pandas/projects/your_day/final/status_df.csv", index_col='ID')
@@ -590,7 +590,7 @@ Val_bar.add(week_month_all_frame, text="Week Month All")
 Val_bar.add(box_all_frame, text="Box All")
 Val_bar.add(value_of_day_frame, text="Value of day")
 Val_bar.add(calendar_all_frame, text="Calendar")
+Val_bar.pack()
 
-Val_bar.pack(expand=True,fill="both") 
 # Label(tab2, text="This is in tab 2", width=50, height=25).pack()
 window.mainloop()
