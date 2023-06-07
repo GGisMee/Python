@@ -19,8 +19,8 @@ def vec(func, arr):
     return (np.array(list(map(func, arr))))
 
 
-df = pd.read_csv("Python/pandas/projects/your_day/final/mydata.csv", index_col='ID')
-s_df_s = pd.read_csv("Python/pandas/projects/your_day/final/status_df.csv", index_col='ID')
+df = pd.read_csv("Python/Projekten/Kombo/your_day/final/mydata.csv", index_col='ID')
+s_df_s = pd.read_csv("Python/Projekten/Kombo/your_day/final/status_df.csv", index_col='ID')
 s_df = np.array(s_df_s)[0]
 
 # för att skriva >< kan man använda knappen till vänster om 1
@@ -32,7 +32,7 @@ window.title("Your Day")
 
 # icon = PhotoImage(file="Python/pandas/projects/your_day/final/day.png") # ikon över bilden, kräver att 
 #* fix so it shows
-window.iconbitmap("Python/pandas/projects/your_day/final/day.ico")
+window.iconbitmap("Python/Projekten/Kombo/your_day/final/day.ico")
 
 time_until_next: str
 done_today: bool
@@ -180,9 +180,9 @@ def inp_page_1():
         in_after_frame = Frame(after_frame, width=400, height=400, bg="#ebebeb")
         in_after_frame.place(anchor="center", relx=.5, rely=.5)
         if done_today:
-            image = Image.open("Python/pandas/projects/your_day/final/alr_done.png")
+            image = Image.open("Python/Projekten/Kombo/your_day/final/alr_done.png")
         else:
-            image = Image.open("Python/pandas/projects/your_day/final/check_bok.png")
+            image = Image.open("Python/Projekten/Kombo/your_day/final/check_bok.png")
 
         # Scale the image to 50% of its original size
         new_width = int(geometry/4)
