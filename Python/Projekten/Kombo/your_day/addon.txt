@@ -1,0 +1,3 @@
+Tillägg
+1. Kunna se i års view och dag view vilka dagar man har skrivit
+2. Kunna lägga till meddelanden med titlar om hur dagen har varit. Dessa ska sedan kunna ses med dagen

@@ -8,7 +8,7 @@ canvas = Canvas(window, bg = "#e3e3e3", width=width, height=height)
 canvas.pack()
 
 
-class point():
+class vec():
     def __init__(self,x,y,z):
         self.x = x
         self.y = y
@@ -48,7 +48,17 @@ cube = np.array([
 
 ])
 
-def Multiply_Matrix_Vector(vec, mat):
+def Multiply_Matrix_Vector(v, m):
+    # v = vector, m = matrix
+    x = v.x*m.m[0][0]+v.y*m.m[1][0]+v.z*m.m[2][0]+m.m[3][0]
+    y = v.x*m.m[0][1]+v.y*m.m[1][1]+v.z*m.m[2][1]+m.m[3][1]
+    z = v.x*m.m[0][2]+v.y*m.m[1][2]+v.z*m.m[2][2]+m.m[3][2]
+    vec(x,y,z)
+    w = v.x*m.m[0][3]+v.y*m.m[1][3]+v.z*m.m[2][3]+m.m[3][3]
+    if w != 0:
+        v_new = vec(np.array(x,y,z)/w)
+        return v_new
+    
     
 
 class matrix_4x4():
@@ -70,6 +80,8 @@ mat_proj.m[3][2] = (-fFar*fNear)/(fFar-fNear)
 mat_proj.m[2][3] = 1
 mat_proj.m[3][3] = 0
 # cube
+
+
 
 window.mainloop()
 
