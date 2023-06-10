@@ -7,24 +7,28 @@ import numpy as np
 import requests
 import json
 from datetime import datetime
+import sys
+# print(f"{sys.path[0]}/date.txt")
+# os.path.join(sys.path[0], "filename") funkar bra för lokal folder
 
-# chmod u+r date.txt **used to fix with allowens
-# chmod u=r,go= date.txt ** to reset if necessary
+def same_dir(name):
+    return os.path.join(sys.path[0], name)
+
 def get_df():
     now_v = datetime.now().date()
     try:
-        f = open("date.txt", "r")
+        f = open(same_dir("date.txt"), "r")
+        print("hello")
         if str(f.readline()) == str(now_v):
             print("unchanged")
-            df = pd.read_csv("mydata.csv")
+            df = pd.read_csv(same_dir("mydata.csv"))
             return df
     except FileNotFoundError:
         print("error: file not found")
         
-    f = open("date.txt", "w")
+    f = open(same_dir("date.txt"), "w")
     f.write(str(now_v))
     print("changed to", now_v)
-
     pos = geocoder.ip("me").latlng
     pos = np.round(pos, decimals=2)
     print(pos)
@@ -56,7 +60,8 @@ def get_df():
     df = pd.DataFrame(reformated_df, columns=np.array(df_uf.index))
     print(df)
 
-    df.to_csv('mydata.csv', index=True)
+    file_path = os.path.join(sys.path[0], 'mydata.csv')
+    df.to_csv(file_path, index=True)
 
     return df
 get_df()
