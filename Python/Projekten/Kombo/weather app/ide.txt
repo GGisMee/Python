@@ -1,0 +1,1 @@
+Man ska kunna ta och hämta info från yr api och sedan kunna se det på flera olika sätt 
