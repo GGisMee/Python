@@ -1,0 +1,2 @@
+I pandas kan man använda liknande map bara genom att skriva (lambda x: x+2)(array)
+För att ta i samma folder med ex pandas eller open kan man skriva: os.path.join(sys.path[0], filename)

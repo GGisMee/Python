@@ -31,7 +31,6 @@ def get_df():
     print("changed to", now_v)
     pos = geocoder.ip("me").latlng
     pos = np.round(pos, decimals=2)
-    print(pos)
     # länken till api
     link = f"https://api.open-meteo.com/v1/forecast?latitude={pos[0]}&longitude={pos[1]}&hourly=temperature_2m,relativehumidity_2m,precipitation,cloudcover,windspeed_10m,windgusts_10m,winddirection_10m&windspeed_unit=ms&past_days=7&timezone=auto"
     response = requests.get(link)
@@ -48,9 +47,9 @@ def get_df():
 
     df = np.array(df_uf["hourly"])
     length = len(df[0])
-    print(length)
+    #print(length)
     reformated_df = np.arange(len(df))
-    print()
+    #print()
     for i in range(336):
         l_list = []
         for el in df:
@@ -58,10 +57,11 @@ def get_df():
         reformated_df = np.vstack((reformated_df, l_list))
     reformated_df = reformated_df[1:]
     df = pd.DataFrame(reformated_df, columns=np.array(df_uf.index))
-    print(df)
+    #print(df)
 
     file_path = os.path.join(sys.path[0], 'mydata.csv')
     df.to_csv(file_path, index=True)
 
     return df
-get_df()
+df = get_df()
+print(df)

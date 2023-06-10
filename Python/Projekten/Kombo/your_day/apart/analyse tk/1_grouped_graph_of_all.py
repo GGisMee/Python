@@ -3,7 +3,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
-df = pd.read_csv("Python/pandas/projects/your_day/mydata.csv", index_col='ID')
+df = pd.read_csv("Python/Projekten/Kombo/your_day/final/mydata.csv", index_col='ID')
 
 from tkinter import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -76,7 +76,7 @@ def prod_graph(inp):
         # print()
 
         start_day = Date[0]
-        # print(Date)
+        print(Date)
         ind_arr = np.array([0,0])
         for i,element in enumerate(Date):
             if (element-start_day).days > inp-1:
@@ -126,7 +126,7 @@ def prod_graph(inp):
             mean_list_tot = np.vstack((mean_list_tot, mean_list))
         mean_list_tot = np.transpose(mean_list_tot[1:])
         x_axeln = x_axeln.reshape((1,-1))[0][1:]
-        print(x_axeln)
+        #print(x_axeln)
 
         # print("\n\n")
         # print(mean_list_tot)
@@ -134,7 +134,7 @@ def prod_graph(inp):
         # kanske en while loop som kör näst närmaste till inga 0001-01-01 finns kvar och om den är samma så skriver den bara samma
         # print(mean_list_tot)
 
-    print(x_axeln, mean_list_tot)
+    #print(x_axeln, mean_list_tot)
         # för x axeln
     fig, axs = plt.subplots(figsize=(8, 6), dpi=50)
         # print(mean_list_tot)

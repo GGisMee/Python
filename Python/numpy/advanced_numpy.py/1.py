@@ -6,4 +6,6 @@ row3 = rows[10:15]
 row4 = rows[15:20]
 row5 = rows[20:25]
 test_data = np.array([row1, row2,row3, row4, row5])
+print(test_data)
 print(test_data[:,-4:3])
+print(test_data[:, 1:3])
