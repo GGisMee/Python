@@ -1,1 +1,5 @@
-Man ska kunna ta och hämta info från yr api och sedan kunna se det på flera olika sätt 
+Man ska kunna ta och hämta info från api och sedan kunna se det på flera olika sätt 
+1. Man ska kunna se som i your day med olika tider i ett diagram. T.ex. 1h, 2h,4h,8h, 1 dag, 2 dagar, 3 dagar
+    - Alternativ med enbart dagar
+2. Man ska kunna se en rating på alla värden från 0 till 100% i pie charts
+3. Man ska kunna se cykelförhållandena i ord över de kommande dagarna

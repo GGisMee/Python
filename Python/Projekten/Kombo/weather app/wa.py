@@ -1,12 +1,25 @@
 # att fixa
-# ej efter GMT ska byta så den är för alla 2h mer
-
+# 
 import os
 import geocoder
 import pandas as pd
 import numpy as np
 import requests
 import json
+from datetime import datetime
+
+now_v = datetime.now().date()
+f = open("Python/Projekten/Kombo/weather app/date.txt", "r")
+if str(f.readline()) != str(now_v):
+    f = open("Python/Projekten/Kombo/weather app/date.txt", "w")
+    f.write(str(now_v))
+    print("changed to", now_v)
+else:
+    print("unchanged")
+del f
+        
+
+exit()
 pos = geocoder.ip("me").latlng
 pos = np.round(pos, decimals=2)
 print(pos)
