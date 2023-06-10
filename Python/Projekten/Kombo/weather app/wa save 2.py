@@ -10,6 +10,10 @@ from datetime import datetime
 
 # chmod u+r date.txt **used to fix with allowens
 # chmod u=r,go= date.txt ** to reset if necessary
+
+# for windows use
+# ls -l ** or go into permission on the file
+
 def get_df():
     now_v = datetime.now().date()
     try:
@@ -56,7 +60,9 @@ def get_df():
     df = pd.DataFrame(reformated_df, columns=np.array(df_uf.index))
     print(df)
 
-    df.to_csv('mydata.csv', index=True)
+    dir_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(dir_path, 'mydata.csv')
+    df.to_csv(file_path, index=True)
 
     return df
 get_df()
