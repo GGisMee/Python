@@ -16,7 +16,10 @@ label_view: int # var ... label syns
 grouping_of_data: str # timmar som de grupperas i för att lättare analysera data som hänger ihop typ medeltemp över en dag
 df = pd.read_csv("Python/Projekten/Kombo/weather app/mydata.csv", index_col="ID") # df hämtas
 
-input_f = tk.Frame(window)
+content_f = tk.Frame(window)
+content_f.pack()
+
+input_f = tk.Frame(content_f)
 input_f.pack()
 
 
@@ -24,13 +27,13 @@ input_f.pack()
 
 
 def run(view_part, label_view, grouping_of_data, night=False):
-    temp_graph(view_part, label_view, grouping_of_data, night)
+    # temp_graph(view_part, label_view, grouping_of_data, night)
     wind_graph(view_part, label_view, grouping_of_data, night)
 
 
 def temp_graph(view_part, label_view, grouping_of_data, night):
     global temp_canvas_f
-    temp_canvas_f = tk.Frame(window)
+    temp_canvas_f = tk.Frame(content_f, width=400, height= 400)
     temp_canvas_f.pack()
 
     df_l_temp = df.drop(['windspeed_10m','windgusts_10m','winddirection_10m', 'relativehumidity_2m'], axis=1)
@@ -109,7 +112,7 @@ def temp_graph(view_part, label_view, grouping_of_data, night):
 
 def wind_graph(view_part, label_view, grouping_of_data, night):
     global canvas_f
-    canvas_f = tk.Frame(window)
+    canvas_f = tk.Frame(content_f, width=400, height= 400)
     canvas_f.pack()
 
     df_l_wind = df.drop(['temperature_2m', 'relativehumidity_2m','precipitation','cloudcover'], axis=1)
@@ -161,7 +164,7 @@ def wind_graph(view_part, label_view, grouping_of_data, night):
     plt.grid(True)
 
     day_labeling = (np.vectorize(lambda str: str.split("/")[0])(x_arr))
-    print(day_labeling)
+    # print(day_labeling)
     each_and_every = (round((len(day_labeling))/len(np.unique(day_labeling))))
     ax2 = axs.secondary_xaxis('top')
     ax2.set_xticks(range(len((day_labeling)))[round(each_and_every/2)::each_and_every])
@@ -169,12 +172,16 @@ def wind_graph(view_part, label_view, grouping_of_data, night):
 
     axs.set_yticks(np.arange(np.amin(mean_arr), np.amax(mean_arr), 1))
 
+    normal_wind = np.array(mean_arr.tolist()[0])
+    high_wind = np.array(mean_arr.tolist()[1])
+    print(x_arr)
+    plt.fill_between(x_arr, normal_wind, high_wind, color='gray', alpha=0.5)
+
     axs.set_title("Temperature Weather graph")
     axs.set_ylabel("Level")
     axs.set_xlabel("Time")
     axs.plot(x_arr,mean_arr[0],  label="1", linewidth=3)
     axs.plot(x_arr,mean_arr[1],  label="2", linewidth=3)
-    axs.plot(x_arr,mean_arr[2],  label="3", linewidth=3)
 
      # de kommer visas korrekt
     axs.legend()
@@ -184,7 +191,7 @@ def wind_graph(view_part, label_view, grouping_of_data, night):
     canvas.get_tk_widget().pack()
     window.update()
 
-run(view_part="4h", label_view=1, grouping_of_data="2h", night=True)
+run(view_part="1w", label_view=2, grouping_of_data="2h", night=True)
 
 
 window.mainloop()
