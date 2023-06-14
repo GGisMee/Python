@@ -137,6 +137,8 @@ def prod_graph(inp):
     #print(x_axeln, mean_list_tot)
         # för x axeln
     fig, axs = plt.subplots(figsize=(8, 6), dpi=50)
+    print(mean_list_tot)
+    print(x_axeln)
         # print(mean_list_tot)
     axs.set_title("Your day")
     axs.set_ylabel("Days")

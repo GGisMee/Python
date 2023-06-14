@@ -18,7 +18,7 @@ def get_df():
     now_v = datetime.now().date()
     try:
         f = open(same_dir("date.txt"), "r")
-        print("hello")
+        # print("hello")
         if str(f.readline()) == str(now_v):
             print("unchanged")
             df = pd.read_csv(same_dir("mydata.csv"))
@@ -32,7 +32,7 @@ def get_df():
     pos = geocoder.ip("me").latlng
     pos = np.round(pos, decimals=2)
     # länken till api
-    link = f"https://api.open-meteo.com/v1/forecast?latitude={pos[0]}&longitude={pos[1]}&hourly=temperature_2m,relativehumidity_2m,precipitation,cloudcover,windspeed_10m,windgusts_10m,winddirection_10m&windspeed_unit=ms&past_days=7&timezone=auto"
+    link = f"https://api.open-meteo.com/v1/forecast?latitude={pos[0]}&longitude={pos[1]}&hourly=temperature_2m,relativehumidity_2m,precipitation,cloudcover,windspeed_10m,windgusts_10m,winddirection_10m&windspeed_unit=ms&timezone=auto"
     response = requests.get(link)
     if (response.status_code) == 200:
         response_data = response.text
@@ -50,7 +50,7 @@ def get_df():
     #print(length)
     reformated_df = np.arange(len(df))
     #print()
-    for i in range(336):
+    for i in range(len(df[0])):
         l_list = []
         for el in df:
             l_list.append(el[i])
@@ -58,10 +58,12 @@ def get_df():
     reformated_df = reformated_df[1:]
     df = pd.DataFrame(reformated_df, columns=np.array(df_uf.index))
     #print(df)
-
+    df.index.name = "ID"
     file_path = os.path.join(sys.path[0], 'mydata.csv')
     df.to_csv(file_path, index=True)
 
     return df
 df = get_df()
-print(df)
+# print(df)
+
+
