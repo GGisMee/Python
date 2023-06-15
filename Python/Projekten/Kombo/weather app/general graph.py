@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import sys
 from datetime import datetime
+import threading
 
 import matplotlib.pyplot as plt
 import tkinter as tk
@@ -10,7 +11,27 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 from format_by_date import format_date
 
+night_v: bool = True
 
+
+def forget_f():
+    temp_canvas_f.forget()
+    canvas_f.forget()
+
+def change_f(dec_val):
+    global night
+    forget_f()
+    if dec_val == "1d": 
+        run(view_part="1d", label_view=1, grouping_of_data="1h", night=night_v)
+    if dec_val == "2d":
+        run(view_part="1d", label_view=1, grouping_of_data="1h", night=night_v)
+    if dec_val == "4d":
+        run(view_part="1d", label_view=1, grouping_of_data="1h", night=night_v)
+    if dec_val == "1w":
+        run(view_part="1d", label_view=1, grouping_of_data="1h", night=night_v)
+          
+
+        
 
 window = tk.Tk()
 
@@ -20,19 +41,17 @@ content_f.pack()
 input_f = tk.Frame(content_f)
 input_f.pack()
 
-btn_1h = tk.Button(input_f, text="1h")
-btn_1h.grid(column=0, row=0)
+btn_1d = tk.Button(input_f, text="1d", command=lambda: change_f("1d"))
+btn_1d.grid(column=0, row=0)
 
-btn_2h = tk.Button(input_f, text="2h")
-btn_2h.grid(column=1, row=0)
+btn_2d = tk.Button(input_f, text="2d", command=lambda: change_f("2d"))
+btn_2d.grid(column=1, row=0)
 
-btn_1d = tk.Button(input_f, text="1d")
-btn_1d.grid(column=2, row=0)
+btn_4d = tk.Button(input_f, text="4d", command=lambda: change_f("4d"))
+btn_4d.grid(column=2, row=0)
 
-btn_2d = tk.Button(input_f, text="2d")
-btn_2d.grid(column=3, row=0)
 
-btn_1w = tk.Button(input_f, text="1w")
+btn_1w = tk.Button(input_f, text="1w", command=lambda: change_f("1w"))
 btn_1w.grid(column=4, row=0)
 
 
@@ -57,10 +76,11 @@ def run(view_part, label_view, grouping_of_data, night=False):
     temp_graph(view_part, label_view, grouping_of_data, night)
     wind_graph(view_part, label_view, grouping_of_data, night)
     window.update()
+    
 
 
 def temp_graph(view_part, label_view, grouping_of_data, night):
-    global temp_canvas_f, now
+    global temp_canvas_f, now, unf_now
     temp_canvas_f = tk.Frame(content_f, width=400, height= 400)
     temp_canvas_f.pack()
 
@@ -68,11 +88,12 @@ def temp_graph(view_part, label_view, grouping_of_data, night):
     df_l_temp["precipitation"] = np.array(df_l_temp["precipitation"])/10
     df_l_temp["cloudcover"] = np.array(df_l_temp["cloudcover"])/10
 
-
+    
     # print("\n\n\n",time_values, "\n\n\n")
     time_values = np.vectorize(lambda element:datetime.strptime(element, "%Y-%m-%dT%H:%M"))(np.array(df_l_temp["time"])) # tidsvärdena hämtas och ordnas till datetime.datetime format
-
     time_values = format_date(time_values, view_part)[0][0]
+    print(time_values)
+
     dates = np.zeros(1)
     if not night:
         for i in time_values:
@@ -85,6 +106,7 @@ def temp_graph(view_part, label_view, grouping_of_data, night):
         exit("Error: time_value array empty, Line 42")
     #print(time_values)
     date_arr = format_date(time_values, grouping_of_data)[0]
+    print("\n"*2,date_arr)
 
     x_arr = np.zeros(1)
     for element in date_arr:
@@ -92,6 +114,7 @@ def temp_graph(view_part, label_view, grouping_of_data, night):
             x_arr = np.hstack((x_arr, (f"{element[0].day}/{element[0].hour}")))
         else:
             x_arr = np.hstack((x_arr, (f"{element[0].day}/{element[0].hour}-{element[-1].hour}")))
+        #print(int(element[0].day),now[0],"\n", int(element[0].hour),now[1],element[-1].hour,int(element[0].hour)<=now[1]<=element[-1].hour, "\n\n")
         if int(element[0].day) == now[0] and int(element[0].hour)<=now[1]<=element[-1].hour:
             now_point = x_arr[np.where(x_arr == x_arr[-1])[0]][0]
     x_arr = x_arr[1:]
@@ -107,11 +130,12 @@ def temp_graph(view_part, label_view, grouping_of_data, night):
     mean_arr = np.transpose(mean_arr[1:])
     #print(mean_arr)
     # print(np.array(x_arr))
-
+    #print(now_point)
     # exit()
-    fig, axs = plt.subplots(figsize=(15, 6), dpi=50)
+    fig, axs = plt.subplots(figsize=(17, 6), dpi=50)
     axs.set_xticks(range(len(x_arr))[::label_view])
     axs.set_xticklabels(x_arr[::label_view])
+    
     plt.xticks(rotation=45)
 
     plt.grid(True)
@@ -119,9 +143,16 @@ def temp_graph(view_part, label_view, grouping_of_data, night):
     day_labeling = (np.vectorize(lambda str: str.split("/")[0])(x_arr))
     # print(day_labeling)
     each_and_every = (round((len(day_labeling))/len(np.unique(day_labeling))))
+
     ax2 = axs.secondary_xaxis('top')
     ax2.set_xticks(range(len((day_labeling)))[round(each_and_every/2)::each_and_every])
-    ax2.set_xticklabels(np.unique(day_labeling))
+    ax2.set_xticklabels((np.array(["Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag","Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag"])[unf_now.weekday()+np.arange(len(np.unique(day_labeling)))]))
+    
+
+    ax3 = axs.secondary_xaxis('top')
+    ax3.tick_params(axis='x', which='both', pad=17)
+    ax3.set_xticks(range(len((day_labeling)))[round(each_and_every/2)::each_and_every])
+    ax3.set_xticklabels(np.unique(day_labeling))
     
 
 
@@ -133,7 +164,7 @@ def temp_graph(view_part, label_view, grouping_of_data, night):
     axs.plot(x_arr,mean_arr[0],  label="1", linewidth=3)
     axs.plot(x_arr,mean_arr[1],  label="2", linewidth=3)
     axs.plot(x_arr,mean_arr[2],  label="3", linewidth=3)
-    print(np.amax(mean_arr))
+    #print(np.amax(mean_arr))
     axs.plot([now_point, now_point], [0, np.amax(mean_arr)], color="red", linewidth=2,linestyle="dashed")
 
      # de kommer visas korrekt
@@ -153,7 +184,7 @@ def wind_graph(view_part, label_view, grouping_of_data, night):
 
     # print("\n\n\n",time_values, "\n\n\n")
     time_values = np.vectorize(lambda element:datetime.strptime(element, "%Y-%m-%dT%H:%M"))(np.array(df_l_wind["time"])) # tidsvärdena hämtas och ordnas till datetime.datetime format
-
+    #! 23 tas inte fixa i formateringen. kör med viewpart 1d och grouping of data 1h så märks det att 23:00 saknas
     time_values = format_date(time_values, view_part)[0][0]
     dates = np.zeros(1)
     if not night:
@@ -191,7 +222,7 @@ def wind_graph(view_part, label_view, grouping_of_data, night):
     # print(np.array(x_arr))
 
     # exit()
-    fig, axs = plt.subplots(figsize=(15, 6), dpi=50)
+    fig, axs = plt.subplots(figsize=(17, 6), dpi=50)
     axs.set_xticks(range(len(x_arr))[::label_view])
     axs.tick_params(axis='x', which='both', pad=17)
     axs.set_xticklabels(x_arr[::label_view])
@@ -201,10 +232,20 @@ def wind_graph(view_part, label_view, grouping_of_data, night):
 
     day_labeling = (np.vectorize(lambda str: str.split("/")[0])(x_arr)) # tar ut dagen ur x_arr värdet
     each_and_every = (round((len(day_labeling))/len(np.unique(day_labeling)))) # hittar antalet värden mellan varje dag
+
     ax2 = axs.secondary_xaxis('top')
     ax2.set_xticks(range(len((day_labeling)))[round(each_and_every/2)::each_and_every])
-    ax2.set_xticklabels(np.unique(day_labeling))
+    ax2.set_xticklabels((np.array(["Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag","Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag"])[unf_now.weekday()+np.arange(len(np.unique(day_labeling)))]))
 
+    #print(unf_now.weekday()+np.arange(len(np.unique(day_labeling))))
+    
+    
+    ax3 = axs.secondary_xaxis('top')
+    ax3.tick_params(axis='x', which='both', pad=17)
+    ax3.set_xticks(range(len((day_labeling)))[round(each_and_every/2)::each_and_every])
+    ax3.set_xticklabels(np.unique(day_labeling))
+    
+    
     axs.set_yticks(np.arange(np.amin(mean_arr), np.amax(mean_arr), 1))
 
     normal_wind = np.array(mean_arr.tolist()[0])
@@ -219,7 +260,7 @@ def wind_graph(view_part, label_view, grouping_of_data, night):
       direction_num_list: list = []
     
 
-      print(f"\n\nd:{el}")
+      #print(f"\n\nd:{el}")
       for extent in range(4):
         # print(extent*90, (extent+1)*90)
         if (extent*90<=el<=(extent+1)*90):
@@ -250,9 +291,9 @@ def wind_graph(view_part, label_view, grouping_of_data, night):
           # print(el, direction_str_list[-1])
     del direction_def, direction_num_list
     direction_str_list = np.array(direction_str_list)
-    axs3 = axs.secondary_xaxis("bottom")
-    axs3.set_xticks(np.arange(len(direction_str_list))[::label_view])
-    axs3.set_xticklabels(direction_str_list[::label_view])
+    axs4 = axs.secondary_xaxis("bottom")
+    axs4.set_xticks(np.arange(len(direction_str_list))[::label_view])
+    axs4.set_xticklabels(direction_str_list[::label_view])
 
     # print("\n"*4,x_arr.tolist())
     # print("\n"*2,mean_arr.tolist(), "\n"*4)
@@ -270,7 +311,7 @@ def wind_graph(view_part, label_view, grouping_of_data, night):
     canvas.draw()
     canvas.get_tk_widget().pack()
     
-run(view_part="1w", label_view=2, grouping_of_data="1h", night=True)
+run(view_part="1w", label_view=1, grouping_of_data="1d", night=True)
 
 
 window.mainloop()
