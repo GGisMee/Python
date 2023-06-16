@@ -127,7 +127,7 @@ def change_f(dec_val, default=0):
     choice = dec_val
     forget_f()
     if default == 1:
-        print("halleluja")
+        # print("halleluja")
         run(view_part="1w", label_view=3, grouping_of_data="1h", night=night_v)
         return
     if dec_val == "1d": 
@@ -258,7 +258,6 @@ def temp_graph(view_part, label_view, grouping_of_data, night):
             x_arr = np.hstack((x_arr, (f"{element[0].day}/{element[0].hour}-{element[-1].hour}")))
         #print(int(element[0].day),now[0],"\n", int(element[0].hour),now[1],element[-1].hour,int(element[0].hour)<=now[1]<=element[-1].hour, "\n\n")
         if int(element[0].day) == now[0] and int(element[0].hour)<=now[1]<=element[-1].hour and (night or now[1] < 23):
-            print("hallelulia")
             now_point = x_arr[np.where(x_arr == x_arr[-1])[0]][0]
     x_arr = x_arr[1:]
     mean_arr = (np.zeros(len(np.array(df_l_temp.iloc[0])[1:])))
