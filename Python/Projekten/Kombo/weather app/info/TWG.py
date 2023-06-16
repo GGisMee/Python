@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+#* formatering av datum
 def format_date(time_values, grouping_of_data="1h"):
 
     if grouping_of_data == "1h":
@@ -56,6 +57,7 @@ def format_date(time_values, grouping_of_data="1h"):
 def same_dir(name):
     return os.path.join(sys.path[0], name)
 
+#* hämtar df antingen från api eller från fil
 def get_df():
     now_v = datetime.now().date()
     try:
@@ -108,14 +110,8 @@ def get_df():
 df = get_df()
 # print(df)
 
-
-
-#!----------------------------------------------------------------------------------------
-
-#!----------------------------------------------------------------------------------------
-
+#* Grafen
 night_v: bool = False
-run_data: list = ["1w", 2, "1h", night_v]
 choice: str = "1w"
 
 def forget_f():
@@ -123,7 +119,7 @@ def forget_f():
     canvas_f.forget()
 
 def change_f(dec_val, default=0):
-    global night_v, run_data, choice
+    global night_v, choice
     choice = dec_val
     forget_f()
     if default == 1:
@@ -205,7 +201,9 @@ df = pd.read_csv("Python/Projekten/Kombo/weather app/mydata.csv", index_col="ID"
 df_time = df["time"]
 unf_now = datetime.now()
 now = [int(unf_now.day)]
-if (int(unf_now.strftime("%M"))>=30):
+if (int(unf_now.strftime("%M"))>=30 and int(unf_now.strftime("%H"))==23):
+    now.append(int(unf_now.hour))
+elif (int(unf_now.strftime("%M"))>=30):
     now.append(int(unf_now.hour+1))
 else:
     now.append(int(unf_now.hour))
@@ -307,9 +305,12 @@ def temp_graph(view_part, label_view, grouping_of_data, night):
     axs.plot(x_arr,mean_arr[1],  label="Molnighet", linewidth=3)
     axs.plot(x_arr,mean_arr[2],  label="Regn", linewidth=3)
     #print(np.amax(mean_arr))
-    if ((night or now[1] < 23)):
-        axs.plot([now_point, now_point], [0, np.amax(mean_arr)], color="red", linewidth=2,linestyle="dashed")
 
+    try:
+        if ((night or now[1] < 23)):
+            axs.plot([now_point, now_point], [0, np.amax(mean_arr)], color="red", linewidth=2,linestyle="dashed")
+    except UnboundLocalError:
+        print("Problems with nighttime or shift from one day to another")
      # de kommer visas korrekt
     axs.legend()
 
@@ -319,7 +320,7 @@ def temp_graph(view_part, label_view, grouping_of_data, night):
 
 def wind_graph(view_part, label_view, grouping_of_data, night):
     global canvas_f
-    canvas_f = tk.Frame(content_f, width=400, height= 400, bg="blue")
+    canvas_f = tk.Frame(content_f, width=400, height= 400)
     canvas_f.pack()
 
     df_l_wind = df.drop(['temperature_2m', 'relativehumidity_2m','precipitation','cloudcover'], axis=1)
