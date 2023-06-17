@@ -5,6 +5,8 @@ import json
 
 import sys
 
+import math
+
 import pandas as pd
 import numpy as np
 from datetime import datetime
@@ -123,8 +125,8 @@ def change_f(dec_val, default=0):
     choice = dec_val
     forget_f()
     if default == 1:
-        # print("halleluja")
-        run(view_part="1w", label_view=3, grouping_of_data="1h", night=night_v)
+
+        run(view_part="1w", label_view=4, grouping_of_data="1h", night=night_v)
         return
     if dec_val == "1d": 
         run(view_part="1d", label_view=1, grouping_of_data="1h", night=night_v)
@@ -196,7 +198,7 @@ btn_1w_mean.grid(column=5, row=1)
 view_part: str # 1h exempelvis
 label_view: int # var ... label syns
 grouping_of_data: str # timmar som de grupperas i för att lättare analysera data som hänger ihop typ medeltemp över en dag
-df = pd.read_csv("Python/Projekten/Kombo/weather app/mydata.csv", index_col="ID") # df hämtas
+df = pd.read_csv(f"{sys.path[0]}/mydata.csv", index_col="ID") # df hämtas
 
 df_time = df["time"]
 unf_now = datetime.now()
@@ -295,15 +297,16 @@ def temp_graph(view_part, label_view, grouping_of_data, night):
     ax3.set_xticklabels(np.unique(day_labeling))
     
 
+    precipitation = mean_arr[1]*100
+    precipitation = np.where(precipitation>0, precipitation, 0)
 
-
-    axs.set_yticks(np.arange(np.amin(mean_arr), np.amax(mean_arr), 1))
+    axs.set_yticks(np.arange(math.floor(np.amin(mean_arr)), math.ceil(np.amax(mean_arr)), 1))
     axs.set_title("Temperatur och Vind Graf")
     axs.set_ylabel("Nivå")
     axs.set_xlabel("Tid")
     axs.plot(x_arr,mean_arr[0],  label="Temperatur", linewidth=3)
-    axs.plot(x_arr,mean_arr[1],  label="Molnighet", linewidth=3)
-    axs.plot(x_arr,mean_arr[2],  label="Regn", linewidth=3)
+    axs.plot(x_arr,precipitation,  label="Nederbörd", linewidth=3)
+    axs.plot(x_arr,mean_arr[2],  label="Molnighet", linewidth=3)
     #print(np.amax(mean_arr))
 
     try:
@@ -390,7 +393,7 @@ def wind_graph(view_part, label_view, grouping_of_data, night):
     ax3.set_xticklabels(np.unique(day_labeling))
     
     
-    axs.set_yticks(np.arange(np.amin(mean_arr), np.amax(mean_arr), 1))
+    axs.set_yticks(np.arange(math.floor(np.amin(mean_arr)), math.ceil(np.amax(mean_arr)), 1))
 
     normal_wind = np.array(mean_arr.tolist()[0])
     high_wind = np.array(mean_arr.tolist()[1])
