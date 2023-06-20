@@ -8,4 +8,5 @@ pag.write("Hello")
 
 # trycker en viss knapp
 #pag.press("enter")
-pag.press("w")
+#pag.press("w")
+#pag.press("space")

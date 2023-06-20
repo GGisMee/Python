@@ -198,7 +198,7 @@ btn_1w_mean.grid(column=5, row=1)
 view_part: str # 1h exempelvis
 label_view: int # var ... label syns
 grouping_of_data: str # timmar som de grupperas i för att lättare analysera data som hänger ihop typ medeltemp över en dag
-df = pd.read_csv(f"{sys.path[0]}/mydata.csv", index_col="ID") # df hämtas
+df = pd.read_csv(same_dir("mydata.csv"), index_col="ID") # df hämtas
 
 df_time = df["time"]
 unf_now = datetime.now()
@@ -314,9 +314,10 @@ def temp_graph(view_part, label_view, grouping_of_data, night):
             axs.plot([now_point, now_point], [0, np.amax(mean_arr)], color="red", linewidth=2,linestyle="dashed")
     except UnboundLocalError:
         print("Problems with nighttime or shift from one day to another")
+
      # de kommer visas korrekt
     axs.legend()
-
+    print("helo2")
     canvas = FigureCanvasTkAgg(fig, master=temp_canvas_f)
     canvas.draw()
     canvas.get_tk_widget().pack()
