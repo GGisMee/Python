@@ -176,6 +176,18 @@ class newcoord:
             print(f"change: {[xchange, ychange]}")
             print(f"new coords: {xy}")
         return xy[0], xy[1]
+    def rotate_from_origo(xy,deg, show=False): # byt kvadrant eller rotera mellansteg
+        xy = [1,1]
+        deg = -90
+        inherited_deg = Linear.k_to_degrees(Line.points_to_linear_function([0,0], xy)[0])
+        deg+=inherited_deg
+        length = point(xy).length()
+        xy1 = newcoord.from_deg_xy_len(deg, [0,0], length, show=True)
+        if show:
+            print(f"original position: {xy}, inhertited deg: {inherited_deg}")
+            print(f"rotation: {deg}, length: {length}")
+            print(f"new coord: {xy1}")
+        return xy1 
 
 
 
