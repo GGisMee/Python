@@ -18,8 +18,10 @@ class shape:
         self.position = position # denna är som andra box position och visar var på mappen den finns
         self.boxes = boxes # är alla boxar i en shape
     def rotate(self):
-        for i in self.boxes:
-            pass
+        print(self.boxes)
+        for i, el in enumerate(self.boxes):
+            self.boxes[i] = newcoord.rotate_from_origo(el, -90)
+            print(self.boxes[i])
 
 # själva blocken
 class I_block(shape):
@@ -51,9 +53,10 @@ class O_block(shape):
 
 
 #! fixa en kvadrant konverterare i sgl för att enkelt kunna rotera
-
-j = I_block(position=[5,2], color="yellow")   
-print(j)
+#! fixa error med kvadrant konverterare
+#print(newcoord.rotate_from_origo([1,0], -90))
+# j = I_block(position=[5,2], color="yellow")   
+# j.rotate()
 exit()
 box_arr = np.resize(np.arange(0, 10*20), (20,10))+1 # ska användas för att genom xy positioner i index få ut boxen att ändra
 # ger en xy grid med 0,0 till 10, 20 till höger nedåt

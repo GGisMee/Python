@@ -106,9 +106,6 @@ class Line:
         return xy
 
 
-Line.specific_point_between_points([1,1], [-1,-2], 0.5, True)
-
-
 class Linear:
     def Linear_point_changer(k=None,m=None,xy=None, show = False): # tar basically alla förutom 1 och ger tillbaka den saknade
         if xy[1] == None or xy[0] == None:
@@ -179,12 +176,14 @@ class newcoord:
             print(f"new coords: {xy}")
         return xy[0], xy[1]
     def rotate_from_origo(xy,deg, show=False): # byt kvadrant eller rotera mellansteg
-        xy = [1,1]
         deg = -90
-        inherited_deg = Linear.k_to_degrees(Line.points_to_linear_function([0,0], xy)[0])
+        try:
+            inherited_deg = Linear.k_to_degrees(Line.points_to_linear_function([0,0], xy)[0])
+        except ZeroDivisionError:
+            return [0,0]
         deg+=inherited_deg
         length = point(xy).length()
-        xy1 = newcoord.from_deg_xy_len(deg, [0,0], length, show=True)
+        xy1 = newcoord.from_deg_xy_len(deg, [0,0], length)
         if show:
             print(f"original position: {xy}, inhertited deg: {inherited_deg}")
             print(f"rotation: {deg}, length: {length}")

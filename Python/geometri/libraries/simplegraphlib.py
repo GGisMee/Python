@@ -182,7 +182,7 @@ class newcoord:
         inherited_deg = Linear.k_to_degrees(Line.points_to_linear_function([0,0], xy)[0])
         deg+=inherited_deg
         length = point(xy).length()
-        xy1 = newcoord.from_deg_xy_len(deg, [0,0], length, show=True)
+        xy1 = newcoord.from_deg_xy_len(deg, [0,0], length)
         if show:
             print(f"original position: {xy}, inhertited deg: {inherited_deg}")
             print(f"rotation: {deg}, length: {length}")
