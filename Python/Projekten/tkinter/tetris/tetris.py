@@ -15,11 +15,18 @@ canvas.pack()
 
 class shape:
     local_boxes: list
+    
     def __init__(self, position, color):
         self.color = color
         self.position = position # denna är positionen och visar var på mappen den finns
         self.boxes = np.array(self.local_boxes)+position
-        print(self.boxes)
+        self.creation()
+
+    def creation(self):
+        for i, el in enumerate(self.boxes):
+           # fixa så den tar in på den positionen från arrayen och ändrar färgen
+           pass
+           
     def rotate(self):
         for i, el in enumerate(self.local_boxes):
             if el!= [0,0]:
@@ -101,11 +108,11 @@ for i in range(20):
 run_v: bool = True
 all_shapes = ["I_block", "J_block", "L_block", "O_block", "S_block", "T_block", "Z_block"]
 upcoming_shapes = np.vectorize(lambda el: all_shapes[el])(np.random.randint(6, size=3))
-current_shape = eval(all_shapes[randint(0, 6)])
 
 def new_shape():
     global current_shape, upcoming_shapes
     current_shape = eval(upcoming_shapes[0])
+    current_shape = eval(all_shapes[0]) # remove after deving
     upcoming_shapes = np.delete(upcoming_shapes, 0)
 
     x = (np.array(current_shape.local_boxes)[:,0]) 
@@ -118,18 +125,14 @@ def new_shape():
     position = [random_position+x_offset, y_offset]
     #print(position)
     shape_c = current_shape(position)
-    shape_c.rotate()
-    # print(x_offset, y_offset)
-    # print(width, length)
-    # print(random_position)
     
 
 
 
 def run():
     new_shape()
-
-    exit()
+    window.update_idletasks()
+    window.mainloop()
 
     while run:
 
