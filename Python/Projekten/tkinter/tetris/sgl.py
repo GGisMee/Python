@@ -10,6 +10,18 @@ def counting_lib(idholder, variable):
     if variable not in counting_lib_dic[idholder]:
         counting_lib_dic[idholder].append([len(counting_lib_dic[idholder]), variable]) 
 
+def get_quadrant(xy):
+    x,y = xy
+    print(x,y)
+    if x>=0 and y>=0:
+        return 1
+    elif x<=0 and y>=0:
+        return 2
+    elif x<=0 and y<=0:
+        return 3
+    elif x>=0 and y<=0:
+        return 4
+
 class degrees:
     def shorten_deg(deg, show=False):
         while deg < 0:
@@ -31,7 +43,21 @@ class degrees:
             deg+=distance*2
         if show:
             print(f"deg: {deg}\ndistance: {distance}")
+        return 
+    def get_deg(xy1, xy2, show=False): # som i kvadrant 1 fast fortsatt
+        xy = np.array(xy2)-np.array(xy1)
+        quad = get_quadrant(xy)
+        partial_deg = np.absolute(np.degrees(np.arctan(xy[1]/xy[0])))
+        if quad in [2,4]:
+            partial_deg = 90-partial_deg
+        deg = (partial_deg+90*(quad-1))
+        if show:
+            print(f"initial xy1: {xy}, initial xy2: {xy2}")
+            print(f"partial degrees: {partial_deg}")
+            print(f"final degrees: {deg}")
         return deg
+        
+
 
 class point:
     def __init__(self, xy):
@@ -51,8 +77,17 @@ class Line:
         return xymid
 
     def points_to_linear_function(xy1, xy2, show=False):
-        k_value_var = ((xy1[1]-xy2[1])/(xy1[0]-xy2[0]))
-        m_value_var = (xy1[1]-(k_value_var*xy1[0]))
+        try:
+            k_value_var = ((xy1[1]-xy2[1])/(xy1[0]-xy2[0]))
+            m_value_var = (xy1[1]-(k_value_var*xy1[0]))
+        except ZeroDivisionError:
+            if xy1[1]>xy2[1]:
+                k_value_var = np.inf
+            elif xy1[1]<xy2[1]:
+                k_value_var = -np.inf
+            elif xy1[1]==xy2[1]:
+                return None, 0
+            return k_value_var, 0
         if show == True:
             tecken = ""
             if m_value_var>=0:
@@ -129,7 +164,8 @@ class Linear:
             return k,m
     
     def k_to_degrees(k, show = False): # k värde till grader, lista funkar med
-        degrees = np.degrees(np.arctan(k))
+        rad = (np.arctan(k))
+        degrees = np.degrees(rad)
         if show:
             print(f"deg={degrees}")
         return degrees
@@ -176,11 +212,7 @@ class newcoord:
             print(f"new coords: {xy}")
         return xy[0], xy[1]
     def rotate_from_origo(xy,deg, show=False): # byt kvadrant eller rotera mellansteg
-        deg = -90
-        try:
-            inherited_deg = Linear.k_to_degrees(Line.points_to_linear_function([0,0], xy)[0])
-        except ZeroDivisionError:
-            return [0,0]
+        inherited_deg = degrees.get_deg([0,0], xy)
         deg+=inherited_deg
         length = point(xy).length()
         xy1 = newcoord.from_deg_xy_len(deg, [0,0], length)
@@ -188,7 +220,10 @@ class newcoord:
             print(f"original position: {xy}, inhertited deg: {inherited_deg}")
             print(f"rotation: {deg}, length: {length}")
             print(f"new coord: {xy1}")
-        return xy1 
+        return xy1
+    
+
+
 class shape:
     def __init__(self, xy):
         self.xy = np.array([xy])
