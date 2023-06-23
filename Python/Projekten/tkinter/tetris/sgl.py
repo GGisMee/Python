@@ -12,7 +12,6 @@ def counting_lib(idholder, variable):
 
 def get_quadrant(xy):
     x,y = xy
-    print(x,y)
     if x>=0 and y>=0:
         return 1
     elif x<=0 and y>=0:
@@ -216,7 +215,7 @@ class newcoord:
         deg+=inherited_deg
         length = point(xy).length()
         xy1 = newcoord.from_deg_xy_len(deg, [0,0], length)
-        if show:
+        if show: 
             print(f"original position: {xy}, inhertited deg: {inherited_deg}")
             print(f"rotation: {deg}, length: {length}")
             print(f"new coord: {xy1}")
