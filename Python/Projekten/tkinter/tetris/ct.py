@@ -1,16 +1,12 @@
-import tkinter as tk
 import numpy as np
 
-arr = np.array([[1,2], [3,4], [5,6]])+[1,2]
-print(arr)
-print(arr[:,1])
+empty_array = np.empty((0, 2))
+array1 = np.array([[1, 2], [3, 4]])
+array2 = np.array([[5, 6], [7, 8]])
+array3 = np.array([[9, 10], [11, 12]])
 
-exit()
-window = tk.Tk()
+result = np.vstack((empty_array, array1))
+result = np.vstack((result, array2))
+result = np.vstack((result, array3))
 
-canvas = tk.Canvas(window)
-canvas.pack()
-canvas.create_rectangle(0,0, 100, 100, fill="lime")
-
-
-window.mainloop()
+print(result)
