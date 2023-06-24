@@ -20,14 +20,45 @@ class shape:
         self.color = color
         self.position = position # denna är positionen och visar var på mappen den finns
         self.boxes = np.array(self.local_boxes)+position
-        self.creation()
+        self.create()
 
-    def creation(self):
+    def delete(self):
+        #print(self.boxes)
         for i, el in enumerate(self.boxes):
+            print(box_arr[2][6])
+            print(el[0], el[1])
+            print(box_arr)
+            positions_on_grid = (box_arr[el[0]][el[1]])
+            #print(positions_on_grid, type(positions_on_grid))
+            canvas.itemconfig(positions_on_grid, fill="light gray")
+            canvas.update_idletasks()
+
+    def create(self):
+        #b = self.boxes[:,1]
+        #b= np.array([[-2, 1], [0,2], [0,0], [1,-1]])[:,1]
+        print(self.boxes, print())
+        for i, el in enumerate(self.boxes):
+            el = np.vectorize(lambda el1: int(el1))(el)
+            print(el)
+            print(box_arr[el[1]])
+            positions_on_grid = (box_arr[el[1]][el[0]])
+            #print(positions_on_grid, type(positions_on_grid))
+            canvas.itemconfig(positions_on_grid, fill=self.color)
+        canvas.update_idletasks()
+               
            # fixa så den tar in på den positionen från arrayen och ändrar färgen
-           pass
-           
+
+    def evaluate(self): # testar om den är utanför några gränser
+        if (np.any(np.where(self.boxes<0, 1, 0))):
+            print("outside of box")
+            return 1
+        
+        return 0
+
     def rotate(self):
+        self.delete()
+        save_local_boxes = self.local_boxes
+        save_boxes = self.boxes
         for i, el in enumerate(self.local_boxes):
             if el!= [0,0]:
                 self.local_boxes[i] = newcoord.rotate_from_origo(el, -90)
@@ -36,6 +67,13 @@ class shape:
         self.local_boxes = np.round(self.local_boxes).tolist()
         self.boxes = np.array(self.local_boxes)+self.position
         print(self.boxes)
+
+        if self.evaluate():
+            self.boxes = save_boxes 
+            self.local_boxes = save_local_boxes
+            return
+        
+        self.create()
     def move(self):
         pass
 
@@ -50,7 +88,7 @@ class I_block(shape):
 
 
 class J_block(shape):
-    local_boxes = [[-1,1], [-1,0], [0,0], [1,0]]
+    local_boxes = [[-1,-1], [-1,0], [0,0], [1,0]]
     color = "blue"
     def __init__(self, position):
         shape.__init__(self, position, self.color)
@@ -58,7 +96,7 @@ class J_block(shape):
         return "J"
 
 class L_block(shape):
-    local_boxes = [[-1,0], [0,0], [1,0], [1,1]]
+    local_boxes = [[-1,0], [0,0], [1,0], [1,-1]]
     color = "orange"
     def __init__(self, position):
         shape.__init__(self,position, self.color)
@@ -67,7 +105,7 @@ class L_block(shape):
 
 
 class O_block(shape):
-    local_boxes = [[0,0], [1,0], [0,-1], [1,-1]]
+    local_boxes = [[0,0], [1,0], [0,1], [1,1]]
     color = "yellow"
     def __init__(self, position):
         shape.__init__(self, position, self.color)
@@ -75,7 +113,7 @@ class O_block(shape):
         return "O"
     
 class S_block(shape):
-    local_boxes = [[-1,0], [0,0], [0,1], [1,1]]
+    local_boxes = [[-1,0], [0,0], [0,-1], [1,-1]]
     color = "lime"
     def __init__(self, position):
         shape.__init__(self, position, self.color)
@@ -83,7 +121,7 @@ class S_block(shape):
         return "S"
     
 class T_block(shape):
-    local_boxes = [[-1,0], [0,0], [0,1], [1,0]]
+    local_boxes = [[-1,0], [0,0], [0,-1], [1,0]]
     color = "purple"
     def __init__(self, position):
         shape.__init__(self,  position, self.color)
@@ -91,7 +129,7 @@ class T_block(shape):
         return "T"
 
 class Z_block(shape):
-    local_boxes = [[-1,1], [0,1], [0,0], [1,0]]
+    local_boxes = [[-1,-1], [0,-1], [0,0], [1,0]]
     color = "red"
     def __init__(self, position):
         shape.__init__(self, position, self.color)
@@ -105,22 +143,27 @@ for i in range(20):
     for i2 in range(10):
         box_id = canvas.create_rectangle(i2*box_geometry, i*box_geometry, i2*box_geometry+box_geometry, i*box_geometry+box_geometry, fill="light gray", outline="green")
 
+
+
 run_v: bool = True
 all_shapes = ["I_block", "J_block", "L_block", "O_block", "S_block", "T_block", "Z_block"]
 upcoming_shapes = np.vectorize(lambda el: all_shapes[el])(np.random.randint(6, size=3))
 
 def new_shape():
-    global current_shape, upcoming_shapes
+    global upcoming_shapes, shape_c
     current_shape = eval(upcoming_shapes[0])
-    current_shape = eval(all_shapes[0]) # remove after deving
+    current_shape = eval(all_shapes[1]) # remove after dev:ing
     upcoming_shapes = np.delete(upcoming_shapes, 0)
 
     x = (np.array(current_shape.local_boxes)[:,0]) 
     y = (np.array(current_shape.local_boxes)[:,1])
     #print(current_shape.local_boxes)
     width = (np.amax(x)-np.amin(x)+1)
-    y_offset = np.amax(y) # om 0,0 kordinaten är högst upp blir den 0 annars 1 om på andra lagret
+    y_offset = np.abs(np.amin(y)) # om 0,0 kordinaten är högst upp blir den 0 annars 1 om på andra lagret
     x_offset = np.abs(np.amin(x)) # samma fast för x axeln
+    # print(x_offset, y_offset)
+    # print(width)
+    # print(current_shape)
     random_position = (randint(0, 9-width))
     position = [random_position+x_offset, y_offset]
     #print(position)
@@ -131,11 +174,10 @@ def new_shape():
 
 def run():
     new_shape()
-    window.update_idletasks()
-    window.mainloop()
+    #shape_c.rotate()
+    #print(shape_c.boxes)
+    #while run:
 
-    while run:
-
-        time.sleep(1) 
+    #    time.sleep(1) 
 run()
 window.mainloop()
