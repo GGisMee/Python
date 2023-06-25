@@ -5,31 +5,6 @@ import time
 from random import randint
 import threading
 
-
-
-
-
-
-
-
-
-
-
-
-#! big error: lokala boxarna är inte lokala för en typ utan när en ny av en typ skapas kommer den ha lokala boxarna från förra. Alltså är rotation kvar
-#! lös på bästa sätt antingen genom omprogrammering prob 
-
-
-
-
-
-
-
-
-
-
-
-
 window = tk.Tk()
 box_geometry: int = 30
 window.geometry(f"{10*box_geometry}x{20*box_geometry}")
@@ -59,7 +34,7 @@ class shape:
     def create(self, boxes):
         for i, el in enumerate(boxes):
             #el = np.vectorize(lambda el1: int(el1))(el)
-            positions_on_grid = box_arr[int(el[1])][int(el[0])]
+            positions_on_grid = (box_arr[el[1]][el[0]])
 
             canvas.itemconfig(positions_on_grid, fill=self.color)
         #canvas.update_idletasks()     
@@ -75,10 +50,11 @@ class shape:
         if np.any(boxes[:,1]>=20):
             print("outside of lower border")
             return 1
-        #print("\n\n",self.boxes, "\n",old_shapes[1:])
-        if np.any(np.all(self.boxes[:, None] == old_shapes, axis=2)):
+        if np.any(np.all(np.isin(self.boxes.astype(int), old_shapes.astype(int)), axis=1)):
             #print(self.boxes, old_shapes.astype(int)[1:])
             print("inside of another box")
+            print(np.isin(self.boxes, old_shapes))
+            print("\n"*3, self.boxes.astype(int), old_shapes.astype(int))
             return 2
 
         return 0
@@ -234,7 +210,8 @@ shape_c = None
 def new_shape():
     global upcoming_shapes, shape_c, old_shapes
     if shape_c != None:
-        old_shapes = np.vstack((old_shapes, shape_c.boxes.astype(int))).astype(int)
+        old_shapes = np.vstack((old_shapes, shape_c.boxes.astype(int)))
+        #print("\n",old_shapes[1:].astype(int))
 
         
     
@@ -286,22 +263,22 @@ def fall_func():
 
 def run():
     new_shape()
-    # input_thread = threading.Thread(target=get_input)
-    # input_thread.start()
-    # fall_thread = threading.Thread(target=fall_func)
-    # fall_thread.start()
-    shape_c.move_down()
-    shape_c.rotate()
-    shape_c.move_right()
-    shape_c.move_right()
-    shape_c.move_right()
-    shape_c.move_right()
-    for i in range(16):
+    #input_thread = threading.Thread(target=get_input)
+    #input_thread.start()
+    #fall_thread = threading.Thread(target=fall_func)
+    #fall_thread.start()
+    for i in range(19+19):
         shape_c.move_down()
+    window.update()
+    time.sleep(1)
     shape_c.move_down()
-
-
-    
+    window.update()
+    time.sleep(1)
+    for i in range(1):
+        shape_c.move_down()
+    window.update()
+    #time.sleep(1)
+    #shape_c.move_down()
 
 
     

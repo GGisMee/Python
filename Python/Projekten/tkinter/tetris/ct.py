@@ -1,12 +1,24 @@
 import numpy as np
 
-empty_array = np.empty((0, 2))
-array1 = np.array([[1, 2], [3, 4]])
-array2 = np.array([[5, 6], [7, 8]])
-array3 = np.array([[9, 10], [11, 12]])
+arr1 = np.array([[4, 5],
+                 [5, 5],
+                 [6, 5],
+                 [7, 5]])
 
-result = np.vstack((empty_array, array1))
-result = np.vstack((result, array2))
-result = np.vstack((result, array3))
+arr2 = np.array([[4, 19],
+                 [5, 19],
+                 [6, 19],
+                 [7, 19],
+                 [4, 18],
+                 [5, 18],
+                 [6, 18],
+                 [7, 18]])
 
-print(result)
+exists_in_arr2 = np.any(np.all(arr1[:, None] == arr2, axis=2))
+# print(np.all(arr1[:, None] == arr2, axis=2))
+
+
+if exists_in_arr2: # ... is where a condition that checks if examplewise the whole coordinate [4,5] from arr1 is in arr2, then [5,5] and so on
+    print("At least one coordinate in arr1 exists in arr2.")
+else:
+    print("No coordinates in arr1 exist in arr2.")
