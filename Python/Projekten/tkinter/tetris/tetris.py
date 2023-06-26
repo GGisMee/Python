@@ -47,6 +47,7 @@ class shape:
         self.position = position # denna är positionen och visar var på mappen den finns
         self.boxes = np.array(self.local_boxes)+position
         self.create(self.boxes)
+        self.s_local_boxes = self.local_boxes[:]
 
     def delete(self, boxes):
         for i, el in enumerate(boxes):
@@ -89,16 +90,16 @@ class shape:
             print("O, so no rotation")
             return
 
-        save_local_boxes = self.local_boxes[:]
+        save_local_boxes = self.s_local_boxes[:]
         save_boxes = self.boxes[:]
-        for i, el in enumerate(self.local_boxes):
+        for i, el in enumerate(self.s_local_boxes):
             if el!= [0,0]:
-                self.local_boxes[i] = newcoord.rotate_from_origo(el, 90)
+                self.s_local_boxes[i] = newcoord.rotate_from_origo(el, 90)
             else: 
-                self.local_boxes[i] = [0,0]
-        self.local_boxes = np.round(self.local_boxes).tolist()
+                self.s_local_boxes[i] = [0,0]
+        self.s_local_boxes = np.round(self.s_local_boxes).tolist()
 
-        self.boxes = (np.array(self.local_boxes)+self.position).astype(int)
+        self.boxes = (np.array(self.s_local_boxes)+self.position).astype(int)
 
         
         
@@ -108,7 +109,7 @@ class shape:
                 for i in shape_c.boxes:
                     i[1]-=1
             self.boxes = save_boxes 
-            self.local_boxes = save_local_boxes
+            self.s_local_boxes = save_local_boxes
             print("unable")
 
             return
@@ -119,7 +120,7 @@ class shape:
         save_boxes = self.boxes[:]
         self.position[-1] += 1
         
-        self.boxes = (np.array(self.local_boxes)+self.position).astype(int)
+        self.boxes = (np.array(self.s_local_boxes)+self.position).astype(int)
         if self.evaluate(self.boxes):
             self.position[-1]-=1
             self.boxes = save_boxes
@@ -132,7 +133,7 @@ class shape:
         save_boxes = self.boxes[:]
         self.position[0] += 1
         
-        self.boxes = (np.array(self.local_boxes)+self.position).astype(int)
+        self.boxes = (np.array(self.s_local_boxes)+self.position).astype(int)
         if self.evaluate(self.boxes):
             self.position[0]-=1
             self.boxes = save_boxes
@@ -144,7 +145,7 @@ class shape:
         save_boxes = self.boxes[:]
         self.position[0] -= 1
         
-        self.boxes = (np.array(self.local_boxes)+self.position).astype(int)
+        self.boxes = (np.array(self.s_local_boxes)+self.position).astype(int)
         if self.evaluate(self.boxes):
             self.position[0]+=1
             self.boxes = save_boxes
@@ -286,19 +287,12 @@ def fall_func():
 
 def run():
     new_shape()
-    # input_thread = threading.Thread(target=get_input)
-    # input_thread.start()
-    # fall_thread = threading.Thread(target=fall_func)
-    # fall_thread.start()
-    shape_c.move_down()
-    shape_c.rotate()
-    shape_c.move_right()
-    shape_c.move_right()
-    shape_c.move_right()
-    shape_c.move_right()
-    for i in range(16):
-        shape_c.move_down()
-    shape_c.move_down()
+    input_thread = threading.Thread(target=get_input)
+    input_thread.start()
+    fall_thread = threading.Thread(target=fall_func)
+    fall_thread.start()
+    
+
 
 
     
