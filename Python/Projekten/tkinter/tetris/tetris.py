@@ -11,9 +11,10 @@ import threading
 # en titel screen med rekord
 # se på sidan kommande block, kanske en hold funktion
 # paus knapp kanske
+# att den avslutas när man kommer högst upp
+# hastighetssystem
 
-
-
+iterator = 0
 
 window = tk.Tk()
 box_geometry: int = 30
@@ -51,21 +52,26 @@ class shape:
 
 
     def evaluate(self, boxes): # testar om den är utanför några gränser
+        v = 0
+        for i, el in enumerate(old_shapes): #! säger att den befinner sig på [4,18] när den egentligne är på [0,18]
+            for i2, el2 in enumerate(boxes):
+                if np.array_equal(el, el2):
+                    v = 1
+                    break
+
         if (np.any(boxes[:,1]<0)): # [:,1]
             print("outside of higher border")
             return 1
-        if (np.any(boxes[:,0]>=10) or np.any(boxes[:,0]<0)):
+        elif (np.any(boxes[:,0]>=10) or np.any(boxes[:,0]<0)):
             print("outside of right or left border")
             return 1
-        if np.any(boxes[:,1]>=20):
+        elif np.any(boxes[:,1]>=20):
             print("outside of lower border")
             return 1
-        #print("\n\n",self.boxes, "\n",old_shapes[1:])
-        if np.any(np.all(self.boxes[:, None] == old_shapes[1:], axis=2)):
-            #print(self.boxes, old_shapes.astype(int)[1:])
-            print("inside of another box")
+        elif v:
+            print("\n",el, boxes) # >12
+            #print("inside of another box")
             return 2
-
         return 0
 
     def rotate(self):
@@ -133,10 +139,10 @@ class shape:
         self.delete(save_boxes)
         self.create(self.boxes)
     def auto_move_down(self):
-        self.delete
+        #self.delete()
 
         while not self.evaluate(self.boxes):
-            #!time.sleep(0.005)
+            time.sleep(0.005)
             self.move_down()
             window.update_idletasks()
 # själva blocken
@@ -215,7 +221,7 @@ shape_c = None
 
 def get_color_f(values):
     arr = []
-    print(len(values))
+    #print(len(values))
     for i,el in enumerate(values):
         positions_on_grid = (box_arr[el[1]][el[0]])
         color = canvas.itemcget(positions_on_grid, "fill")
@@ -233,26 +239,29 @@ def create_f(boxes, color_arr):
     for i, el in enumerate(boxes):
         positions_on_grid = box_arr[int(el[1])][int(el[0])]
         canvas.itemconfig(positions_on_grid, fill=color_arr[i])
+        print(i)
 
 def check_rows():
     global old_shapes
     window.update()
     if np.any(old_shapes != np.zeros(2)):
-        indexes = (np.unique(old_shapes[1:,1]))
+        indexes = (np.unique(old_shapes[:,1]))
         for i in indexes:
-            values = old_shapes[1:][np.where(old_shapes[1:,1] == i)[0]]
+            values = old_shapes[np.where(old_shapes[:,1] == i)[0]]
             x_values = np.sort(values[:,0])
-            if np.all(x_values  == np.arange(10)):
+            if np.array_equal(x_values, np.arange(10)):
+                window.update()
                 save_old_shapes = old_shapes[:]
-                print("row")
+                #print("row")
                 #print(values)
-                #print(old_shapes[1:],"\n",values, "\n\n\n")
-                indexes2 = np.where((old_shapes[1:, None] == values).all(-1).any(-1))[0]
-                old_shapes = np.delete(old_shapes[1:], indexes2, axis=0)
+                #print(old_shapes,"\n",values, "\n\n\n")
+                indexes2 = np.where(old_shapes[:,1]==i)[0]
+                old_shapes = np.delete(old_shapes, indexes2, axis=0)
+                #print(old_shapes)
                 color_arr = get_color_f(old_shapes)
                 delete_f(save_old_shapes)
-                print(i)
-                print(old_shapes, "\n\n")
+                print(f"len: {i}")
+                #print(old_shapes, "\n\n")
                 rows = old_shapes[:, 1]<i
                 old_shapes[rows, 1]+=1
 
@@ -261,16 +270,19 @@ def check_rows():
 
 
 
-
+test = True
 def new_shape():
-    global upcoming_shapes, shape_c, old_shapes
+    global upcoming_shapes, shape_c, old_shapes, test
     if shape_c != None:
         old_shapes = np.vstack((old_shapes, shape_c.boxes)).astype(int)
+        if test:
+            old_shapes = old_shapes[1:]
+            test = False
 
         
     
     current_shape = eval(upcoming_shapes[0])
-    #current_shape = eval(all_shapes[0]) #* remove after dev:ing
+    current_shape = eval(all_shapes[0]) #* remove after dev:ing
     upcoming_shapes = np.delete(upcoming_shapes, 0)
     upcoming_shapes = np.append(upcoming_shapes, all_shapes[randint(0,6)])
 
@@ -282,7 +294,7 @@ def new_shape():
     x_offset = np.abs(np.amin(x)) # samma fast för x axeln
 
     random_position = (randint(0, 9-width))
-    #random_position = 4 #* remove after dev:ing
+    random_position = 4 #* remove after dev:ing
     position = [random_position+x_offset, y_offset]
 
     shape_c = current_shape(position)
@@ -314,11 +326,12 @@ def fall_func():
         shape_c.move_down()
 
 def run():
+    global old_shapes
     new_shape()
-    input_thread = threading.Thread(target=get_input)
-    input_thread.start()
-    fall_thread = threading.Thread(target=fall_func)
-    fall_thread.start()
+    # input_thread = threading.Thread(target=get_input)
+    # input_thread.start()
+    # fall_thread = threading.Thread(target=fall_func)
+    # fall_thread.start()
     """
     shape_c.move_down()
     shape_c.auto_move_down()
@@ -326,41 +339,52 @@ def run():
     shape_c.move_right()
     shape_c.move_left()
     """
-    # shape_c.move_right()
-    # shape_c.move_right()
-    # shape_c.auto_move_down()
+    shape_c.move_right()
+    shape_c.move_right()
+    shape_c.auto_move_down()
 
-    # shape_c.move_left()
-    # shape_c.move_left()
-    # shape_c.auto_move_down()
+    shape_c.move_left()
+    shape_c.move_left()
+    shape_c.auto_move_down()
 
-    # shape_c.move_left()
-    # shape_c.move_left()
-    # shape_c.move_left()
-    # shape_c.move_left()
-    # shape_c.auto_move_down()
+    shape_c.move_left()
+    shape_c.move_left()
+    shape_c.move_left()
+    shape_c.move_left()
+    shape_c.auto_move_down()
 
-    # shape_c.auto_move_down()
+    shape_c.auto_move_down()
 
+    shape_c.move_down()
+    shape_c.rotate()
+    shape_c.move_right()
+    shape_c.move_right()
+    shape_c.move_right()
+    shape_c.auto_move_down()
+
+    shape_c.move_down()
+    shape_c.rotate()
+    shape_c.move_right()
+    shape_c.move_right()
+    shape_c.move_right()
+    shape_c.move_right()
+    shape_c.auto_move_down()
+
+    shape_c.auto_move_down()
+
+    shape_c.move_left()
+    shape_c.move_left()
+    shape_c.move_left()
+    shape_c.move_left()
+    shape_c.auto_move_down()
+    # for i in range(18):
+    #     shape_c.move_down()
+    # window.update()
+    # time.sleep(2)
     # shape_c.move_down()
-    # shape_c.rotate()
-    # shape_c.move_right()
-    # shape_c.move_right()
-    # shape_c.move_right()
-    # shape_c.auto_move_down()
-
-    # shape_c.move_down()
-    # shape_c.rotate()
-    # shape_c.move_right()
-    # shape_c.move_right()
-    # shape_c.move_right()
-    # shape_c.move_right()
-    # shape_c.auto_move_down()
 
 
-
-
-    
+    #shape_c.auto_move_down()
 
 
     
