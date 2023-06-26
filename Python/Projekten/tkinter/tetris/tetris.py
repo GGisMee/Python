@@ -5,27 +5,12 @@ import time
 from random import randint
 import threading
 
-
-
-
-
-
-
-
-
-
-
-
-#! big error: lokala boxarna är inte lokala för en typ utan när en ny av en typ skapas kommer den ha lokala boxarna från förra. Alltså är rotation kvar
-#! lös på bästa sätt antingen genom omprogrammering prob 
-
-
-
-
-
-
-
-
+#* att fixa
+#! bug fritt
+# fixa senare en outline till blocken
+# en titel screen med rekord
+# se på sidan kommande block, kanske en hold funktion
+# paus knapp kanske
 
 
 
@@ -63,8 +48,7 @@ class shape:
             positions_on_grid = box_arr[int(el[1])][int(el[0])]
 
             canvas.itemconfig(positions_on_grid, fill=self.color)
-        #canvas.update_idletasks()     
-           # fixa så den tar in på den positionen från arrayen och ändrar färgen
+
 
     def evaluate(self, boxes): # testar om den är utanför några gränser
         if (np.any(boxes[:,1]<0)): # [:,1]
@@ -77,7 +61,7 @@ class shape:
             print("outside of lower border")
             return 1
         #print("\n\n",self.boxes, "\n",old_shapes[1:])
-        if np.any(np.all(self.boxes[:, None] == old_shapes, axis=2)):
+        if np.any(np.all(self.boxes[:, None] == old_shapes[1:], axis=2)):
             #print(self.boxes, old_shapes.astype(int)[1:])
             print("inside of another box")
             return 2
@@ -85,7 +69,6 @@ class shape:
         return 0
 
     def rotate(self):
-
         if str(self) == "O":
             print("O, so no rotation")
             return
@@ -101,8 +84,6 @@ class shape:
 
         self.boxes = (np.array(self.s_local_boxes)+self.position).astype(int)
 
-        
-        
         evaluation = self.evaluate(self.boxes)
         if evaluation:
             if evaluation == 2:
@@ -111,7 +92,6 @@ class shape:
             self.boxes = save_boxes 
             self.s_local_boxes = save_local_boxes
             print("unable")
-
             return
         self.delete(save_boxes)
         self.create(self.boxes)
@@ -156,11 +136,13 @@ class shape:
         self.delete
 
         while not self.evaluate(self.boxes):
+            #!time.sleep(0.005)
             self.move_down()
+            window.update_idletasks()
 # själva blocken
 class I_block(shape):
     local_boxes = [[-1,0], [0,0], [1,0], [2,0]]
-    color = "aqua"
+    color = "#00ffff"
     def __init__(self, position):
         shape.__init__(self, position, self.color)
     def __repr__(self):
@@ -169,7 +151,7 @@ class I_block(shape):
 
 class J_block(shape):
     local_boxes = [[-1,-1], [-1,0], [0,0], [1,0]]
-    color = "blue"
+    color = "#0000ff"
     def __init__(self, position):
         shape.__init__(self, position, self.color)
     def __repr__(self):
@@ -177,7 +159,7 @@ class J_block(shape):
 
 class L_block(shape):
     local_boxes = [[-1,0], [0,0], [1,0], [1,-1]]
-    color = "orange"
+    color = "#ff7f00"
     def __init__(self, position):
         shape.__init__(self,position, self.color)
     def __repr__(self):
@@ -186,7 +168,7 @@ class L_block(shape):
 
 class O_block(shape):
     local_boxes = [[0,0], [1,0], [0,1], [1,1]]
-    color = "yellow"
+    color = "#ffff00"
     def __init__(self, position):
         shape.__init__(self, position, self.color)
     def __repr__(self):
@@ -194,7 +176,7 @@ class O_block(shape):
     
 class S_block(shape):
     local_boxes = [[-1,0], [0,0], [0,-1], [1,-1]]
-    color = "lime"
+    color = "#00ff00"
     def __init__(self, position):
         shape.__init__(self, position, self.color)
     def __repr__(self):
@@ -202,7 +184,7 @@ class S_block(shape):
     
 class T_block(shape):
     local_boxes = [[-1,0], [0,0], [0,-1], [1,0]]
-    color = "#A020F0"
+    color = "#800080"
     def __init__(self, position):
         shape.__init__(self,  position, self.color)
     def __repr__(self):
@@ -210,7 +192,7 @@ class T_block(shape):
 
 class Z_block(shape):
     local_boxes = [[-1,-1], [0,-1], [0,0], [1,0]]
-    color = "red"
+    color = "#ff0000"
     def __init__(self, position):
         shape.__init__(self, position, self.color)
     def __repr__(self):
@@ -228,19 +210,67 @@ for i in range(20):
 run_v: bool = True
 all_shapes = ["I_block", "J_block", "L_block", "O_block", "S_block", "T_block", "Z_block"]
 upcoming_shapes = np.vectorize(lambda el: all_shapes[el])(np.random.randint(6, size=3))
-old_shapes = np.empty(2)
+old_shapes = np.zeros(2)
 shape_c = None
+
+def get_color_f(values):
+    arr = []
+    print(len(values))
+    for i,el in enumerate(values):
+        positions_on_grid = (box_arr[el[1]][el[0]])
+        color = canvas.itemcget(positions_on_grid, "fill")
+        arr.append(color)
+    return np.array(arr)
+    
+
+def delete_f(boxes):
+    for i, el in enumerate(boxes):
+            #el = np.vectorize(lambda el1: int(el1))(el)
+            positions_on_grid = (box_arr[el[1]][el[0]])
+            canvas.itemconfig(positions_on_grid, fill="light gray")
+def create_f(boxes, color_arr):
+    #print(boxes)
+    for i, el in enumerate(boxes):
+        positions_on_grid = box_arr[int(el[1])][int(el[0])]
+        canvas.itemconfig(positions_on_grid, fill=color_arr[i])
+
+def check_rows():
+    global old_shapes
+    window.update()
+    if np.any(old_shapes != np.zeros(2)):
+        indexes = (np.unique(old_shapes[1:,1]))
+        for i in indexes:
+            values = old_shapes[1:][np.where(old_shapes[1:,1] == i)[0]]
+            x_values = np.sort(values[:,0])
+            if np.all(x_values  == np.arange(10)):
+                save_old_shapes = old_shapes[:]
+                print("row")
+                #print(values)
+                #print(old_shapes[1:],"\n",values, "\n\n\n")
+                indexes2 = np.where((old_shapes[1:, None] == values).all(-1).any(-1))[0]
+                old_shapes = np.delete(old_shapes[1:], indexes2, axis=0)
+                color_arr = get_color_f(old_shapes)
+                delete_f(save_old_shapes)
+                print(i)
+                print(old_shapes, "\n\n")
+                rows = old_shapes[:, 1]<i
+                old_shapes[rows, 1]+=1
+
+                #old_shapes[:,1]+=1 # den kan helt enkelt inte flytta ned utan man måste hitta alla över den nivån och flytta ned dem
+                create_f(old_shapes, color_arr)
+
+
 
 
 def new_shape():
     global upcoming_shapes, shape_c, old_shapes
     if shape_c != None:
-        old_shapes = np.vstack((old_shapes, shape_c.boxes.astype(int))).astype(int)
+        old_shapes = np.vstack((old_shapes, shape_c.boxes)).astype(int)
 
         
     
     current_shape = eval(upcoming_shapes[0])
-    current_shape = eval(all_shapes[0]) #* remove after dev:ing
+    #current_shape = eval(all_shapes[0]) #* remove after dev:ing
     upcoming_shapes = np.delete(upcoming_shapes, 0)
     upcoming_shapes = np.append(upcoming_shapes, all_shapes[randint(0,6)])
 
@@ -252,13 +282,12 @@ def new_shape():
     x_offset = np.abs(np.amin(x)) # samma fast för x axeln
 
     random_position = (randint(0, 9-width))
-    random_position = 4 #* remove after dev:ing
+    #random_position = 4 #* remove after dev:ing
     position = [random_position+x_offset, y_offset]
 
     shape_c = current_shape(position)
-    
-def check_rows():
-    pass # old_shapes
+
+    check_rows()
 
 def right_packer(event):
     shape_c.move_right()
@@ -270,7 +299,7 @@ def down_packer(event):
     shape_c.move_down()
 def space_packer(event):
     shape_c.auto_move_down()
-    time.sleep(1)
+    time.sleep(0.5)
 def get_input():
     window.bind("<Right>", right_packer)   
     window.bind("<Left>", left_packer)      
@@ -283,7 +312,6 @@ def fall_func():
     while True:
         time.sleep(2)
         shape_c.move_down()
-    
 
 def run():
     new_shape()
@@ -291,7 +319,44 @@ def run():
     input_thread.start()
     fall_thread = threading.Thread(target=fall_func)
     fall_thread.start()
-    
+    """
+    shape_c.move_down()
+    shape_c.auto_move_down()
+    shape_c.rotate()
+    shape_c.move_right()
+    shape_c.move_left()
+    """
+    # shape_c.move_right()
+    # shape_c.move_right()
+    # shape_c.auto_move_down()
+
+    # shape_c.move_left()
+    # shape_c.move_left()
+    # shape_c.auto_move_down()
+
+    # shape_c.move_left()
+    # shape_c.move_left()
+    # shape_c.move_left()
+    # shape_c.move_left()
+    # shape_c.auto_move_down()
+
+    # shape_c.auto_move_down()
+
+    # shape_c.move_down()
+    # shape_c.rotate()
+    # shape_c.move_right()
+    # shape_c.move_right()
+    # shape_c.move_right()
+    # shape_c.auto_move_down()
+
+    # shape_c.move_down()
+    # shape_c.rotate()
+    # shape_c.move_right()
+    # shape_c.move_right()
+    # shape_c.move_right()
+    # shape_c.move_right()
+    # shape_c.auto_move_down()
+
 
 
 
