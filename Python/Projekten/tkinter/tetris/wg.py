@@ -1,25 +1,27 @@
 import numpy as np
-a = np.array([[ 6, 19],
-       [ 7, 19],
-       [ 8, 19],
-       [ 9, 19],
-       [ 2, 19],
-       [ 3, 19],
-       [ 4, 19],
-       [ 5, 19],
-       [ 8, 16],
-       [ 8, 17],
-       [ 8, 18],
-       [ 9, 16],
-       [ 9, 17],
-       [ 9, 18],
-       [ 4, 18],
-       [ 5, 18],
-       [ 6, 18],
-       [ 7, 18],
-       [ 0, 18],
-       [ 1, 18],
-       [ 2, 18],
-       [ 3, 18]])
 
-print(np.vectorize(lambda el: str(el)+"hello")(a))
+
+class C:
+       def __init__(self, boxes):
+             self.boxes = np.array(boxes)
+       
+       def func(self):
+              box_arr = np.resize(np.arange(0, 10*20), (20,10))+1 # ska användas för att genom xy positioner i index få ut boxen att ändra
+              boxes_to_display = np.array(box_arr[:]).T
+              min = np.min(self.boxes[:,0])-1
+              max = np.max(self.boxes[:,0])
+              boxes_to_display = (boxes_to_display[min:max].T)
+              #print(boxes_to_display)
+              boxes_to_display = np.reshape(boxes_to_display, (1, -1))[0]
+
+              for el1, el2 in self.boxes:
+                     obj = (el1+el2*10)
+                     boxes_to_display = np.delete(boxes_to_display, np.where(boxes_to_display == obj)[0][0])
+              #print(boxes_to_display)
+              for i, el in enumerate(boxes_to_display):
+                     block_area.itemconfig(boxes_to_display, fill="yellow")
+
+       
+
+c_obj = C([[4,0], [5,0], [6,0],[7,0]])
+c_obj.func()
