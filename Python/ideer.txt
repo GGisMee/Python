@@ -19,4 +19,10 @@ Denna foldern innehåller ideer om vad jag kan tänkas göra:
 
 - Planerare: planerare med boxar som kan sammanlänkas och skrivas på. Själva infon sparas i en folder i JPeg fil kanske och visas med Canvas kanske 
 
+- Lär ett nytt library :D
+
+- tidtagare till kod, ganska ez
+
+- funktions räknare som räknar hur många gånger en funktion kalls
+
 
