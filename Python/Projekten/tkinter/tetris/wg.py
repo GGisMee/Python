@@ -1,8 +1,5 @@
 import numpy as np
-for i in np.arange(1, 20+1):
-    print("nr: "+str(i))
-
-np.array([[ 6, 19],
+a = np.array([[ 6, 19],
        [ 7, 19],
        [ 8, 19],
        [ 9, 19],
@@ -24,3 +21,5 @@ np.array([[ 6, 19],
        [ 1, 18],
        [ 2, 18],
        [ 3, 18]])
+
+print(np.vectorize(lambda el: str(el)+"hello")(a))
