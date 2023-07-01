@@ -7,8 +7,8 @@ import threading
 
 #todo
 #! bug fritt
-# fixa senare en outline till blocken
-# en outline längst ned där blocket kommer hamna eller en grå väg ned
+#* fixa senare en outline till blocken
+#* en outline längst ned där blocket kommer hamna eller en grå väg ned
 # en titel screen med rekord
 # se på sidan kommande block, kanske en hold funktion
 # paus knapp kanske
@@ -51,57 +51,73 @@ class shape:
         self.last_boxes_td: np.ndarray
 
     def down_display(self): #! kan förenklas med bara de raderna och sedan lägg på blocket istället för att ta bort block positionen
+        print("\n\n")
         #window.update() # remove after deving
         boxes_to_display = np.array(box_arr[:])
         min = np.min(self.boxes[:,0])
         max = np.max(self.boxes[:,0])+1
-        boxes_to_display = (boxes_to_display[:,min:max])
-
-        boxes_to_display = np.reshape(boxes_to_display, (1, -1))[0]
-        for el1, el2 in self.boxes:
-               obj = (el1+el2*10)+1
-               boxes_to_display = np.delete(boxes_to_display, np.where(boxes_to_display == obj)[0][0])
-
-
-        columns = np.unique(self.boxes[:,0])
-        pass
-        for column in columns:
-            #print(self.boxes)
-            row_values = self.boxes[np.where(self.boxes[:,0]==column)][:,1]
-            lowest_row = np.min(row_values)
-            value = column+lowest_row*10
-            for obj in box_arr[:,column][np.where(box_arr[:,column]<value)]:
-                boxes_to_display = np.delete(boxes_to_display, np.where(boxes_to_display == obj)[0][0])
+        boxes_to_display = (boxes_to_display[:, min:max])
+        # raderar över och själva self.boxes
+        for i in np.unique(self.boxes[:,0]):
+            max_y_value = (np.max(self.boxes[np.where(self.boxes[:,0]==i)][:,1]))
+            positional_value_boxes = box_arr[max_y_value][i] # ordnar så den blir av samma typ som boxes_to_display
+            positional_values = box_arr[np.where(box_arr[:,i]<=positional_value_boxes),i][0] # tar fram värderna över boxen eller boxen själv
+            for obj in positional_values:
+                boxes_to_display = np.where(boxes_to_display == obj, None, boxes_to_display)
 
 
-
-
+        # för old_shapes och under
         if not np.array_equal(old_shapes, np.array([0,0])):
-
-            rows = np.unique(old_shapes[:,0]) # 67
-            for row in rows:
-                indexes = (np.where(old_shapes[:,0] == row))[0]
-                y_values = (old_shapes[indexes,1])
-                min_y = np.min(y_values)
-                range_ = (np.arange(min_y, 20))
-
-                for i2 in range_:
-                    try:
-                        positions_on_grid = (box_arr[i2][row])
-                        boxes_to_display = np.delete(boxes_to_display, np.where(boxes_to_display == positions_on_grid)[0][0])
-                    except IndexError:
-                        pass
+            pass
+            #window.update()
+            arr = old_shapes[:, 0]
+            l_old_shapes = old_shapes[(arr > min-1) & (arr < max)]
+            
 
 
-        for i in self.last_boxes_td:
-               #print(i)
-               block_area.itemconfig(i, fill="#262626", outline = "#4f4f4f")
+            for i,el in enumerate(np.unique(self.boxes[:,0])):
+                max_y_value = (np.max(self.boxes[np.where(self.boxes[:,0]==el)][:,1]))
+                #print(max_y_value)
+                positional_value_boxes = box_arr[max_y_value][el] # ordnar så den blir av samma typ som boxes_to_display
+                positional_values = box_arr[box_arr[:,el]<=positional_value_boxes,el][0] # tar fram värderna över boxen
+                
+                
+                # old_shapes deleteing above
+                l_os_for_row = l_old_shapes[l_old_shapes[:,0]==el] # narrowed down for only this row
+                l_os_for_row = l_os_for_row[:, 0] + l_os_for_row[:, 1] * 10   # fix to boxes_to_display format
+                l_os_for_row = np.delete(l_os_for_row, [np.where(l_os_for_row<positional_value_boxes)])
+                
+                # below deletion
+                try:
+                    old_min_y_val = (np.min(l_os_for_row))
 
-        for i in boxes_to_display:
-               #print(i)
-               block_area.itemconfig(i, fill="#363636")
+                    boxes_td_in_column = (boxes_to_display[:, i][boxes_to_display[:, i] != None])
+                    b_to_del = (boxes_td_in_column[boxes_td_in_column>=old_min_y_val])
+                    for obj in b_to_del:
+                        boxes_to_display = np.where(boxes_to_display == obj, None, boxes_to_display)
+                except ValueError:
+                    pass
         
+        pass
+        # deletion
+        if not np.array_equal(self.last_boxes_td, np.array([[0,0]])):
+            for i in self.last_boxes_td: #! fixa problemet med att old_shapes försvinner, annars typ klart :D
+                   block_area.itemconfig(i, fill="#262626", outline = "#4f4f4f")
+        
+        
+        # creation
+        boxes_to_display = np.reshape(boxes_to_display, (1, -1))
+        boxes_to_display = boxes_to_display[boxes_to_display!=None]
+        for i in boxes_to_display:
+            block_area.itemconfig(i, fill="#363636") 
         self.last_boxes_td = boxes_to_display
+                
+
+
+                
+
+
+            
 
     def delete(self, boxes):
         for i, el in enumerate(boxes):
@@ -185,11 +201,12 @@ class shape:
             new_shape()
             return 2
         self.delete(save_boxes)
+        self.down_display()
         self.create(self.boxes) #! också error när den åker nedåt DX
         #! kan prob fixas genom att köra någon extra down_display och deletea allt först, alternativt bara skilla down_display
         if not from_auto: #! för att se till att den inte behöver animera varje steg lade jag till denna, orsakar dock error att det blir mörkt på blocksen och ändå tar tid
+            pass
             
-            self.down_display()
             
 
 
@@ -207,6 +224,7 @@ class shape:
         self.create(self.boxes)
 
 
+
     def move_left(self):
         save_boxes = self.boxes[:]
         self.position[0] -= 1
@@ -221,13 +239,14 @@ class shape:
         self.create(self.boxes)
 
 
+
+
     def auto_move_down(self):
         print(self)
         #self.delete()
         while not self.evaluate(self.boxes): #* verkar som om shape_c och boxen inte är bundna av någon anledning, leta i roten
-            #time.sleep(0.005) #* fix after deving
-            if self.move_down(1) == 2:
-                return
+            time.sleep(0.005) #* fix after deving
+            self.move_down()
             window.update_idletasks()
 # själva blocken
 class I_block(shape):
@@ -370,7 +389,7 @@ def new_shape():
 
     
     current_shape = eval(upcoming_shapes[0])
-    current_shape = eval(all_shapes[-1]) #* remove after dev:ing
+    current_shape = eval(all_shapes[0]) #* remove after dev:ing
     upcoming_shapes = np.delete(upcoming_shapes, 0)
     upcoming_shapes = np.append(upcoming_shapes, all_shapes[randint(0,6)])
 
@@ -382,7 +401,7 @@ def new_shape():
     x_offset = np.abs(np.amin(x)) # samma fast för x axeln
 
     random_position = (randint(0, 10-width))
-    random_position = 0 #* remove after dev:ing
+    random_position = 1 #* remove after dev:ing
     position = [random_position+x_offset, y_offset]
 
     shape_c = current_shape(position)
@@ -418,7 +437,39 @@ def fall_func():
 def run():
     global old_shape
     new_shape()
-    #shape_c.auto_move_down()
+
+
+    #* for bug
+    # shape_c.auto_move_down()
+    # shape_c.move_down()
+    # shape_c.rotate()
+    # shape_c.move_left()
+    # shape_c.auto_move_down()
+    # shape_c.auto_move_down()
+    # shape_c.move_down()
+    # window.update()
+    # time.sleep(1)
+    
+    # shape_c.rotate()
+
+    # window.update()
+    # time.sleep(1)
+    # shape_c.move_down()
+
+    # window.update()
+    # time.sleep(1)
+    # shape_c.move_right()
+
+    # window.update()
+    # time.sleep(1)
+    # shape_c.move_left()
+
+
+
+
+
+    #* for beneath
+    # shape_c.auto_move_down()
 
     # shape_c.auto_move_down()
     # shape_c.move_down()
@@ -429,13 +480,15 @@ def run():
     # shape_c.rotate()
     # shape_c.move_left()
     # shape_c.auto_move_down()
+    
     # shape_c.move_down()
     # shape_c.rotate()
     # shape_c.move_left()
     # shape_c.auto_move_down()
     # shape_c.auto_move_down()
-    # shape_c.move_down()
     # shape_c.down_display()
+    # shape_c.auto_move_down()
+    # shape_c.move_down()
 
     # for i in range(4):
     #     shape_c.move_right()
@@ -444,15 +497,15 @@ def run():
 
     # shape_c.move_left()
     # shape_c.move_left()
+    # shape_c.down_display()
 
     
 
-    # input_thread = threading.Thread(target=get_input)
-    # input_thread.start()
-    # fall_thread = threading.Thread(target=fall_func)
-    # fall_thread.start()
+    input_thread = threading.Thread(target=get_input)
+    input_thread.start()
+    fall_thread = threading.Thread(target=fall_func)
+    fall_thread.start()
 
-    shape_c.move_down()
 
     """
     shape_c.auto_move_down()
