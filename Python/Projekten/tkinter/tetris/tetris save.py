@@ -18,6 +18,8 @@ import threading
 window = tk.Tk()
 box_geometry: int = 20 # ger ut storleken av varje box
 
+game_on: bool = True
+
 window.geometry(f"{10*box_geometry}x{20*box_geometry}")
 #window_size = 10
 block_area = tk.Canvas(window, width=10*box_geometry, height=10*2*box_geometry)
@@ -35,7 +37,7 @@ def lighten(hex):
 
     rgb = np.where(rgb<0, 0, rgb) # lighten value
     r,g,b = np.where(rgb>255, 255, rgb)
-    #print(r,g,b)
+
     new_hex =  "#{:02x}{:02x}{:02x}".format(r, g, b)
     return new_hex
 
@@ -51,8 +53,7 @@ class shape:
         self.last_boxes_td: np.ndarray
 
     def down_display(self): #! kan förenklas med bara de raderna och sedan lägg på blocket istället för att ta bort block positionen
-        print("\n\n")
-        #window.update() # remove after deving
+        print("d")
         boxes_to_display = np.array(box_arr[:])
         min = np.min(self.boxes[:,0])
         max = np.max(self.boxes[:,0])+1
@@ -137,8 +138,8 @@ class shape:
 
     def evaluate(self, boxes): # testar om den är utanför några gränser
         v = 0
-        for i, el in enumerate(old_shapes): #! säger att den befinner sig på [4,18] när den egentligne är på [0,18]
-            for i2, el2 in enumerate(boxes):
+        for el in old_shapes:
+            for el2 in boxes:
                 if np.array_equal(el, el2):
                     v = 1
                     break
@@ -197,15 +198,14 @@ class shape:
         if self.evaluate(self.boxes):
             self.position[-1]-=1
             self.boxes = save_boxes
-            shape_c = self
             new_shape()
             return 2
         self.delete(save_boxes)
-        self.down_display()
-        self.create(self.boxes) #! också error när den åker nedåt DX
+         #! också error när den åker nedåt DX
         #! kan prob fixas genom att köra någon extra down_display och deletea allt först, alternativt bara skilla down_display
         if not from_auto: #! för att se till att den inte behöver animera varje steg lade jag till denna, orsakar dock error att det blir mörkt på blocksen och ändå tar tid
-            pass
+            self.down_display()
+        self.create(self.boxes)
             
             
 
@@ -244,9 +244,10 @@ class shape:
     def auto_move_down(self):
         print(self)
         #self.delete()
+        self.last_boxes_td = np.array([[0,0]])
         while not self.evaluate(self.boxes): #* verkar som om shape_c och boxen inte är bundna av någon anledning, leta i roten
             time.sleep(0.005) #* fix after deving
-            self.move_down()
+            self.move_down(True)
             window.update_idletasks()
 # själva blocken
 class I_block(shape):
@@ -435,8 +436,10 @@ def fall_func():
         shape_c.move_down()
 
 def run():
-    global old_shape
+    global old_shape, game_on
     new_shape()
+
+
 
 
     #* for bug

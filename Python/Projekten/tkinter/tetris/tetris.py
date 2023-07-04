@@ -6,23 +6,47 @@ from random import randint
 import threading
 
 #todo
-#! bug fritt
+#! bug fritt, just nu med under och vissa mörka, solution kör genom alla och hitta de som har grå färg och byt till mörk istället för all denna lastboxes_td bs
 #* fixa senare en outline till blocken
 #* en outline längst ned där blocket kommer hamna eller en grå väg ned
-# en titel screen med rekord
-# se på sidan kommande block, kanske en hold funktion
 # paus knapp kanske
-# att den avslutas när man kommer högst upp
-# hastighetssystem
+# hold funktion
+# hastighetssystem, levels, poäng räknare
+
+
+level = 0
 
 window = tk.Tk()
 box_geometry: int = 20 # ger ut storleken av varje box
 
-window.geometry(f"{10*box_geometry}x{20*box_geometry}")
-#window_size = 10
-block_area = tk.Canvas(window, width=10*box_geometry, height=10*2*box_geometry)
-block_area.pack()
+game_on: bool = True
+
+
+window.geometry(f"{10*box_geometry+box_geometry*5}x{20*box_geometry}")
+
+game_frame = tk.Frame(window)
+game_frame.pack()
+
+block_area = tk.Canvas(game_frame, width=10*box_geometry, height=10*2*box_geometry)
+block_area.grid(column=0, row=0)
 # 10 i bas, 20 i höjd
+
+info_frame = tk.Frame(game_frame, width=box_geometry*4, height=20*box_geometry, bg="gray")
+info_frame.grid(column=1, row=0)
+
+def lighten(hex):
+    hex = hex[1:]
+    rgb: list = []
+    for i in [0,2,4]:
+        decimal = int(hex[i:i+2],16)
+        rgb.append(decimal)
+    rgb = np.array(rgb)-60
+
+    rgb = np.where(rgb<0, 0, rgb) # lighten value
+    r,g,b = np.where(rgb>255, 255, rgb)
+
+    new_hex =  "#{:02x}{:02x}{:02x}".format(r, g, b)
+    return new_hex
 
 
 def lighten(hex):
@@ -40,6 +64,49 @@ def lighten(hex):
     return new_hex
 
 
+def lighten(hex):
+    hex = hex[1:]
+    rgb: list = []
+    for i in [0,2,4]:
+        decimal = int(hex[i:i+2],16)
+        rgb.append(decimal)
+    rgb = np.array(rgb)-60
+
+    rgb = np.where(rgb<0, 0, rgb) # lighten value
+    r,g,b = np.where(rgb>255, 255, rgb)
+    #print(r,g,b)
+    new_hex =  "#{:02x}{:02x}{:02x}".format(r, g, b)
+    return new_hex
+
+
+class show_box:
+    def __init__(self, Frame, bl:int=20, color="light gray"): # bl for boxlength
+        self.canvas = tk.Canvas(Frame, height=bl*2, width=bl*4) 
+        self.canvas.pack(pady=10)
+        self.color = color
+        
+        self.box_arr = (np.arange(1,9).reshape(2,4))
+        self.boxes = np.array([0,0])
+        for i in range(2):
+            for i2 in range(4):
+                self.canvas.create_rectangle(i2*bl, i*bl, i2*bl+bl, i*bl+bl, outline="") 
+
+    def change_shape(self, shape):
+        boxes = np.array(shape.local_boxes)
+        shape_color = shape.color
+        for i in range(2):
+            while np.any(boxes[:,i]==-1):
+                boxes[:,i]+=1
+        ordered_boxes = []
+        ordered_boxes = self.box_arr[boxes[:, 1], boxes[:, 0]]
+        if not np.array_equal(self.boxes, np.array([0,0])):
+            for i in self.boxes:
+                self.canvas.itemconfig(i, fill=self.color, outline="")
+        
+        for i in ordered_boxes:
+            self.canvas.itemconfig(i, fill=shape_color, outline=lighten(shape_color))
+        self.boxes = ordered_boxes
+
 class shape:
     local_boxes: list   
     def __init__(self, position, color): 
@@ -51,8 +118,7 @@ class shape:
         self.last_boxes_td: np.ndarray
 
     def down_display(self): #! kan förenklas med bara de raderna och sedan lägg på blocket istället för att ta bort block positionen
-        print("\n\n")
-        #window.update() # remove after deving
+        window.update()
         boxes_to_display = np.array(box_arr[:])
         min = np.min(self.boxes[:,0])
         max = np.max(self.boxes[:,0])+1
@@ -98,7 +164,6 @@ class shape:
                 except ValueError:
                     pass
         
-        pass
         # deletion
         if not np.array_equal(self.last_boxes_td, np.array([[0,0]])):
             for i in self.last_boxes_td: #! fixa problemet med att old_shapes försvinner, annars typ klart :D
@@ -112,13 +177,6 @@ class shape:
             block_area.itemconfig(i, fill="#363636") 
         self.last_boxes_td = boxes_to_display
                 
-
-
-                
-
-
-            
-
     def delete(self, boxes):
         for i, el in enumerate(boxes):
             #el = np.vectorize(lambda el1: int(el1))(el)
@@ -137,8 +195,8 @@ class shape:
 
     def evaluate(self, boxes): # testar om den är utanför några gränser
         v = 0
-        for i, el in enumerate(old_shapes): #! säger att den befinner sig på [4,18] när den egentligne är på [0,18]
-            for i2, el2 in enumerate(boxes):
+        for el in old_shapes:
+            for el2 in boxes:
                 if np.array_equal(el, el2):
                     v = 1
                     break
@@ -197,15 +255,16 @@ class shape:
         if self.evaluate(self.boxes):
             self.position[-1]-=1
             self.boxes = save_boxes
-            shape_c = self
+            window.update()
             new_shape()
+            
             return 2
         self.delete(save_boxes)
-        self.down_display()
-        self.create(self.boxes) #! också error när den åker nedåt DX
+         #! också error när den åker nedåt DX
         #! kan prob fixas genom att köra någon extra down_display och deletea allt först, alternativt bara skilla down_display
         if not from_auto: #! för att se till att den inte behöver animera varje steg lade jag till denna, orsakar dock error att det blir mörkt på blocksen och ändå tar tid
-            pass
+            self.down_display()
+        self.create(self.boxes)
             
             
 
@@ -244,9 +303,11 @@ class shape:
     def auto_move_down(self):
         print(self)
         #self.delete()
+        self.last_boxes_td = np.array([[0,0]])
         while not self.evaluate(self.boxes): #* verkar som om shape_c och boxen inte är bundna av någon anledning, leta i roten
             time.sleep(0.005) #* fix after deving
-            self.move_down()
+            if self.move_down(True) == 2:
+                return
             window.update_idletasks()
 # själva blocken
 class I_block(shape):
@@ -304,6 +365,11 @@ class Z_block(shape):
         shape.__init__(self, position, self.color)
     def __repr__(self):
         return "Z"
+
+
+coming_shapes_boxes = []
+for i in range(3):
+    coming_shapes_boxes.append(show_box(info_frame))
 
 
 box_arr = np.resize(np.arange(0, 10*20), (20,10))+1 # ska användas för att genom xy positioner i index få ut boxen att ändra
@@ -409,6 +475,11 @@ def new_shape():
     shape_c.down_display()
 
     check_rows() 
+    print(upcoming_shapes)
+    for i,el in enumerate(coming_shapes_boxes):
+        
+        el.change_shape(eval(upcoming_shapes[i]))
+
 
 def right_packer(event):
     shape_c.move_right()
@@ -431,12 +502,62 @@ def get_input():
 
 def fall_func():
     while True:
+        if not np.array_equal(old_shapes, np.array([0,0])):
+            if np.any(old_shapes[:,1] <= 1):
+                print("loss")
+                exit()
         time.sleep(2)
+
         shape_c.move_down()
+        print(old_shapes)
 
 def run():
-    global old_shape
+    global old_shape, game_on
     new_shape()
+    #* for beneath simple
+    shape_c.move_down()
+    shape_c.rotate()
+    shape_c.auto_move_down()
+    shape_c.auto_move_down()
+
+
+
+
+
+    #* multiple layer bug:
+    # for i in range(4):
+    #     for i2 in range(5):
+    #         shape_c.move_right()
+    #     shape_c.auto_move_down()
+    # for i in range(4):
+    #     shape_c.move_left()
+    #     shape_c.auto_move_down()
+    # shape_c.move_down()
+    # shape_c.rotate()
+    # shape_c.move_right()
+    # shape_c.move_right()
+    # shape_c.auto_move_down()
+
+    # shape_c.move_down()
+    # shape_c.rotate()
+    # shape_c.move_right()
+    # shape_c.move_right()
+    # shape_c.move_right()
+    # shape_c.auto_move_down()
+
+    # shape_c.move_right()
+    # shape_c.move_down()
+    # shape_c.move_down()
+    # shape_c.move_down()
+    # print("hello")
+
+
+    
+
+
+
+    
+
 
 
     #* for bug
@@ -501,10 +622,10 @@ def run():
 
     
 
-    input_thread = threading.Thread(target=get_input)
-    input_thread.start()
-    fall_thread = threading.Thread(target=fall_func)
-    fall_thread.start()
+    # input_thread = threading.Thread(target=get_input)
+    # input_thread.start()
+    # fall_thread = threading.Thread(target=fall_func)
+    # fall_thread.start()
 
 
     """
