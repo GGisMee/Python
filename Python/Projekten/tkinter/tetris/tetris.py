@@ -15,6 +15,7 @@ def change_speed(level):
     between_blocks = - 4.90862427e-4*level**3 + 0.01922*level**2 - 0.2608854*level+1.2414617
     
     
+#! error när man låter shapen falla rakt nedåt utan påverkan då det blir som en skum väntetid innan den faktiskt börjar åka nedåt
 
 
 
