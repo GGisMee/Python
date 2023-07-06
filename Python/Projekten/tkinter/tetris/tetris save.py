@@ -5,6 +5,10 @@ import time
 from random import randint
 import threading
 
+def add_points():
+    global level
+    40*(level+1)
+
 #todo
 #! bug fritt, just nu med under och vissa mörka, solution kör genom alla och hitta de som har grå färg och byt till mörk istället för all denna lastboxes_td bs
 #* fixa senare en outline till blocken
@@ -14,7 +18,7 @@ import threading
 # hastighetssystem, levels, poäng räknare
 
 
-level: int = 0
+level: int = 1
 
 window = tk.Tk()
 box_geometry: int = 30 # ger ut storleken av varje box
@@ -34,6 +38,10 @@ info_frame_left.grid(column=0, row=0)
 
 hold_f = tk.Frame(info_frame_left, width=box_geometry*4, height=box_geometry*4, bg="gray", highlightthickness=2, highlightbackground="black")
 hold_f.pack()
+hold_item:str = "" 
+hold_stop: bool = False
+
+
 
 
 #* mitten
@@ -62,20 +70,6 @@ def lighten(hex):
     new_hex =  "#{:02x}{:02x}{:02x}".format(r, g, b)
     return new_hex
 
-
-def lighten(hex):
-    hex = hex[1:]
-    rgb: list = []
-    for i in [0,2,4]:
-        decimal = int(hex[i:i+2],16)
-        rgb.append(decimal)
-    rgb = np.array(rgb)-60
-
-    rgb = np.where(rgb<0, 0, rgb) # lighten value
-    r,g,b = np.where(rgb>255, 255, rgb)
-    #print(r,g,b)
-    new_hex =  "#{:02x}{:02x}{:02x}".format(r, g, b)
-    return new_hex
 
 
 def lighten(hex):
@@ -235,7 +229,7 @@ class shape:
 
     def rotate(self):
         if str(self) == "O":
-            print("O, so no rotation")
+            #print("O, so no rotation")
             return
 
         save_local_boxes = self.s_local_boxes[:]
@@ -381,9 +375,15 @@ class Z_block(shape):
         return "Z"
 
 
+#* hållen shape
+tk.Label(hold_f, text="Hold", font=("Ink Free", 25, "bold"), bg="gray").pack()
+hold_box = show_box(hold_f, box_geometry)
+
+
+
 #* kommande shapes
-next_label = tk.Label(upcoming_shapes_f, text="Next", font=("Ink Free", 25, "bold"), bg="gray")
-next_label.pack()
+tk.Label(upcoming_shapes_f, text="Next", font=("Ink Free", 25, "bold"), bg="gray").pack()
+
 
 coming_shapes_boxes = []
 for i in range(3):
@@ -447,10 +447,10 @@ def check_rows():
 
 
 test = True
-def new_shape():
-    global upcoming_shapes, shape_c, old_shapes, test
-    if shape_c != None:
-
+def new_shape(hold=False):
+    global upcoming_shapes, shape_c, old_shapes, test, hold_stop
+    if shape_c != None and not hold:
+        hold_stop = False
         save_last_boxes_td = shape_c.last_boxes_td
         
 
@@ -465,12 +465,14 @@ def new_shape():
         save_last_boxes_td = np.array([[0,0]])
 
     
-
-    
-    current_shape = eval(upcoming_shapes[0])
-    #current_shape = eval(all_shapes[0]) #* remove after dev:ing
-    upcoming_shapes = np.delete(upcoming_shapes, 0)
-    upcoming_shapes = np.append(upcoming_shapes, all_shapes[randint(0,6)])
+    if hold and hold_item != "":
+        print("\n\n\n")
+        current_shape = hold_item
+    else:
+        current_shape = eval(upcoming_shapes[0])
+        #current_shape = eval(all_shapes[0]) #* remove after dev:ing
+        upcoming_shapes = np.delete(upcoming_shapes, 0)
+        upcoming_shapes = np.append(upcoming_shapes, all_shapes[randint(0,6)])
 
     x = (np.array(current_shape.local_boxes)[:,0]) 
     y = (np.array(current_shape.local_boxes)[:,1])
@@ -504,13 +506,29 @@ def down_packer(event):
     shape_c.move_down()
 def space_packer(event):
     shape_c.auto_move_down()
-    time.sleep(0.5)
+    time.sleep(0.25) #! fixa senare
+def hold_packer(event):
+    global shape_c, hold_item, hold_stop
+    if not hold_stop:
+        shape_c.delete(shape_c.boxes)
+        #shape_c = None
+        hold_item_save = eval(np.array(all_shapes)[np.where(np.array(["I", "J", "L", "O", "S", "T", "Z"]) == str(shape_c))][0])
+        new_shape(True)
+        hold_item = hold_item_save
+        hold_box.change_shape(hold_item)
+        hold_stop = True
+        time.sleep(0.5)
 def get_input():
     window.bind("<Right>", right_packer)   
+    window.bind("d", right_packer)   
     window.bind("<Left>", left_packer)      
+    window.bind("a", left_packer)      
     window.bind("<Up>", up_packer)
+    window.bind("w", up_packer)
     window.bind("<Down>", down_packer)
+    window.bind("s", down_packer)
     window.bind("<space>", space_packer)
+    window.bind("c", hold_packer)
 
 
 def fall_func():

@@ -4,23 +4,36 @@ from sgl import newcoord
 import time
 from random import randint
 import threading
+import math
+import timeit # delete after deving
+def add_points(rows):
+    global score_var, level_var
+    value = [0,100,300,500,800][rows]
+    score_var.set(int(score_var.get())+value*(int(level_var.get())+1))
+def change_speed(level):
+    global between_blocks
+    between_blocks = - 4.90862427e-4*level**3 + 0.01922*level**2 - 0.2608854*level+1.2414617
+    
+    
+
+
+
 
 #todo
 #! bug fritt, just nu med under och vissa mörka, solution kör genom alla och hitta de som har grå färg och byt till mörk istället för all denna lastboxes_td bs
 #* fixa senare en outline till blocken
 #* en outline längst ned där blocket kommer hamna eller en grå väg ned
+#* hold funktion
+#* hastighetssystem, levels, poäng räknare
+# vid slut av game gör det typ bara till en paus och sedan nytt game vid klick nånstans på skärmen, kan också gråa ned skärmen
 # paus knapp kanske
-# hold funktion
-# hastighetssystem, levels, poäng räknare
-
-
-level: int = 0
 
 window = tk.Tk()
 box_geometry: int = 30 # ger ut storleken av varje box
 
 game_on: bool = True
 
+between_blocks = 1
 
 window.geometry(f"{20*box_geometry}x{20*box_geometry}")
 
@@ -34,6 +47,12 @@ info_frame_left.grid(column=0, row=0)
 
 hold_f = tk.Frame(info_frame_left, width=box_geometry*4, height=box_geometry*4, bg="gray", highlightthickness=2, highlightbackground="black")
 hold_f.pack()
+hold_item:str = "" 
+hold_stop: bool = False
+
+data_f = tk.Frame(info_frame_left, width=box_geometry*4, height=box_geometry*4, bg="gray", highlightthickness=2, highlightbackground="black")
+data_f.pack()
+
 
 
 #* mitten
@@ -62,20 +81,6 @@ def lighten(hex):
     new_hex =  "#{:02x}{:02x}{:02x}".format(r, g, b)
     return new_hex
 
-
-def lighten(hex):
-    hex = hex[1:]
-    rgb: list = []
-    for i in [0,2,4]:
-        decimal = int(hex[i:i+2],16)
-        rgb.append(decimal)
-    rgb = np.array(rgb)-60
-
-    rgb = np.where(rgb<0, 0, rgb) # lighten value
-    r,g,b = np.where(rgb>255, 255, rgb)
-    #print(r,g,b)
-    new_hex =  "#{:02x}{:02x}{:02x}".format(r, g, b)
-    return new_hex
 
 
 def lighten(hex):
@@ -216,26 +221,16 @@ class shape:
                 if np.array_equal(el, el2):
                     v = 1
                     break
-
-        if (np.any(boxes[:,1]<0)): # [:,1]
-            print("outside of higher border")
-            return 1
-        elif (np.any(boxes[:,0]>=10) or np.any(boxes[:,0]<0)):
-            print("outside of right or left border")
-            return 1
-        elif np.any(boxes[:,1]>=20):
-            print("outside of lower border")
+        if (np.any(boxes[:,1]<0)) or (np.any(boxes[:,0]>=10) or np.any(boxes[:,0]<0)) or np.any(boxes[:,1]>=20): # [:,1]
             return 1
         elif v:
-            #print("\n",el, boxes, "\n", old_shapes) # >12
-            #print("inside of another box")
             return 2
         return 0
 
 
     def rotate(self):
         if str(self) == "O":
-            print("O, so no rotation")
+
             return
 
         save_local_boxes = self.s_local_boxes[:]
@@ -256,7 +251,7 @@ class shape:
                     i[1]-=1
             self.boxes = save_boxes 
             self.s_local_boxes = save_local_boxes
-            print("unable")
+
             return
         self.delete(save_boxes)
         self.down_display()
@@ -316,7 +311,6 @@ class shape:
 
 
     def auto_move_down(self):
-        print(self)
         #self.delete()
         self.last_boxes_td = np.array([[0,0]])
         while not self.evaluate(self.boxes): 
@@ -381,9 +375,29 @@ class Z_block(shape):
         return "Z"
 
 
+#* Score frame
+score_var = tk.StringVar(data_f,0)
+tk.Label(data_f, text="Score", font=("Ink Free", 20, "bold"), bg="gray").pack()
+score_label = tk.Label(data_f, textvariable=score_var, font=("Ink Free", 25, "bold"), bg="light gray").pack()
+
+level_var = tk.StringVar(data_f,0)
+tk.Label(data_f, text="Level", font=("Ink Free", 20, "bold"), bg="gray").pack()
+level_label = tk.Label(data_f, textvariable=level_var, font=("Ink Free", 25, "bold"), bg="light gray").pack()
+
+lines_var = tk.StringVar(data_f,0)
+lines_var_save = 10 # för att kunna mäta på level_var
+tk.Label(data_f, text="Lines", font=("Ink Free", 20, "bold"), bg="gray").pack()
+lines_label = tk.Label(data_f, textvariable=lines_var, font=("Ink Free", 25, "bold"), bg="light gray").pack()
+
+
+#* hållen shape
+tk.Label(hold_f, text="Hold", font=("Ink Free", 25, "bold"), bg="gray").pack()
+hold_box = show_box(hold_f, box_geometry)
+
+
+
 #* kommande shapes
-next_label = tk.Label(upcoming_shapes_f, text="Next", font=("Ink Free", 25, "bold"), bg="gray")
-next_label.pack()
+tk.Label(upcoming_shapes_f, text="Next", font=("Ink Free", 25, "bold"), bg="gray").pack()
 
 coming_shapes_boxes = []
 for i in range(3):
@@ -407,7 +421,6 @@ shape_c = None
 
 def get_color_f(values):
     arr = []
-    #print(len(values))
     for i,el in enumerate(values):
         positions_on_grid = (box_arr[el[1]][el[0]])
         color = block_area.itemcget(positions_on_grid, "fill")
@@ -426,8 +439,9 @@ def create_f(boxes, color_arr):
         block_area.itemconfig(positions_on_grid, outline = lighten(color_arr[i]))
 
 def check_rows():
-    global old_shapes
+    global old_shapes, lines_var_save
     #window.update()
+    rows_qualified = 0
     if np.any(old_shapes != np.zeros(2)):
         indexes = (np.unique(old_shapes[:,1])) # tar fram alla rader med block för att testa om det finns rad på de
         for i in indexes:
@@ -437,24 +451,29 @@ def check_rows():
                 old_shapes = np.delete(old_shapes, indexes2, axis=0)
                 color_arr = get_color_f(old_shapes)
                 delete_f(save_old_shapes)
-                print(f"len: {i}")
                 rows = old_shapes[:, 1]<i
                 old_shapes[rows, 1]+=1
                 create_f(old_shapes, color_arr)
+                rows_qualified+=1
+
+                lines_var.set(str(int(lines_var.get())+1))
+                if int(lines_var.get()) == lines_var_save:
+                    lines_var_save+=10
+                    level_var.set(str(int(level_var.get())+1))
+                    change_speed(int(level_var.get()))
                 shape_c.down_display()
+    add_points(rows_qualified)
+                
                 
 
 
 
 test = True
-def new_shape():
-    global upcoming_shapes, shape_c, old_shapes, test
-    if shape_c != None:
-
+def new_shape(hold=False):
+    global upcoming_shapes, shape_c, old_shapes, test, hold_stop
+    if shape_c != None and not hold:
+        hold_stop = False
         save_last_boxes_td = shape_c.last_boxes_td
-        
-
-        print(shape_c.boxes)
         if np.any(shape_c.boxes[:,1]==0):
             return # old shapes empty bc of all used
         old_shapes = np.vstack((old_shapes, shape_c.boxes)).astype(int)
@@ -465,12 +484,13 @@ def new_shape():
         save_last_boxes_td = np.array([[0,0]])
 
     
-
-    
-    current_shape = eval(upcoming_shapes[0])
-    #current_shape = eval(all_shapes[0]) #* remove after dev:ing
-    upcoming_shapes = np.delete(upcoming_shapes, 0)
-    upcoming_shapes = np.append(upcoming_shapes, all_shapes[randint(0,6)])
+    if hold and hold_item != "":
+        current_shape = hold_item
+    else:
+        current_shape = eval(upcoming_shapes[0])
+        #current_shape = eval(all_shapes[0]) #* remove after dev:ing
+        upcoming_shapes = np.delete(upcoming_shapes, 0)
+        upcoming_shapes = np.append(upcoming_shapes, all_shapes[randint(0,6)])
 
     x = (np.array(current_shape.local_boxes)[:,0]) 
     y = (np.array(current_shape.local_boxes)[:,1])
@@ -488,7 +508,6 @@ def new_shape():
     shape_c.down_display()
 
     check_rows() 
-    print(upcoming_shapes)
     for i,el in enumerate(coming_shapes_boxes):
         
         el.change_shape(eval(upcoming_shapes[i]))
@@ -504,13 +523,28 @@ def down_packer(event):
     shape_c.move_down()
 def space_packer(event):
     shape_c.auto_move_down()
-    time.sleep(0.5)
+    #time.sleep(0.25) #! fixa senare
+def hold_packer(event):
+    global shape_c, hold_item, hold_stop
+    if not hold_stop:
+        shape_c.delete(shape_c.boxes)
+        #shape_c = None
+        hold_item_save = eval(np.array(all_shapes)[np.where(np.array(["I", "J", "L", "O", "S", "T", "Z"]) == str(shape_c))][0])
+        new_shape(True)
+        hold_item = hold_item_save
+        hold_box.change_shape(hold_item)
+        hold_stop = True
 def get_input():
     window.bind("<Right>", right_packer)   
+    window.bind("d", right_packer)   
     window.bind("<Left>", left_packer)      
+    window.bind("a", left_packer)      
     window.bind("<Up>", up_packer)
+    window.bind("w", up_packer)
     window.bind("<Down>", down_packer)
+    window.bind("s", down_packer)
     window.bind("<space>", space_packer)
+    window.bind("c", hold_packer)
 
 
 def fall_func():
@@ -519,8 +553,9 @@ def fall_func():
         if not np.array_equal(old_shapes, np.array([0,0])):
             if np.any(old_shapes[:,1] <= 1):
                 print("loss")
+                # window.quit() #! gör det typ bara till en paus och sedan nytt game vid klick nånstans på skärmen, kan också gråa ned skärmen
                 exit()
-        time.sleep(2)
+        time.sleep(between_blocks)
         shape_c.move_down()
 
         
