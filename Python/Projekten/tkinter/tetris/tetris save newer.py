@@ -32,7 +32,7 @@ def change_speed(level):
 window = tk.Tk()
 box_geometry: int = 30 # ger ut storleken av varje box
 
-paused: bool = False
+game_on: bool = True
 
 between_blocks = 1
 
@@ -260,7 +260,7 @@ class shape:
     
     
     def move_down(self):
-
+        window.update()
         save_boxes = self.boxes[:]
         self.position[-1] += 1
         
@@ -268,14 +268,14 @@ class shape:
         if self.evaluate(self.boxes):
             self.position[-1]-=1
             self.boxes = save_boxes
+
             new_shape()      
             return 2
         self.delete(save_boxes)
 
         self.create(self.boxes)
-
         window.update()
-
+        pass
             
             
 
@@ -489,7 +489,7 @@ def new_shape(hold=False):
         current_shape = hold_item
     else:
         current_shape = eval(upcoming_shapes[0])
-        current_shape = eval(all_shapes[0]) #* remove after dev:ing
+        #current_shape = eval(all_shapes[0]) #* remove after dev:ing
         upcoming_shapes = np.delete(upcoming_shapes, 0)
         upcoming_shapes = np.append(upcoming_shapes, all_shapes[randint(0,6)])
 
@@ -501,7 +501,7 @@ def new_shape(hold=False):
     x_offset = np.abs(np.amin(x)) # samma fast för x axeln
 
     random_position = (randint(0, 10-width))
-    random_position = 1 #* remove after dev:ing
+    #random_position = 1 #* remove after dev:ing
     position = [random_position+x_offset, y_offset]
 
     shape_c = current_shape(position)
@@ -512,32 +512,18 @@ def new_shape(hold=False):
     for i,el in enumerate(coming_shapes_boxes):      
         el.change_shape(eval(upcoming_shapes[i]))
 
-def pause_decorator(func):
-    def wrapper(*args, **kwargs):
-        if paused == True:
-            return
-        func_ = func(*args, **kwargs)
-        return func_
-    return wrapper
 
-@pause_decorator
 def right_packer(event):
     shape_c.move_right()
-@pause_decorator
 def left_packer(event):
     shape_c.move_left()
-@pause_decorator
 def up_packer(event):
     shape_c.rotate()
-@pause_decorator
 def down_packer(event):
     shape_c.move_down()
-@pause_decorator
 def space_packer(event):
     shape_c.auto_move_down()
     #time.sleep(0.25) #! fixa senare
-
-@pause_decorator
 def hold_packer(event):
     global shape_c, hold_item, hold_stop
     if not hold_stop:
@@ -548,16 +534,6 @@ def hold_packer(event):
         hold_item = hold_item_save
         hold_box.change_shape(hold_item)
         hold_stop = True
-def pause_packer(event):
-    global paused
-    if paused: # den ska avpausas och var pausad innan
-        paused = False
-    else: # den ska pausas efter att varit opausad
-        paused = True
-    print(paused)
-
-    time.sleep(0.5)
-
 def get_input():
     window.bind("<Right>", right_packer)   
     window.bind("d", right_packer)   
@@ -569,25 +545,19 @@ def get_input():
     window.bind("s", down_packer)
     window.bind("<space>", space_packer)
     window.bind("c", hold_packer)
-    window.bind("<Escape>", pause_packer)
 
 
 def fall_func():
     time.sleep(between_blocks)
     while True:
-        if not paused:
-            start = time.time()
-            if not np.array_equal(old_shapes, np.array([0,0])):
-                if np.any(old_shapes[:,1] <= 1):
-                    print("loss")
-                    # window.quit() #! gör det typ bara till en paus och sedan nytt game vid klick nånstans på skärmen, kan också gråa ned skärmen
-                    exit()
-
-            shape_c.move_down() # väntetiden i denna
-            resulting_time = (time.time()-start)
-            if resulting_time > between_blocks:
-                resulting_time = between_blocks
-            time.sleep(between_blocks-resulting_time)
+        
+        if not np.array_equal(old_shapes, np.array([0,0])):
+            if np.any(old_shapes[:,1] <= 1):
+                print("loss")
+                # window.quit() #! gör det typ bara till en paus och sedan nytt game vid klick nånstans på skärmen, kan också gråa ned skärmen
+                exit()
+        shape_c.move_down()
+        time.sleep(between_blocks)
 
         
 
@@ -595,12 +565,14 @@ def fall_func():
 def run():
     global old_shape, game_on
     new_shape()
+
+    # shape_c.move_down()
     # window.update()
     # time.sleep(1)
     # shape_c.move_down()
 
     #* for beneath simple
-    # 
+    # shape_c.move_down()
     # shape_c.rotate()
     # shape_c.auto_move_down()
     # shape_c.auto_move_down()
