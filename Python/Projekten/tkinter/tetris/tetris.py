@@ -16,7 +16,7 @@ def change_speed(level):
     
     
 #! error när man låter shapen falla rakt nedåt utan påverkan då det blir som en skum väntetid innan den faktiskt börjar åka nedåt
-
+#* need background for pause and simple start page
 
 
 
