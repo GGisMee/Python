@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import font
 import numpy as np
 from sgl import newcoord
 import time
@@ -67,6 +68,27 @@ info_frame_right.grid(column=2, row=0)
 
 upcoming_shapes_f = tk.Frame(info_frame_right, width=box_geometry*4, bg="gray", highlightthickness=2, highlightbackground="black")
 upcoming_shapes_f.pack()
+
+
+#* paus
+paus_f = tk.Frame(window, width=20*box_geometry, height=20*box_geometry, bg="blue")
+paus_f.place(x=0, y=0, relwidth=1, relheight=1)
+# The logo above
+tetris_label_f = tk.Frame(paus_f, bg="Yellow")
+tetris_label_f.pack()
+custom_font = font.Font(family="Ink Free", weight="bold", size=40)
+for i,el in enumerate([["#ff0000","T"],["#ff7f00", "E"],["#ffff00","T"],["#00ff00","R"],["#00ffff", "I"],["#800080","S"]]):
+    tk.Label(tetris_label_f, text=el[1],foreground=el[0], font=custom_font, highlightthickness=0).grid(column=i, row=0)
+
+continue_btn = tk.Button(paus_f, text="Continue?")
+continue_btn.pack()
+restart_btn = tk.Button(paus_f, text="Restart")
+restart_btn.pack()
+exit_bth = tk.Button(paus_f, text="Exit")
+exit_bth.pack()
+
+
+
 
 def lighten(hex):
     hex = hex[1:]
