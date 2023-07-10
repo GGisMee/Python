@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import font
 import numpy as np
 from sgl import newcoord
 import time
@@ -16,7 +17,7 @@ def change_speed(level):
     
     
 #! error när man låter shapen falla rakt nedåt utan påverkan då det blir som en skum väntetid innan den faktiskt börjar åka nedåt
-
+#* need background for pause and simple start page
 
 
 
@@ -32,7 +33,7 @@ def change_speed(level):
 window = tk.Tk()
 box_geometry: int = 30 # ger ut storleken av varje box
 
-game_on: bool = True
+paused: bool = False
 
 between_blocks = 1
 
@@ -67,6 +68,27 @@ info_frame_right.grid(column=2, row=0)
 
 upcoming_shapes_f = tk.Frame(info_frame_right, width=box_geometry*4, bg="gray", highlightthickness=2, highlightbackground="black")
 upcoming_shapes_f.pack()
+
+
+#* paus
+paus_f = tk.Frame(window, width=20*box_geometry, height=20*box_geometry, bg="blue")
+#paus_f.place(x=0, y=0, relwidth=1, relheight=1)
+# The logo above
+tetris_label_f = tk.Frame(paus_f, bg="Yellow")
+tetris_label_f.pack(pady=20)
+custom_font = font.Font(family="Arial", weight="bold", size=40)
+for i,el in enumerate([["#ff0000","T"],["#ff7f00", "E"],["#ffff00","T"],["#00ff00","R"],["#00ffff", "I"],["#800080","S"]]):
+    tk.Label(tetris_label_f, text=el[1],foreground=el[0], font=custom_font, highlightthickness=0).grid(column=i, row=0)
+
+continue_btn = tk.Button(paus_f, text="Continue?")
+continue_btn.pack()
+restart_btn = tk.Button(paus_f, text="Restart")
+restart_btn.pack()
+exit_bth = tk.Button(paus_f, text="Exit")
+exit_bth.pack()
+
+
+
 
 def lighten(hex):
     hex = hex[1:]
@@ -260,7 +282,7 @@ class shape:
     
     
     def move_down(self):
-        window.update()
+
         save_boxes = self.boxes[:]
         self.position[-1] += 1
         
@@ -268,14 +290,14 @@ class shape:
         if self.evaluate(self.boxes):
             self.position[-1]-=1
             self.boxes = save_boxes
-
             new_shape()      
             return 2
         self.delete(save_boxes)
 
         self.create(self.boxes)
+
         window.update()
-        pass
+
             
             
 
@@ -512,18 +534,32 @@ def new_shape(hold=False):
     for i,el in enumerate(coming_shapes_boxes):      
         el.change_shape(eval(upcoming_shapes[i]))
 
+def pause_decorator(func):
+    def wrapper(*args, **kwargs):
+        if paused == True:
+            return
+        func_ = func(*args, **kwargs)
+        return func_
+    return wrapper
 
+@pause_decorator
 def right_packer(event):
     shape_c.move_right()
+@pause_decorator
 def left_packer(event):
     shape_c.move_left()
+@pause_decorator
 def up_packer(event):
     shape_c.rotate()
+@pause_decorator
 def down_packer(event):
     shape_c.move_down()
+@pause_decorator
 def space_packer(event):
     shape_c.auto_move_down()
     #time.sleep(0.25) #! fixa senare
+
+@pause_decorator
 def hold_packer(event):
     global shape_c, hold_item, hold_stop
     if not hold_stop:
@@ -534,6 +570,16 @@ def hold_packer(event):
         hold_item = hold_item_save
         hold_box.change_shape(hold_item)
         hold_stop = True
+def pause_packer(event):
+    global paused
+    if paused: # den ska avpausas och var pausad innan
+        paused = False
+    else: # den ska pausas efter att varit opausad
+        paused = True
+    print(paused)
+
+    time.sleep(0.5)
+
 def get_input():
     window.bind("<Right>", right_packer)   
     window.bind("d", right_packer)   
@@ -545,19 +591,25 @@ def get_input():
     window.bind("s", down_packer)
     window.bind("<space>", space_packer)
     window.bind("c", hold_packer)
+    window.bind("<Escape>", pause_packer)
 
 
 def fall_func():
     time.sleep(between_blocks)
     while True:
-        
-        if not np.array_equal(old_shapes, np.array([0,0])):
-            if np.any(old_shapes[:,1] <= 1):
-                print("loss")
-                # window.quit() #! gör det typ bara till en paus och sedan nytt game vid klick nånstans på skärmen, kan också gråa ned skärmen
-                exit()
-        shape_c.move_down()
-        time.sleep(between_blocks)
+        if not paused:
+            start = time.time()
+            if not np.array_equal(old_shapes, np.array([0,0])):
+                if np.any(old_shapes[:,1] <= 1):
+                    print("loss")
+                    # window.quit() #! gör det typ bara till en paus och sedan nytt game vid klick nånstans på skärmen, kan också gråa ned skärmen
+                    exit()
+
+            shape_c.move_down() # väntetiden i denna
+            resulting_time = (time.time()-start)
+            if resulting_time > between_blocks:
+                resulting_time = between_blocks
+            time.sleep(between_blocks-resulting_time)
 
         
 
@@ -565,14 +617,12 @@ def fall_func():
 def run():
     global old_shape, game_on
     new_shape()
-
-    # shape_c.move_down()
     # window.update()
     # time.sleep(1)
     # shape_c.move_down()
 
     #* for beneath simple
-    # shape_c.move_down()
+    # 
     # shape_c.rotate()
     # shape_c.auto_move_down()
     # shape_c.auto_move_down()

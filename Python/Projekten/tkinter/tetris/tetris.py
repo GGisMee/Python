@@ -6,7 +6,7 @@ import time
 from random import randint
 import threading
 import math
-import timeit # delete after deving
+#import timeit # delete after deving
 def add_points(rows):
     global score_var, level_var
     value = [0,100,300,500,800][rows]
@@ -30,6 +30,7 @@ def change_speed(level):
 # vid slut av game gör det typ bara till en paus och sedan nytt game vid klick nånstans på skärmen, kan också gråa ned skärmen
 # paus knapp kanske
 
+
 window = tk.Tk()
 box_geometry: int = 30 # ger ut storleken av varje box
 
@@ -38,7 +39,7 @@ paused: bool = False
 between_blocks = 1
 
 window.geometry(f"{20*box_geometry}x{20*box_geometry}")
-
+# def run():
 game_frame = tk.Frame(window)
 game_frame.pack()
 
@@ -70,41 +71,6 @@ upcoming_shapes_f = tk.Frame(info_frame_right, width=box_geometry*4, bg="gray", 
 upcoming_shapes_f.pack()
 
 
-#* paus
-paus_f = tk.Frame(window, width=20*box_geometry, height=20*box_geometry, bg="blue")
-paus_f.place(x=0, y=0, relwidth=1, relheight=1)
-# The logo above
-tetris_label_f = tk.Frame(paus_f, bg="Yellow")
-tetris_label_f.pack()
-custom_font = font.Font(family="Ink Free", weight="bold", size=40)
-for i,el in enumerate([["#ff0000","T"],["#ff7f00", "E"],["#ffff00","T"],["#00ff00","R"],["#00ffff", "I"],["#800080","S"]]):
-    tk.Label(tetris_label_f, text=el[1],foreground=el[0], font=custom_font, highlightthickness=0).grid(column=i, row=0)
-
-continue_btn = tk.Button(paus_f, text="Continue?")
-continue_btn.pack()
-restart_btn = tk.Button(paus_f, text="Restart")
-restart_btn.pack()
-exit_bth = tk.Button(paus_f, text="Exit")
-exit_bth.pack()
-
-
-
-
-def lighten(hex):
-    hex = hex[1:]
-    rgb: list = []
-    for i in [0,2,4]:
-        decimal = int(hex[i:i+2],16)
-        rgb.append(decimal)
-    rgb = np.array(rgb)-60
-
-    rgb = np.where(rgb<0, 0, rgb) # lighten value
-    r,g,b = np.where(rgb>255, 255, rgb)
-
-    new_hex =  "#{:02x}{:02x}{:02x}".format(r, g, b)
-    return new_hex
-
-
 
 def lighten(hex):
     hex = hex[1:]
@@ -122,24 +88,24 @@ def lighten(hex):
 
 
 class show_box:
-    def __init__(self, Frame, bl:int=20, color="gray"): # bl for boxlength
-        self.canvas = tk.Canvas(Frame, height=bl*2, width=bl*4, bg=color,highlightthickness=0) 
+    def __init__(self, Frame, bl:int=20, color="gray", width_height=[4,2]): # bl for boxlength
+        self.canvas = tk.Canvas(Frame, height=bl*width_height[1], width=bl*width_height[0], bg=color,highlightthickness=0) 
         self.canvas.pack(fill="both", padx=5, pady=10) 
         self.color = color
-        
-        self.box_arr = (np.arange(1,9).reshape(2,4))
+        self.width_height= width_height
+        self.box_arr = (np.arange(1,width_height[0]*width_height[1]+1).reshape(width_height[1],width_height[0]))
         self.boxes = np.array([0,0])
-        for i in range(2):
-            for i2 in range(4):
+        for i in range(width_height[1]):
+            for i2 in range(width_height[0]):
                 self.canvas.create_rectangle(i2*bl, i*bl, i2*bl+bl, i*bl+bl, outline="") 
 
     def change_shape(self, shape):
-        boxes = np.array(shape.local_boxes)
+        boxes = np.array(shape.local_boxes).astype(int)
         shape_color = shape.color
         for i in range(2):
-            while np.any(boxes[:,i]==-1):
+            while np.any(boxes[:,i]<0):
                 boxes[:,i]+=1
-        ordered_boxes = []
+        boxes = boxes.astype(int) # något fel då den under visar index 3
         ordered_boxes = self.box_arr[boxes[:, 1], boxes[:, 0]]
         if not np.array_equal(self.boxes, np.array([0,0])):
             for i in self.boxes:
@@ -162,12 +128,12 @@ class shape:
     def down_display(self): 
         #window.update()
         boxes_to_display = np.array(box_arr[:])
-        min = np.min(self.boxes[:,0])
-        max = np.max(self.boxes[:,0])+1
+        min = int(np.min(self.boxes[:,0]))
+        max = int(np.max(self.boxes[:,0])+1)
         boxes_to_display = (boxes_to_display[:, min:max])
         # raderar över och själva self.boxes
         for i in np.unique(self.boxes[:,0]):
-            max_y_value = (np.max(self.boxes[np.where(self.boxes[:,0]==i)][:,1]))
+            max_y_value = int(np.max(self.boxes[np.where(self.boxes[:,0]==i)][:,1]))
             positional_value_boxes = box_arr[max_y_value][i] # ordnar så den blir av samma typ som boxes_to_display
             positional_values = box_arr[np.where(box_arr[:,i]<=positional_value_boxes),i][0] # tar fram värderna över boxen eller boxen själv
             for obj in positional_values:
@@ -222,9 +188,14 @@ class shape:
         self.last_boxes_td = boxes_to_display
                 
     def delete(self, boxes):
+
         for i, el in enumerate(boxes):
+            el1 = round(el[1])
+            el0 = round(el[0])
+            print(el1,el0)
             #el = np.vectorize(lambda el1: int(el1))(el)
-            positions_on_grid = (box_arr[el[1]][el[0]])
+            #print(box_arr[el[1]])
+            positions_on_grid = (box_arr[el1][el0])
             try:
                 block_area.itemconfig(positions_on_grid, fill="#262626", outline = "#4f4f4f")
             except RuntimeError:
@@ -398,6 +369,44 @@ class Z_block(shape):
         return "Z"
 
 
+#* paus
+paus_f = tk.Frame(window, width=20*box_geometry, height=20*box_geometry, bg="blue")
+# The logo above
+tetris_label_f = tk.Frame(paus_f, bg="Yellow")
+tetris_label_f.pack(pady=20)
+custom_font = font.Font(family="Arial", weight="bold", size=40)
+for i,el in enumerate([["#ff0000","T"],["#ff7f00", "E"],["#ffff00","T"],["#00ff00","R"],["#00ffff", "I"],["#800080","S"]]):
+    tk.Label(tetris_label_f, text=el[1],foreground=el[0], font=custom_font, highlightthickness=0).grid(column=i, row=0)
+
+
+sb_f = tk.Frame(paus_f)
+sb_f.pack(anchor="center")
+sb = show_box(sb_f,width_height=[3,3])
+def animate_boxes(): #! erroret med denna
+    while True:
+        rotating_shape = np.array(["J_block", "L_block", "S_block", "T_block", "Z_block"])
+        for i in rotating_shape:
+            shape = eval(i)
+            for i2 in range(4):
+                sb.change_shape(shape)
+                #window.update_idletasks()
+                local_boxes_save = []
+                for el in shape.local_boxes:
+                    local_boxes_save.append(newcoord.rotate_from_origo(el, -90))
+                shape.local_boxes = local_boxes_save
+                #print(np.array(shape.local_boxes).astype(int))
+                time.sleep(1)
+
+        
+sb.change_shape(S_block)
+print(sb.boxes)
+
+
+restart_btn = tk.Button(paus_f, text="Start new game") # command delete create
+restart_btn.pack()
+exit_bth = tk.Button(paus_f, text="Exit")
+exit_bth.pack()
+
 #* Score frame
 score_var = tk.StringVar(data_f,0)
 tk.Label(data_f, text="Score", font=("Ink Free", 20, "bold"), bg="gray").pack()
@@ -511,7 +520,7 @@ def new_shape(hold=False):
         current_shape = hold_item
     else:
         current_shape = eval(upcoming_shapes[0])
-        current_shape = eval(all_shapes[0]) #* remove after dev:ing
+        #current_shape = eval(all_shapes[1]) #* remove after dev:ing
         upcoming_shapes = np.delete(upcoming_shapes, 0)
         upcoming_shapes = np.append(upcoming_shapes, all_shapes[randint(0,6)])
 
@@ -523,7 +532,7 @@ def new_shape(hold=False):
     x_offset = np.abs(np.amin(x)) # samma fast för x axeln
 
     random_position = (randint(0, 10-width))
-    random_position = 1 #* remove after dev:ing
+    #random_position = 1 #* remove after dev:ing
     position = [random_position+x_offset, y_offset]
 
     shape_c = current_shape(position)
@@ -573,10 +582,12 @@ def hold_packer(event):
 def pause_packer(event):
     global paused
     if paused: # den ska avpausas och var pausad innan
+        paus_f.place_forget()
         paused = False
     else: # den ska pausas efter att varit opausad
+        paus_f.place(x=0, y=0, relwidth=1, relheight=1)
         paused = True
-    print(paused)
+    return paused
 
     time.sleep(0.5)
 
@@ -611,26 +622,18 @@ def fall_func():
                 resulting_time = between_blocks
             time.sleep(between_blocks-resulting_time)
 
-        
-
-
 def run():
-    global old_shape, game_on
     new_shape()
+    #shape_c.auto_move_down()
+
     # window.update()
     # time.sleep(1)
     # shape_c.move_down()
-
     #* for beneath simple
     # 
     # shape_c.rotate()
     # shape_c.auto_move_down()
     # shape_c.auto_move_down()
-
-
-
-
-
     #* multiple layer bug:
     # for i in range(4):
     #     for i2 in range(5):
@@ -644,27 +647,17 @@ def run():
     # shape_c.move_right()
     # shape_c.move_right()
     # shape_c.auto_move_down()
-
     # shape_c.move_down()
     # shape_c.rotate()
     # shape_c.move_right()
     # shape_c.move_right()
     # shape_c.move_right()
     # shape_c.auto_move_down()
-
     # shape_c.move_right()
     # shape_c.move_down()
     # shape_c.move_down()
     # shape_c.move_down()
     # print("hello")
-
-
-    
-
-
-
-    
-
 
 
     #* for bug
@@ -677,38 +670,29 @@ def run():
     # shape_c.move_down()
     # window.update()
     # time.sleep(1)
-    
-    # shape_c.rotate()
 
+    # shape_c.rotate()
     # window.update()
     # time.sleep(1)
     # shape_c.move_down()
-
     # window.update()
     # time.sleep(1)
     # shape_c.move_right()
-
     # window.update()
     # time.sleep(1)
     # shape_c.move_left()
-
-
-
-
-
     #* for beneath
     # shape_c.auto_move_down()
+    # shape_c.auto_move_down()
+    # shape_c.move_down()
+    # shape_c.rotate()
+    # shape_c.move_left()
+    # shape_c.auto_move_down()
+    # shape_c.move_down()
+    # shape_c.rotate()
+    # shape_c.move_left()
+    # shape_c.auto_move_down()
 
-    # shape_c.auto_move_down()
-    # shape_c.move_down()
-    # shape_c.rotate()
-    # shape_c.move_left()
-    # shape_c.auto_move_down()
-    # shape_c.move_down()
-    # shape_c.rotate()
-    # shape_c.move_left()
-    # shape_c.auto_move_down()
-    
     # shape_c.move_down()
     # shape_c.rotate()
     # shape_c.move_left()
@@ -717,24 +701,21 @@ def run():
     # shape_c.down_display()
     # shape_c.auto_move_down()
     # shape_c.move_down()
-
     # for i in range(4):
     #     shape_c.move_right()
     # for i in range(6):
     #     shape_c.move_down()
-
     # shape_c.move_left()
     # shape_c.move_left()
     # shape_c.down_display()
-
-    
 
     input_thread = threading.Thread(target=get_input)
     input_thread.start()
     fall_thread = threading.Thread(target=fall_func)
     fall_thread.start()
 
-
+    # animation_thread = threading.Thread(target=animate_boxes)
+    # animation_thread.start()
     """
     shape_c.auto_move_down()
     window.update()
@@ -743,12 +724,5 @@ def run():
     shape_c.move_left()
     shape_c.rotate()
     """
-
-    
-
-    
-    
-
-
+    window.mainloop()
 run()
-window.mainloop()

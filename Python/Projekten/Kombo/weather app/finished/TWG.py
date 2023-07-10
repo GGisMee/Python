@@ -257,7 +257,6 @@ def run(view_part, label_view, grouping_of_data, night=False):
     if night and now[1] == 23:
         now_point = False
 
-
     temp_graph(mean_arr[:3], x_arr, now_point, label_view, night)
     wind_graph(mean_arr[3:], x_arr, now_point, label_view, night)
 
