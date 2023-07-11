@@ -22,7 +22,8 @@ def change_speed(level):
 
 
 #todo
-# antingen inget mer
+# antingen eller nedan:
+# inget mer
 # en pandas funktion där rekorden skrivs i tabell
 # en start och eller slutskärm med den som finns
 
@@ -573,7 +574,9 @@ def fall_func():
                 if np.any(old_shapes[:,1] <= 1):
                     print("loss")
                     # window.quit() #! gör det typ bara till en paus och sedan nytt game vid klick nånstans på skärmen, kan också gråa ned skärmen
-                    exit()
+                    game_frame.forget()
+                    window.update()
+                    #exit()
 
             shape_c.move_down() # väntetiden i denna
             resulting_time = (time.time()-start)
