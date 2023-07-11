@@ -9,10 +9,15 @@ class Table:
 		self.frame = Frame(root)
 		self.frame.pack()
 
-	def populate(self, table_items, fill=False, fill_same = False):
+	def populate(self, table_items, fill=False, fill_same = False,id=False):
 		self.table_items = np.array(table_items)
 		self.row_length = len(self.table_items)
 		self.column_length = len(self.table_items[0])
+		if id:
+			ids = ((np.arange(self.row_length)+1).reshape((-1,1)))
+			self.table_items = np.hstack((ids, self.table_items))
+			self.column_length += 1
+				
 		
 		#np.vectorize(lambda el: print(el))(self.table_items)
 		if fill:
@@ -31,4 +36,3 @@ class Table:
 				self.labels.append(Label(self.frame, width=self.width_height[0], height=self.width_height[1], fg='black',
 							font=('Arial',16,'bold'), text=self.table_items[i][j], highlightbackground="gray", highlightthickness=2))
 				self.labels[-1].grid(row=i, column=j)
-
