@@ -1,12 +1,43 @@
 import tkinter as tk
-from tkinter import font
 import numpy as np
 from sgl import newcoord
-import time
 from random import randint
-import threading
-import math
-#import timeit # delete after deving
+import sys, threading, time
+import pandas as pd
+from datetime import datetime
+from TkTable import Table
+
+
+def show_table(Name):
+    df = pd.read_csv(f"{sys.path[0]}/records.csv",index_col="ID")
+
+    def add(Name, Score):
+        now = datetime.now()
+        today = now.strftime("%Y-%m-%d")
+        df.loc[len(df)] = [str(Name), int(Score), str(today)]
+
+    add(Name, int(score_var.get()))
+    table = Table(window)
+    table.populate(df.sort_values(by=['Score'], ascending=False), fill_same=True, id=True)
+    
+    df.to_csv(f'{sys.path[0]}/records.csv', index=True)
+
+def test_button(entry, entry_button):
+    if entry.get() == "":
+        return
+    entry.forget()
+    entry_button.forget()
+
+
+    show_table(entry.get())
+
+def entry_func():
+    entry = tk.Entry(window)
+    entry.pack(anchor="center")
+    entry_button = tk.Button(window, command=lambda: test_button(entry, entry_button))
+    entry_button.pack()
+
+
 def add_points(rows):
     global score_var, level_var
     value = [0,100,300,500,800][rows]
@@ -566,16 +597,18 @@ def get_input():
 
 
 def fall_func():
+    global paused
     time.sleep(between_blocks)
     while True:
         if not paused:
             start = time.time()
             if not np.array_equal(old_shapes, np.array([0,0])):
                 if np.any(old_shapes[:,1] <= 1):
-                    print("loss")
+                    entry_func()
                     # window.quit() #! gör det typ bara till en paus och sedan nytt game vid klick nånstans på skärmen, kan också gråa ned skärmen
                     game_frame.forget()
                     window.update()
+                    paused = True
                     #exit()
 
             shape_c.move_down() # väntetiden i denna

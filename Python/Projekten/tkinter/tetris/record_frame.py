@@ -4,12 +4,11 @@ import pandas as pd
 import sys
 import numpy as np
 global df
-from Table import Table
+from TkTable import Table
 
 window = tk.Tk()
 
 def show_table(Name):
-    global window
     df = pd.read_csv(f"{sys.path[0]}/records.csv",index_col="ID")
 
     def add(Name, Score):
@@ -19,10 +18,12 @@ def show_table(Name):
 
 
 
-
-    add(Name, 300)
+    add(Name, 1100)
     table = Table(window)
-    table.populate(df.sort_values(by=['Score'], ascending=False), fill_same=True, id=True)
+    titles = pd.DataFrame({1:["Name, Score"]})
+    modified_df = df.sort_values(by=['Score'], ascending=False)[:9]
+    table.populate(modified_df,fill=True, fill_same=False, titles=True)
+    df.to_csv(f'{sys.path[0]}/records.csv', index=True)
 
 def test_button(entry, entry_button):
     if entry.get() == "":
