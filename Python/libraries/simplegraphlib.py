@@ -4,6 +4,7 @@ if __name__ == "__main__":
 
 import numpy as np
 import math
+import timeit
 counting_lib_dic = {}
 def counting_lib(idholder, variable):
     if idholder not in counting_lib_dic.keys():
@@ -49,16 +50,16 @@ class degrees:
         xy = np.array(xy2)-np.array(xy1)
         quad = get_quadrant(xy)
         partial_deg = np.absolute(np.degrees(np.arctan(xy[1]/xy[0])))
+
         if quad in [2,4]:
             partial_deg = 90-partial_deg
+        
         deg = (partial_deg+90*(quad-1))
         if show:
             print(f"initial xy1: {xy}, initial xy2: {xy2}")
             print(f"partial degrees: {partial_deg}")
             print(f"final degrees: {deg}")
         return deg
-        
-
 
 class point:
     def __init__(self, xy):
@@ -141,7 +142,6 @@ class Line:
             print(f"point: {xy}")
         return xy
 
-
 class Linear:
     def Linear_point_changer(k=None,m=None,xy=None, show = False): # tar basically alla förutom 1 och ger tillbaka den saknade
         if xy[1] == None or xy[0] == None:
@@ -183,8 +183,6 @@ class Linear:
             print(new_k)
         return new_k
     
-
-
 class newcoord:
     def from_k_xy_x(k, xy, x, show = False): # tar in x värdet för nya punkten, punkten själv och k
         k,m = Linear.Linear_point_changer(k, xy=xy, show=True)
@@ -223,8 +221,6 @@ class newcoord:
             print(f"new coord: {xy1}")
         return xy1
     
-
-
 class shape:
     def __init__(self, xy):
         self.xy = np.array([xy])

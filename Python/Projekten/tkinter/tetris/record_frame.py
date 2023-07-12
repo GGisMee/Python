@@ -19,8 +19,8 @@ def show_table(Name):
 
 
     add(Name, 1100)
+    table_packer = tk.Frame(window)
     table = Table(window)
-    titles = pd.DataFrame({1:["Name, Score"]})
     modified_df = df.sort_values(by=['Score'], ascending=False)[:9]
     table.populate(modified_df,fill=True, fill_same=False, titles=True)
     df.to_csv(f'{sys.path[0]}/records.csv', index=True)
@@ -36,9 +36,9 @@ def test_button(entry, entry_button):
 
 def start():
     entry = tk.Entry(window)
-    entry.pack(anchor="center")
-    entry_button = tk.Button(window, command=lambda: test_button(entry, entry_button))
-    entry_button.pack()
+    entry.grid(row=0, column=0)
+    entry_button = tk.Button(window, command=lambda: test_button(entry, entry_button), text="Enter")
+    entry_button.grid(row=0, column=1)
 start()
 
 window.mainloop()

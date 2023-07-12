@@ -6,8 +6,10 @@ import sys, threading, time
 import pandas as pd
 from datetime import datetime
 from TkTable import Table
+import vlc
 
-
+media = vlc.MediaPlayer(f"{sys.path[0]}/music.mp3")
+media.play()
 def show_table(Name):
     df = pd.read_csv(f"{sys.path[0]}/records.csv",index_col="ID")
 
@@ -28,14 +30,15 @@ def test_button(entry, entry_button):
     entry.forget()
     entry_button.forget()
 
-
     show_table(entry.get())
 
 def entry_func():
-    entry = tk.Entry(window)
-    entry.pack(anchor="center")
-    entry_button = tk.Button(window, command=lambda: test_button(entry, entry_button))
-    entry_button.pack()
+    entry_f = tk.Frame(window)
+    entry_f.pack()
+    entry = tk.Entry(entry_f)
+    entry.grid(row=0, column=0)
+    entry_button = tk.Button(entry_f, command=lambda: test_button(entry, entry_button), text="Enter")
+    entry_button.grid(row=0, column=1)
 
 
 def add_points(rows):
@@ -53,10 +56,7 @@ def change_speed(level):
 
 
 #todo
-# antingen eller nedan:
-# inget mer
-# en pandas funktion där rekorden skrivs i tabell
-# en start och eller slutskärm med den som finns
+# fixa musik
 
 
 window = tk.Tk()
@@ -245,7 +245,7 @@ class shape:
                     break
         if (np.any(boxes[:,1]<0)) or (np.any(boxes[:,0]>=10) or np.any(boxes[:,0]<0)) or np.any(boxes[:,1]>=20): # [:,1]
             return 1
-        elif v:
+        if v:
             return 2
         return 0
 
@@ -575,9 +575,12 @@ def pause_packer(event):
     if paused: # den ska avpausas och var pausad innan
         #paus_f.place_forget()
         paused = False
+        media.set_pause(0)
     else: # den ska pausas efter att varit opausad
         #paus_f.place(x=0, y=0, relwidth=1, relheight=1)
         paused = True
+        media.set_pause(1)
+
     return paused
 
     time.sleep(0.5)
@@ -616,6 +619,13 @@ def fall_func():
             if resulting_time > between_blocks:
                 resulting_time = between_blocks
             time.sleep(between_blocks-resulting_time)
+
+def music_func():
+    while True:
+        state = media.get_state()
+        if state == vlc.State.Ended:
+            media.play()
+        time.sleep(1)
 
 new_shape()
 #shape_c.auto_move_down()
@@ -701,6 +711,8 @@ input_thread = threading.Thread(target=get_input)
 input_thread.start()
 fall_thread = threading.Thread(target=fall_func)
 fall_thread.start()
+music_checker = threading.Thread(target=music_func)
+music_checker.start()
 """
 shape_c.auto_move_down()
 window.update()

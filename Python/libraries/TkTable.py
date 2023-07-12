@@ -19,10 +19,12 @@ class Table:
 		self.row_length = len(self.table_items)
 		self.column_length = len(self.table_items[0])
 		if titles:
-			if not isinstance(table_items,DataFrame):
-				print("not pandas DataFrame, therefore usage of titles is denied")
-				return
-			self.table_items = (np.vstack((table_items.columns.values, self.table_items)))
+			if isinstance(DataFrame):
+				self.table_items = (np.vstack((table_items.columns.values, self.table_items)))
+			elif isinstance(table_items, np.array) or isinstance(table_items, list):
+				print("list or numpy array")
+			else:
+				titles = False
 		if id:
 			ids = ((np.arange(self.row_length)+1).reshape((-1,1)))
 			if titles:
