@@ -1,8 +1,0 @@
-# först krävs
-Set AUTOCOMMIT = OFF;
-
-# för att commit:a
-commit;
-
-# för att få tillbaka 
-rollback;
