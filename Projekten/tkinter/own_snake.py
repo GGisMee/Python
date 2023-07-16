@@ -4,7 +4,7 @@ from math import *;
 from random import *
 import threading
 
-geometry = 600
+geometry = 400
 size_sub = 10
 startVar = False
 apple_sub = 3
@@ -15,7 +15,7 @@ def start():
     continuation("runscr")
     
 
-win_start_geo = 1000
+win_start_geo = 600
 # print("write row/column below")
 # inp = round(float(input()))
 # print(inp)

@@ -220,7 +220,7 @@ class newcoord:
             print(f"rotation: {deg}, length: {length}")
             print(f"new coord: {xy1}")
         return xy1
-    
+
 class shape:
     def __init__(self, xy):
         self.xy = np.array([xy])

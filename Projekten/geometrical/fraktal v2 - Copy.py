@@ -17,7 +17,7 @@ class triangle:
         self.color = color
         self.new = True
 
-        self.obj = canvas.create_polygon(c1[0], c1[1], c2[0], c2[1], c3[0], c3[1], width=4, outline=color, fill="lightgray")
+        self.obj = canvas.create_polygon(c1[0], c1[1], c2[0], c2[1], c3[0], c3[1], width=0.5, outline=color, fill="lightgray")
 
 
         self.m1_2 = [0.5*(self.c1[0]+self.c2[0]), 0.5*(self.c1[1]+self.c2[1])]
@@ -82,7 +82,7 @@ triangles = []
 t1 = triangle([100, 400], [400, 400], [250, 100], color="blue")
 t2 = triangle([175, 250], [325, 250], [250, 400], color="green")
 triangles.append(t2)
-for i in range(5):
+for i in range(6):
     new_triangles()
 
 window.mainloop()
