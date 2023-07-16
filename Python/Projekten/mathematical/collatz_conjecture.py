@@ -13,7 +13,7 @@ def input_f():
     except ValueError:
         input_f()
 
-for i in range(2, 101):
-    numbers = get_conjecture(i)[0]
-    plt.plot(np.arange(1, len(numbers)+1), numbers)
+i = 10
+numbers = get_conjecture(i)[0]
+plt.plot(np.arange(1, len(numbers)+1), numbers)
 plt.show()
