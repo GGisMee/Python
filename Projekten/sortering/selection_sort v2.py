@@ -1,8 +1,6 @@
 import numpy as np
 from time import time
 def sort(arr):
-    
-    changed = []
     excluding_i = 0
     for o in arr[:]:
         min_i = excluding_i
