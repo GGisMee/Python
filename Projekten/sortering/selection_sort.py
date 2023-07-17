@@ -12,5 +12,5 @@ def sort(arr):
         del arr[min_i] 
     return changed
 start = time()
-print(sort(np.random.randint(1,3001, size=(1,3000))[0].tolist()))
+sort(np.random.randint(1,3001, size=(1,3000))[0].tolist())
 print(time()-start)
