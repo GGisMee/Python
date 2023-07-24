@@ -1,2 +1,4 @@
 För att ta i samma folder med ex pandas eller open kan man skriva: os.path.join(sys.path[0], filename) eller f"{sys.path[0]}/{filename}"
 Vid radering av information, konvertera bara till none så slipper man problem med olika shapes i subarraysen ex [[1,2], [3], [5,6]] går ej, men [[1,2], [3, None], [5,6]] går
+
+när man skapar en lista kan man välja dtype för om den ska bestå av int32,str, float32 osv

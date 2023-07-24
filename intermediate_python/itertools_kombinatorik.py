@@ -13,13 +13,13 @@ prod = list(product(a1,b1,repeat=2))
 from itertools import permutations
 a2 = [1,2,3]
 perm = list(permutations(a2, 2)) # 2 visar längd av lista
-# print(perm)
+print(perm)
 # alla ordningar den kan vara i 
 
 
 from itertools import combinations 
 a3 = [1,2,3,4]
 comb = combinations(a3, 2)
-print(list(comb))
+#print(list(comb))
 # alla de kan vara ihop med om bara med en annan en gång
 
