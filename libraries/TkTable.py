@@ -7,7 +7,11 @@ if __name__ == "__main__":
 	exit()
 
 class Table:
+	"""A class which creates a table in tkinter"""
 	def __init__(self,root, width_height = [7,1]):
+		"""root is the window or frame, which is wanted
+		
+		width height is how big in size you want the Table to be"""
 		self.labels = []
 		self.width_height = width_height
 		self.root = root

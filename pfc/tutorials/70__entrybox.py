@@ -20,7 +20,6 @@ def delete():
 
 def bs():
     sum
-    
     entry.delete(len(entry.get())-1, END)
 
 def DLW():
