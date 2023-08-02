@@ -3,7 +3,8 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
-df = pd.read_csv("Python/Projekten/Kombo/your_day/final/mydata.csv", index_col='ID')
+from sys import path
+df = pd.read_csv(f"{path[0]}/mydata.csv", index_col='ID')
 
 from tkinter import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg

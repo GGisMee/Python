@@ -7,6 +7,7 @@ import numpy as np
 from datetime import datetime
 import datetime as dt_a
 from tkinter.ttk import Notebook
+from sys import path
 
 
 import matplotlib.pyplot as plt
@@ -19,8 +20,8 @@ def vec(func, arr):
     return (np.array(list(map(func, arr))))
 
 
-df = pd.read_csv("Python/Projekten/Kombo/your_day/final/mydata.csv", index_col='ID')
-s_df_s = pd.read_csv("Python/Projekten/Kombo/your_day/final/status_df.csv", index_col='ID')
+df = pd.read_csv(f"{path[0]}/mydata.csv", index_col='ID')
+s_df_s = pd.read_csv(f"{path[0]}/status_df.csv", index_col='ID')
 s_df = np.array(s_df_s)[0]
 
 # för att skriva >< kan man använda knappen till vänster om 1
@@ -32,7 +33,7 @@ window.title("Your Day")
 
 # icon = PhotoImage(file="Python/pandas/projects/your_day/final/day.png") # ikon över bilden, kräver att 
 #* fix so it shows
-window.iconbitmap("Python/Projekten/Kombo/your_day/final/day.ico")
+window.iconbitmap(f"{path[0]}/day.ico")
 
 time_until_next: str
 done_today: bool

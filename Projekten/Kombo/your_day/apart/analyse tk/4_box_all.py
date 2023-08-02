@@ -7,10 +7,12 @@ from tkinter import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
+from sys import path
+
 window = Tk()
 window.title("Matplotlib in Tkinter")
 
-df = pd.read_csv("Python/pandas/projects/your_day/mydata.csv", index_col='ID')
+df = pd.read_csv(f"{path[0]}/mydata.csv", index_col='ID')
 n_df = (np.array(df)[:,2:])
 print(n_df)
 
