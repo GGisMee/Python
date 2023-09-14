@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-tal = 64
+tal = int(input('Enter number: '))
 list_of_used_primes = [0]
 
 def get_primes(end):
