@@ -1,0 +1,1 @@
+[print(i) if i>10 else None for i in [1,4,6,1,10,300,50,30]]

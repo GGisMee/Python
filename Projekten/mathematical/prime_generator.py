@@ -1,5 +1,6 @@
 from math import *
 import numpy as np
+
 def get_primes(end):
     all = np.arange(2, end+1)
     primes = [2]
@@ -9,3 +10,5 @@ def get_primes(end):
             primes.append(all[0])
     except IndexError:
         return primes
+
+primes = get_primes(400000)
