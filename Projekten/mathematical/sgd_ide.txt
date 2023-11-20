@@ -1,0 +1,3 @@
+exemplifierad genom geogebra: https://www.geogebra.org/classic/rn4ddjed
+
+testa att köra med en rate som minskar och försök komma på någon bra metod typ mindre ju närmare y, eller mindre på något sätt i en fallgrop
