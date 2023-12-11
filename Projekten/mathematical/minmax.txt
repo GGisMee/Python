@@ -1,0 +1,4 @@
+Ide på geogebra: https://www.geogebra.org/classic/jjvgqums
+
+1. Förbättring, gör det till en fysik uppgift med gravitation och friktion
+2. Låt den rulla

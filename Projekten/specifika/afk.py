@@ -2,7 +2,7 @@ import pyautogui
 import tkinter as tk
 import threading
 import time
-
+next_time_between=60
 
 def strt_fn():
     global on
