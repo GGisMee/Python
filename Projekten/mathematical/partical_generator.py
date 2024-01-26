@@ -24,4 +24,7 @@ class partical_container:
         for i in range(num_par):
             self.par_list.append(particle)
 
-    def 
+    def apply(self):
+        self.x_mat
+        self.y_mat
+        self.vx_mat
