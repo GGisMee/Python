@@ -1,0 +1,86 @@
+#box1{
+    width: 250px;
+    height: 250px;
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    animation-timing-function:ease-in-out;
+/*
+/*    animation: MySlide; /*Vilken animation som ska spelas för detta objekt*/
+  /*  animation-duration: 5s; /*tid som animationen spelas under*/
+    /*animation-iteration-count: infinite; /*kör 2 ggr*/
+  /*  animation-play-state: running;
+    animation-delay: 1s;
+    animation-timing-function:linear; /*hur den ska åka, typ snabbt i början långsamt i slutet mm*/
+
+/*kan skrivas som: animation: 3s linear 0s Infinate running Myslide*/
+
+}
+
+
+#box1:hover{ 
+    /*animation: 3s linear 0s infinite running MySlide;*/
+    padding: auto;
+}
+#box1:active{ /*active funkar också som onclick*/
+    /*animation: 3s linear 0s infinite running MySlide;*/
+    padding: auto;
+}
+@keyframes MySlide{ /*keyframes används för att specifisiera en animation*/
+    from{margin-left: 0%;} /*startpunkt*/
+    to{margin-left:100%;} /*slutpunkt*/
+}
+
+
+
+#box1:active{
+    /*animation: 3s linear 0s infinite running MyRotate*/
+    padding: auto;
+}
+@keyframes MyRotate{
+    100%{transform: rotateX(360deg)}
+    100%{transform: rotateY(360deg)}
+    100%{transform: rotateZ(360deg)}
+}
+
+
+
+#box1:active{
+    /*animation: 3s linear 0s infinite running MyOpacity;*/
+    padding: auto;
+}
+@keyframes MyOpacity{
+    50%{opacity: 0;} /*med 50% kommer den att bli helt genomskinlig och sedan återvända till synlig, men annars på 100% kommer den att snappa tillbaka*/
+}
+
+
+
+#box1:active{
+    /*animation: 3s linear 0s infinite running MyScale;*/
+    padding: auto;
+}
+@keyframes MyScale{
+    50%{transform: scaleX(2);}
+}
+
+
+
+#box1:active{
+    animation: 6s linear 0s infinite running MyRotate;
+}
+@keyframes MyColor{
+    /*50%{background-color: blue;}*/
+
+    10%{background-color: orange;}
+    20%{background-color: yellow;}
+    30%{background-color: green;}
+    40%{background-color: blue;}
+    50%{background-color: purple;}
+}
+
+
+/*Annat*/
+#text{
+    font-size: 100px;
+}

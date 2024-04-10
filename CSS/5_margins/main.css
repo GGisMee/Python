@@ -1,0 +1,22 @@
+#boxes{
+border-style: none;
+margin: 0px;
+}
+
+#box1{
+border: 10px;
+border-style:solid;
+background:lightblue;
+padding: 60px; /*I denna är det padding*/
+}
+
+#box2{
+    border: 10px;
+    border-style:solid;
+    border-color:grey;
+    background:lightcoral;
+    margin-top: 50px; /*I denna är det en margin, men ingen padding*/
+    margin-left: 5px;
+    margin-right: 50%;
+    margin-bottom: 1%;
+}
