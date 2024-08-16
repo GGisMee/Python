@@ -1,14 +1,22 @@
-import requests
-from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright
+import time
+def run(playwright):
+    # Start a new browser session
+    browser = playwright.chromium.launch(headless=False)
+    page = browser.new_page()
 
-url = "https://example.com/kalender"  # Ersätt med den faktiska URL:en
-response = requests.get(url)
-soup = BeautifulSoup(response.text, 'html.parser')
+    # Open the desired website
+    page.goto("https://web.skola24.se/timetable/timetable-viewer/industritekniska.skola24.se/Hitachigymnasiet%20i%20V%C3%A4ster%C3%A5s/")  # Replace with the actual URL
 
-# Exempel på hur man hämtar alla händelser som ligger i en viss HTML-klass
-events = soup.find_all('div', class_='event-class')
+    # Insert 2201 into the input field
+    page.fill("input[placeholder='Klass']", "TE V2201")  # Replace with the actual selector
+    time.sleep(1)
+    #page.wait_for_timeout(1000)
+    page.press("input[placeholder='Klass']", "Enter")  # Replace with the actual selector
 
-for event in events:
-    title = event.find('h2').text  # Antagande: titeln är i en h2-tag
-    date = event.find('span', class_='date-class').text  # Antagande: datumet finns i en span-tag med en viss klass
-    print(f"Title: {title}, Date: {date}")
+    #page.wait_for_timeout(5000)
+    time.sleep(1)
+    browser.close()
+
+with sync_playwright() as playwright:
+    run(playwright)
