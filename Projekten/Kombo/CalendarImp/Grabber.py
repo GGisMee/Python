@@ -25,4 +25,11 @@ new_times = []
 for i, row in enumerate(times):
     if i%2 == 0:
         new_times.append([times[i], times[i+1]])
+
+startTime = 0
+endTime = 0
+for i, row in enumerate(times):
+    
+
+
 print(new_times)
