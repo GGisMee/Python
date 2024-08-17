@@ -3,6 +3,8 @@ import time
 
 from Navigator import insert, insert_and_choose_in_list
 from sys import path
+
+import numpy as np
 dir = path[0]
 
 startWeek: int= 37
@@ -29,28 +31,43 @@ def scrape_calendar(page, dir):
     # rätt sätt: gruppera alla olika textvärden. Ta deras x och y värden och gruppera därefter dem i vilken dag dem är och sen i lektioner
 
     # style="font-size: 14px; font-family: &quot;Open Sans&quot;; fill: rgb(0, 0, 0); pointer-events: none;"
+    time.sleep(0.1)
+    text_elements = np.array(page.query_selector_all('text'))
+    #print(text_elements)
+    indexList = []
+    for i,el in enumerate(text_elements):
+        if "Fredag" in el.text_content():
+            text_elements = text_elements[i+1:]
+            break
+    for i,el in enumerate(text_elements):
+        if "" == el.text_content():
+            indexList.append(i)
+    text_elements = np.delete(text_elements, indexList)
 
-    text_elements = page.query_selector_all('text')
-    print(text_elements)
+    #print([el.text_content() for el in text_elements])
 
-    elements = []
-    for el in text_elements:
-        elements.append(el.text_content())
 
-    
-    
-    
-        
+    DevidedList = []
+    for i in range(5):
+        WeekList = []
+        minX = 221*i+39
+        maxX = 221*(i+1)+39
+        for el in text_elements:
+            if minX < int(el.get_attribute("x")) < maxX:
+                WeekList.append(el)
+                #print(el)
+       #print("\n")
+        #print(WeekList, "\n")
+        DevidedList.append(WeekList)
+
 
 
 
 with sync_playwright() as playwright:
     page, browser = start(playwright)
     insert(page, info = r"placeholder='Klass'",text="TE V2201")
-    print(1)
     insert_and_choose_in_list(page, info = r"placeholder='Vecka'",text=str(startWeek), list_info="w-menu-item")
     page.wait_for_timeout(100)
     scrape_calendar(page, dir)
     time.sleep(1000)
     page.close()
-    
