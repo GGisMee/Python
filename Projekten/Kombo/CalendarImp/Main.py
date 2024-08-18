@@ -12,7 +12,7 @@ numWeeks: int = 3
 
 def start(playwright):
     """Creates the browser and opens the website and returns it"""
-    browser = playwright.chromium.launch(headless=False)
+    browser = playwright.chromium.launch(headless=True)
     page = browser.new_page()
     page.goto("https://web.skola24.se/timetable/timetable-viewer/industritekniska.skola24.se/Hitachigymnasiet%20i%20V%C3%A4ster%C3%A5s/")  # Replace with the actual URL
     page.wait_for_load_state("networkidle")
@@ -21,46 +21,69 @@ def start(playwright):
 
 
 def scrape_calendar(page, dir):
-    # page_text = page.inner_text('body')
-    # print(page_text)
-
-    # # Skriv clipboard-data till en textfil
-    # with open(f"{dir}/output2.txt", 'w') as file:
-    #     file.write(page_text)
-
-    # rätt sätt: gruppera alla olika textvärden. Ta deras x och y värden och gruppera därefter dem i vilken dag dem är och sen i lektioner
-
-    # style="font-size: 14px; font-family: &quot;Open Sans&quot;; fill: rgb(0, 0, 0); pointer-events: none;"
+    # Pause execution briefly to avoid overwhelming the server or triggering anti-scraping measures
     time.sleep(0.1)
+
+    # Select all text elements on the page and convert them into a numpy array
     text_elements = np.array(page.query_selector_all('text'))
-    #print(text_elements)
-    indexList = []
-    for i,el in enumerate(text_elements):
-        if "Fredag" in el.text_content():
-            text_elements = text_elements[i+1:]
-            break
-    for i,el in enumerate(text_elements):
-        if "" == el.text_content():
-            indexList.append(i)
-    text_elements = np.delete(text_elements, indexList)
 
-    #print([el.text_content() for el in text_elements])
+    # Removes all elements before Fredag
+    index = next(i for i, elem in enumerate(text_elements) if "Fredag" in elem.text_content())
+    text_elements = text_elements[index+1:]
 
 
+    # # Removes empty elements
+    text_elements = np.array([elem for elem in text_elements if elem.text_content()])
+    
+    
     DevidedList = []
+    # # Divide the remaining text elements into 5 weekly lists
     for i in range(5):
         WeekList = []
-        minX = 221*i+39
-        maxX = 221*(i+1)+39
+        # Calculate the minimum and maximum x-coordinate values for the current week
+        minX = 221 * i + 39
+        maxX = 221 * (i + 1) + 39
+        # Add elements to the current week list if their x-coordinate falls within the days range
         for el in text_elements:
-            if minX < int(el.get_attribute("x")) < maxX:
+            if minX < np.int16(el.get_attribute("x")) < maxX:
                 WeekList.append(el)
-                #print(el)
-       #print("\n")
-        #print(WeekList, "\n")
         DevidedList.append(WeekList)
 
 
+    for WeekList in DevidedList:
+        WeekList = np.array(WeekList)
+        Dates = np.array([el for el in WeekList if ":" in el.text_content()])
+        YDates = np.array([np.int16(el.get_attribute("y")) for el in Dates])
+        IndexSortedYDates = np.argsort(YDates)
+        YDates = YDates[IndexSortedYDates]
+        Dates = Dates[IndexSortedYDates]
+        WeekListNoDates = WeekList[~np.isin(WeekList, Dates)]
+        
+        
+        XDates = np.array([np.int16(el.get_attribute("x")) for el in Dates])
+
+
+        TextDates = np.array([el.text_content() for el in Dates])
+
+        # I pair the dates up in two so that they are split into when they happen.
+        PairedTextDates = [TextDates[i:i+2] for i in range(0, len(TextDates), 2)]
+        print(type(PairedTextDates))
+        PairedYDates = list([YDates[i:i+2] for i in range(0, len(YDates), 2)])
+        PairedXDates = list([XDates[i:i+2] for i in range(0, len(XDates), 2)])
+
+        Text = [el.text_content() for el in WeekListNoDates]
+        TextY = [np.int16(el.get_attribute("y")) for el in WeekListNoDates]
+
+        IndexList = [next((i for i, (start, end) in enumerate(PairedYDates) if start <= element <= end), None) for element in TextY]
+        StructuredLectures = np.array(PairedTextDates).tolist()
+        for TextIndex, DatesIndex in enumerate(IndexList):
+            StructuredLectures[DatesIndex].append(Text[TextIndex])
+        #* Att göra  
+        # Dela upp dem som består av två ex SVESVE och SVASVA i två stycken.
+        # Fixa att lunch är för kort
+
+        
+    
 
 
 with sync_playwright() as playwright:
@@ -69,5 +92,4 @@ with sync_playwright() as playwright:
     insert_and_choose_in_list(page, info = r"placeholder='Vecka'",text=str(startWeek), list_info="w-menu-item")
     page.wait_for_timeout(100)
     scrape_calendar(page, dir)
-    time.sleep(1000)
     page.close()
