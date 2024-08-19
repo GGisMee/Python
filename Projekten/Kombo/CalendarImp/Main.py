@@ -64,23 +64,25 @@ def scrape_calendar(page, dir):
 
 
         TextDates = np.array([el.text_content() for el in Dates])
-
+        print(YDates, YDates.shape)
         # I pair the dates up in two so that they are split into when they happen.
         PairedTextDates = [TextDates[i:i+2] for i in range(0, len(TextDates), 2)]
-        print(type(PairedTextDates))
         PairedYDates = list([YDates[i:i+2] for i in range(0, len(YDates), 2)])
         PairedXDates = list([XDates[i:i+2] for i in range(0, len(XDates), 2)])
-
         Text = [el.text_content() for el in WeekListNoDates]
         TextY = [np.int16(el.get_attribute("y")) for el in WeekListNoDates]
-
+        
         IndexList = [next((i for i, (start, end) in enumerate(PairedYDates) if start <= element <= end), None) for element in TextY]
         StructuredLectures = np.array(PairedTextDates).tolist()
         for TextIndex, DatesIndex in enumerate(IndexList):
+            if Text[TextIndex][0:3] == Text[TextIndex][3:6]:
+                Text[TextIndex][0:3]
+            
             StructuredLectures[DatesIndex].append(Text[TextIndex])
         #* Att göra  
         # Dela upp dem som består av två ex SVESVE och SVASVA i två stycken.
-        # Fixa att lunch är för kort
+        # Ta bort repetering alltså SVESVE...
+        # Fixa att lunch är för kort med 2
 
         
     
