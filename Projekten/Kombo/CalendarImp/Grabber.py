@@ -19,7 +19,7 @@ def scrape_calendar(page):
         index = next(i for i, elem in enumerate(text_elements) if "Fredag" in elem.text_content())
     except StopIteration: 
         print("Loaded incorrectly, run again")
-    Days = [str(el.text_content())[-3:] for el in text_elements[index-4:index+1]]
+    Days = [str(el.text_content()).split(" ")[1] for el in text_elements[index-4:index+1]]
     text_elements = text_elements[index+1:]
 
     # # Removes empty elements
