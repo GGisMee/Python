@@ -30,7 +30,7 @@ def scrape_calendar(page):
     for i in range(5):
         WeekList = []
         # Calculate the minimum and maximum x-coordinate values for the current week
-        minX = Step * i + leftXOutline #! Skulle behöva göra den här dynamisk eftersom den ändras efter device.
+        minX = Step * i + leftXOutline
         maxX = Step * (i + 1) + leftXOutline
         # Add elements to the current week list if their x-coordinate falls within the days range
         for el in text_elements:
@@ -43,6 +43,8 @@ def scrape_calendar(page):
     for i2,WeekList in enumerate(DevidedList):
         WeekList = np.array(WeekList)
         Dates = np.array([el for el in WeekList if ":" in el.text_content()])
+        if len(Dates) % 2 == 1:
+            pass #! problem, det finns enbart ett 12:10 på onsdagen v 38 som SVA och SVE delar 
         YDates = np.array([np.int16(el.get_attribute("y")) for el in Dates])
 
 
@@ -56,16 +58,16 @@ def scrape_calendar(page):
     
         Text = [el.text_content() for el in WeekListNoDates]
         TextY = [np.int16(el.get_attribute("y")) for el in WeekListNoDates]
-        
+
         IndexList = [next((i for i, (start, end) in enumerate(PairedYDates) if start <= element <= end), None) for element in TextY]
+
         StructuredLectures = np.array(PairedTextDates).tolist()
         for TextIndex, DatesIndex in enumerate(IndexList):
             if Text[TextIndex][0:3] == Text[TextIndex][3:6]:
                 Text[TextIndex] = Text[TextIndex][3:]
             StructuredLectures[DatesIndex].append(Text[TextIndex])
         for i, lecture in enumerate(StructuredLectures):
-            if len(lecture) == 3:
-                StructuredLectures[i].append("")
+            while len(lecture) < 5:
                 StructuredLectures[i].append("")
             while len(lecture) > 5:
                 part = lecture[0:5]
@@ -84,4 +86,4 @@ def getData(page, startWeek, NumWeek: int = 1):
         Days, WeekData = scrape_calendar(page)
         dataSet.append(WeekData)
         daySet.append(Days)
-    return daySet, WeekData
+    return daySet, dataSet

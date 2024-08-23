@@ -4,8 +4,12 @@ from Navigator import insert
 from Grabber import getData 
 from icalendar import Calendar, Event, vCalAddress, vText
 import datetime
-startWeek: int = 37
-numWeeks: int = 2
+import pytz
+import os
+import sys
+
+startWeek: int = 39
+numWeeks: int = 1
 klass = "2201"
 
 def start(playwright):
@@ -35,21 +39,31 @@ def FormatToICal(daySet:list, dataSet:list):
     cal = Calendar()
     cal.add('version', '2.0')
     yearList = getYearList(daySet)
-    
+    sweden_tz = pytz.timezone('Europe/Stockholm')
     # Fixa så åren fungerar som de ska och även att den fungerar med flera veckor eftersom det blev någon bugg nu.
-    for i, day in enumerate(dataSet):
-        for i2, activity in enumerate(day):
-            
-            # event = Event()
-            startTime = activity[0]
-            endTime = activity[1]
-            activityName = activity[2]
-            activityTeacher = activity[3]
-            activityRoom = activity[4]
-            # event.add('name', activityName)
-            # event['location'] = vText(f'Sal {activityRoom}')
-            # event.add('teacher', activityTeacher)
-            print( startTime, endTime, yearList[i][i2], daySet[i][i2])
+    for i, WeekData in enumerate(dataSet):
+        for i2, dayData in enumerate(WeekData):
+            for i3, activity in enumerate(dayData):
+                event = Event()
+                startTime = str(activity[0]).split(":")
+                endTime = str(activity[1]).split(":")
+                activityName = activity[2]
+                activityTeacher = activity[3]
+                activityRoom = activity[4]
+                event.add('summary', activityName)
+                event['location'] = vText(f'Sal {activityRoom}')
+                event.add('description', f"lärare: {activityTeacher}")
+
+                date = str(daySet[i][i2]).split("/")
+                print(int(yearList[i][i2]), int(date[1]), int(date[0]), int(startTime[0]), int(startTime[1]))
+                event.add('dtstart', datetime.datetime(int(yearList[i][i2]), int(date[1]), int(date[0]), int(startTime[0]), int(startTime[1])))
+                event.add('dtend', datetime.datetime(int(yearList[i][i2]), int(date[1]), int(date[0]), int(endTime[0]), int(endTime[1])))
+                cal.add_component(event)
+                
+                #print(startTime, endTime, yearList[i][i2], daySet[i][i2])
+    f = open(os.path.join(sys.path[0], 'calendar.ics'), 'wb')
+    f.write(cal.to_ical())
+    f.close()
 
 
     
