@@ -4,7 +4,7 @@ from Navigator import insert
 from Grabber import getData 
 from icalendar import Calendar, Event, vCalAddress, vText
 import datetime
-startWeek: int = 37
+startWeek: int = 34
 numWeeks: int = 2
 klass = "2201"
 
