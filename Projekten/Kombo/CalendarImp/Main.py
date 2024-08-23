@@ -8,8 +8,9 @@ import pytz
 import os
 import sys
 
-startWeek: int = 39
-numWeeks: int = 1
+startWeek: int = 37
+numWeeks: int = None
+stopWeek:int = 37
 klass = "2201"
 
 def start(playwright):
@@ -55,7 +56,6 @@ def FormatToICal(daySet:list, dataSet:list):
                 event.add('description', f"lärare: {activityTeacher}")
 
                 date = str(daySet[i][i2]).split("/")
-                print(int(yearList[i][i2]), int(date[1]), int(date[0]), int(startTime[0]), int(startTime[1]))
                 event.add('dtstart', datetime.datetime(int(yearList[i][i2]), int(date[1]), int(date[0]), int(startTime[0]), int(startTime[1])))
                 event.add('dtend', datetime.datetime(int(yearList[i][i2]), int(date[1]), int(date[0]), int(endTime[0]), int(endTime[1])))
                 cal.add_component(event)
@@ -71,6 +71,6 @@ def FormatToICal(daySet:list, dataSet:list):
 with sync_playwright() as playwright:
     page, browser = start(playwright)
     insert(page, info = r"placeholder='Klass'",text=f"TE V{klass}")
-    daySet, dataSet = getData(page, startWeek, numWeeks)
+    daySet, dataSet = getData(page, startWeek,NumWeeks=numWeeks, stopWeek=stopWeek)
     FormatToICal(daySet, dataSet)
     page.close()

@@ -44,7 +44,8 @@ def scrape_calendar(page):
         WeekList = np.array(WeekList)
         Dates = np.array([el for el in WeekList if ":" in el.text_content()])
         if len(Dates) % 2 == 1:
-            pass #! problem, det finns enbart ett 12:10 på onsdagen v 38 som SVA och SVE delar 
+            print('Error. Uneven amount of hours for the activities') #! problem, det finns enbart ett 12:10 på onsdagen v 38 som SVA och SVE delar 
+            exit()
         YDates = np.array([np.int16(el.get_attribute("y")) for el in Dates])
 
 
@@ -60,7 +61,7 @@ def scrape_calendar(page):
         TextY = [np.int16(el.get_attribute("y")) for el in WeekListNoDates]
 
         IndexList = [next((i for i, (start, end) in enumerate(PairedYDates) if start <= element <= end), None) for element in TextY]
-
+        #! problem på torsdag 12/9 att den tänker att Aktivitet skolfoto tillhör svenskan eftersom den är innanför svenskans y ramar.
         StructuredLectures = np.array(PairedTextDates).tolist()
         for TextIndex, DatesIndex in enumerate(IndexList):
             if Text[TextIndex][0:3] == Text[TextIndex][3:6]:
@@ -77,11 +78,27 @@ def scrape_calendar(page):
     return Days, TotalWeekList
         
 
-def getData(page, startWeek, NumWeek: int = 1):
+def getData(page, startWeek, NumWeeks: int = None, stopWeek:int = None):
     dataSet = []
     daySet = []
-    for i in range(NumWeek):
-        insert_and_choose_in_list(page, info = r"placeholder='Vecka'",text=startWeek+i, list_info="w-menu-item")
+    WeekList = []
+    VarWeek = startWeek
+    if stopWeek:
+        while VarWeek != stopWeek+1:
+            WeekList.append(VarWeek)
+            VarWeek += 1
+            if VarWeek == 53:
+                VarWeek -= 52
+    elif NumWeeks:
+        for i in range(NumWeeks):
+            weekNum = startWeek+i
+            if weekNum>52:
+                WeekList.append(weekNum-52)
+            else:
+                WeekList.append(weekNum)
+
+    for weekNum in WeekList:
+        insert_and_choose_in_list(page, info = r"placeholder='Vecka'",text=weekNum, list_info="w-menu-item")
         page.wait_for_timeout(100)
         Days, WeekData = scrape_calendar(page)
         dataSet.append(WeekData)
