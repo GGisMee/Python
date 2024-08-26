@@ -31,7 +31,7 @@ def scrape_calendar(page):
         WeekList = []
         # Calculate the minimum and maximum x-coordinate values for the current week
         minX = Step * i + leftXOutline
-        maxX = Step * (i + 1) + leftXOutline
+        maxX = Step * (i + 1) + leftXOutline-2
         # Add elements to the current week list if their x-coordinate falls within the days range
         for el in text_elements:
             if minX < np.int16(el.get_attribute("x")) < maxX:
@@ -47,6 +47,7 @@ def scrape_calendar(page):
             print('Error. Uneven amount of hours for the activities') #! problem, det finns enbart ett 12:10 på onsdagen v 38 som SVA och SVE delar 
             exit()
         YDates = np.array([np.int16(el.get_attribute("y")) for el in Dates])
+        XDates = np.array([np.int16(el.get_attribute("x")) for el in Dates])
 
 
         WeekListNoDates = WeekList[~np.isin(WeekList, Dates)]
@@ -56,11 +57,32 @@ def scrape_calendar(page):
         # I pair the dates up in two so that they are split into when they happen.
         PairedTextDates = [TextDates[i:i+2] for i in range(0, len(TextDates), 2)]
         PairedYDates = list([YDates[i:i+2] for i in range(0, len(YDates), 2)])
+        PairedXDates = list([XDates[i:i+2] for i in range(0, len(XDates), 2)])
     
         Text = [el.text_content() for el in WeekListNoDates]
-        TextY = [np.int16(el.get_attribute("y")) for el in WeekListNoDates]
+        TextYList = [np.int16(el.get_attribute("y")) for el in WeekListNoDates]
+        TextXList = [np.int16(el.get_attribute("x")) for el in WeekListNoDates]
 
-        IndexList = [next((i for i, (start, end) in enumerate(PairedYDates) if start <= element <= end), None) for element in TextY]
+        IndexList = []
+
+        for i, TextY in enumerate(TextYList):
+            FontValue = str(WeekListNoDates[i].get_attribute("style"))
+            TextEl = Text[i]
+            FontValue = FontValue.split(";")[0].replace("font-size: ","").replace("px", "")
+            WeekList[i].text_content()
+            widthValue = round(len(TextEl)*0.6*int(FontValue))
+            TextX = TextXList[i]+widthValue
+            #print(widthValue)
+
+            index = None
+            for i2, (startY, endY) in enumerate(PairedYDates):
+                startX = PairedXDates[i2][0]
+                endX = PairedXDates[i2][1]
+                if startY <= TextY <= endY and startX <= TextX<= endX: # antaglig anledning är att det är salen som automatiskt hamnar utanför endX
+                    Index = i2
+                    break
+            IndexList.append(Index)
+             # kan nog göras genom att använda en approximation av hur många pixlar som ska läggas till.
         #! problem på torsdag 12/9 att den tänker att Aktivitet skolfoto tillhör svenskan eftersom den är innanför svenskans y ramar.
         StructuredLectures = np.array(PairedTextDates).tolist()
         for TextIndex, DatesIndex in enumerate(IndexList):

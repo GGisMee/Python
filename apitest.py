@@ -1,4 +1,3 @@
-pass
 import requests
 
 
@@ -38,10 +37,11 @@ headers = {
 }
 
 # Make the POST request
-response = requests.post('https://web.skola24.se/timetable/timetable-viewer/data/render', json=body, headers=headers)
-
+response = requests.post('https://web.skola24.se/timetable/timetable-viewer/industritekniska.skola24.se/Hitachigymnasiet%20i%20V%C3%A4ster%C3%A5s', json=body, headers=headers)
+# otherwise: https://web.skola24.se/timetable/timetable-viewer/industritekniska.skola24.se/Hitachigymnasiet%20i%20V%C3%A4ster%C3%A5s/
+# or 'https://web.skola24.se/timetable/timetable-viewer/data/render'
 # Parse the JSON response
-data = response.json()
+data = response.status_code
 
 # Now `data` contains the schedule information retrieved from the Skola24 API
 print(data)
