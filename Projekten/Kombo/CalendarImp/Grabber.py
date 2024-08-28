@@ -56,9 +56,16 @@ def scrape_calendar(page):
 
         # I pair the dates up in two so that they are split into when they happen.
         PairedTextDates = [TextDates[i:i+2] for i in range(0, len(TextDates), 2)]
-        PairedYDates = list([YDates[i:i+2] for i in range(0, len(YDates), 2)])
-        PairedXDates = list([XDates[i:i+2] for i in range(0, len(XDates), 2)])
-    
+        PairedYDates = np.array([YDates[i:i+2] for i in range(0, len(YDates), 2)])
+        #! skulle behöva sortera dem här eftersom den får fel index när den ligger med alla profil aktiviterarna först på tisdag 10/9
+        PairedXDates = np.array([XDates[i:i+2] for i in range(0, len(XDates), 2)])
+
+        # sort the PairedDates.
+        sortList = np.argsort(PairedYDates[:,0])
+        PairedYDates = PairedYDates[sortList].tolist()
+        PairedXDates = PairedXDates[sortList].tolist()
+
+
         Text = [el.text_content() for el in WeekListNoDates]
         TextYList = [np.int16(el.get_attribute("y")) for el in WeekListNoDates]
         TextXList = [np.int16(el.get_attribute("x")) for el in WeekListNoDates]
@@ -70,7 +77,7 @@ def scrape_calendar(page):
             TextEl = Text[i]
             FontValue = FontValue.split(";")[0].replace("font-size: ","").replace("px", "")
             WeekList[i].text_content()
-            widthValue = round(len(TextEl)*0.6*int(FontValue))
+            widthValue = round(len(TextEl)*9.5-14)
             TextX = TextXList[i]+widthValue
             #print(widthValue)
 
@@ -78,7 +85,7 @@ def scrape_calendar(page):
             for i2, (startY, endY) in enumerate(PairedYDates):
                 startX = PairedXDates[i2][0]
                 endX = PairedXDates[i2][1]
-                if startY <= TextY <= endY and startX <= TextX<= endX: # antaglig anledning är att det är salen som automatiskt hamnar utanför endX
+                if startY <= TextY < endY and startX <= TextX< endX: # antaglig anledning är att det är salen som automatiskt hamnar utanför endX
                     Index = i2
                     break
             IndexList.append(Index)
