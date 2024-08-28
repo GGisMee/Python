@@ -40,7 +40,7 @@ def scrape_calendar(page):
         DevidedList.append(WeekList)
     
     TotalWeekList = []
-    for i2,WeekList in enumerate(DevidedList):
+    for WeekIndex,WeekList in enumerate(DevidedList):
         WeekList = np.array(WeekList)
         Dates = np.array([el for el in WeekList if ":" in el.text_content()])
         if len(Dates) % 2 == 1:
@@ -55,15 +55,16 @@ def scrape_calendar(page):
         TextDates = np.array([el.text_content() for el in Dates])
 
         # I pair the dates up in two so that they are split into when they happen.
-        PairedTextDates = [TextDates[i:i+2] for i in range(0, len(TextDates), 2)]
+        PairedTextDates = np.array([TextDates[i:i+2] for i in range(0, len(TextDates), 2)])
         PairedYDates = np.array([YDates[i:i+2] for i in range(0, len(YDates), 2)])
-        #! skulle behöva sortera dem här eftersom den får fel index när den ligger med alla profil aktiviterarna först på tisdag 10/9
         PairedXDates = np.array([XDates[i:i+2] for i in range(0, len(XDates), 2)])
 
         # sort the PairedDates.
         sortList = np.argsort(PairedYDates[:,0])
+        PairedTextDates = PairedTextDates[sortList].tolist()
         PairedYDates = PairedYDates[sortList].tolist()
         PairedXDates = PairedXDates[sortList].tolist()
+
 
 
         Text = [el.text_content() for el in WeekListNoDates]
@@ -73,10 +74,7 @@ def scrape_calendar(page):
         IndexList = []
 
         for i, TextY in enumerate(TextYList):
-            FontValue = str(WeekListNoDates[i].get_attribute("style"))
             TextEl = Text[i]
-            FontValue = FontValue.split(";")[0].replace("font-size: ","").replace("px", "")
-            WeekList[i].text_content()
             widthValue = round(len(TextEl)*9.5-14)
             TextX = TextXList[i]+widthValue
             #print(widthValue)
@@ -84,15 +82,22 @@ def scrape_calendar(page):
             index = None
             for i2, (startY, endY) in enumerate(PairedYDates):
                 startX = PairedXDates[i2][0]
-                endX = PairedXDates[i2][1]
+                extraForWidth = 6*len(TextEl)-1
+                endX = PairedXDates[i2][1]+extraForWidth
                 if startY <= TextY < endY and startX <= TextX< endX: # antaglig anledning är att det är salen som automatiskt hamnar utanför endX
                     Index = i2
                     break
             IndexList.append(Index)
              # kan nog göras genom att använda en approximation av hur många pixlar som ska läggas till.
-        #! problem på torsdag 12/9 att den tänker att Aktivitet skolfoto tillhör svenskan eftersom den är innanför svenskans y ramar.
         StructuredLectures = np.array(PairedTextDates).tolist()
         for TextIndex, DatesIndex in enumerate(IndexList):
+
+            if (TextIndex != len(Text)-1) and (Text[TextIndex] == 'JONWES,' and Text[TextIndex+1] == 'JOHOST,'):
+                Text[TextIndex] = Text[TextIndex]+'JOHOST,'
+                del Text[TextIndex+1]
+                del IndexList[TextIndex+1]
+
+                
             if Text[TextIndex][0:3] == Text[TextIndex][3:6]:
                 Text[TextIndex] = Text[TextIndex][3:]
             StructuredLectures[DatesIndex].append(Text[TextIndex])
