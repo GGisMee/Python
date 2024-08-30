@@ -1,6 +1,8 @@
 import numpy as np
 import time
 from Navigator import insert_and_choose_in_list
+import datetime
+
 def scrape_calendar(page):
     # Pause execution briefly to avoid overwhelming the server or triggering anti-scraping measures
     time.sleep(0.1)
@@ -46,7 +48,7 @@ def scrape_calendar(page):
         WeekList = np.array(WeekList)
         Dates = np.array([el for el in WeekList if ":" in el.text_content()])
         if (len(Dates) % 2) == 1:
-            print(f"Activity with same startdate, causing issue skipping day {Days[i2]}")
+            print(f"Activity with same startdate, causing issue skipping day {Days[i2-1]}")
             del Days[i2]
             continue #! problem, det finns enbart ett 12:10 på onsdagen v 38 som SVA och SVE delar 
         YDates = np.array([np.int16(el.get_attribute("y")) for el in Dates])
@@ -63,6 +65,9 @@ def scrape_calendar(page):
         PairedXDates = np.array([XDates[i:i+2] for i in range(0, len(XDates), 2)])
 
         # sort the PairedDates.
+        if len(PairedYDates) == 0:
+            TotalWeekList.append([])
+            continue
         sortList = np.argsort(PairedYDates[:,0])
         PairedTextDates = PairedTextDates[sortList].tolist()
         PairedYDates = PairedYDates[sortList].tolist()
@@ -115,13 +120,13 @@ def scrape_calendar(page):
     return Days, TotalWeekList
         
 
-def getData(page, startWeek, NumWeeks: int = None, stopWeek:int = None):
+def getData(page, startWeek, NumWeeks: int = None, stopWeek:int = None, year:int=datetime.datetime.now().year):
     dataSet = []
     daySet = []
     extraYearValue = 0
-    extraWeekValue = 0
+    extraWeekValue = datetime.datetime.now().year-year
     for i in range(NumWeeks):
-        ChosenWeek = i+startWeek-extraWeekValue
+        ChosenWeek = i+startWeek+extraWeekValue
         if ChosenWeek >= 53:
             extraWeekValue -= 52
             ChosenWeek-=52

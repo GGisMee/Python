@@ -3,10 +3,11 @@ from Formater import FormatToICal
 from Navigator import insert
 from Grabber import getData 
 
-
-startWeek: int = 44
-numWeeks: int = 1
-endWeek: int = None
+#! fixa fel med skumma aktiveten vecka 5
+startWeek: int = 5
+year: int = 2025
+numWeeks: int = None
+endWeek: int = 10
 klass = "2201"
 
 if ("s" in klass) or ("S" in klass):
@@ -34,7 +35,7 @@ def start(playwright):
 with sync_playwright() as playwright:
     page, browser = start(playwright)
     insert(page, info = r"placeholder='Klass'",text=klass)
-    daySet, dataSet = getData(page, startWeek, numWeeks)
+    daySet, dataSet = getData(page, startWeek, numWeeks, year = year)
     FormatToICal(daySet, dataSet)
     page.close()
     print("Successfully ran through program")
