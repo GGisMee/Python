@@ -30,7 +30,7 @@ def scrape_calendar(page):
         WeekList = []
         # Calculate the minimum and maximum x-coordinate values for the current week
         minX = Step * i + leftXOutline
-        maxX = Step * (i + 1) + leftXOutline
+        maxX = Step * (i + 1) + leftXOutline-2
         # Add elements to the current week list if their x-coordinate falls within the days range
         for el in text_elements:
             if minX < np.int16(el.get_attribute("x")) < maxX:
@@ -39,7 +39,7 @@ def scrape_calendar(page):
         DevidedList.append(WeekList)
     
     TotalWeekList = []
-    for i2,WeekList in enumerate(DevidedList):
+    for WeekIndex,WeekList in enumerate(DevidedList):
         WeekList = np.array(WeekList)
         Dates = np.array([el for el in WeekList if ":" in el.text_content()])
         if (len(Dates) % 2) == 1:
@@ -47,6 +47,7 @@ def scrape_calendar(page):
             del Days[i2]
             continue #! problem, det finns enbart ett 12:10 på onsdagen v 38 som SVA och SVE delar 
         YDates = np.array([np.int16(el.get_attribute("y")) for el in Dates])
+        XDates = np.array([np.int16(el.get_attribute("x")) for el in Dates])
 
 
         WeekListNoDates = WeekList[~np.isin(WeekList, Dates)]
@@ -54,16 +55,49 @@ def scrape_calendar(page):
         TextDates = np.array([el.text_content() for el in Dates])
 
         # I pair the dates up in two so that they are split into when they happen.
-        PairedTextDates = [TextDates[i:i+2] for i in range(0, len(TextDates), 2)]
-        PairedYDates = list([YDates[i:i+2] for i in range(0, len(YDates), 2)])
-    
+        PairedTextDates = np.array([TextDates[i:i+2] for i in range(0, len(TextDates), 2)])
+        PairedYDates = np.array([YDates[i:i+2] for i in range(0, len(YDates), 2)])
+        PairedXDates = np.array([XDates[i:i+2] for i in range(0, len(XDates), 2)])
+
+        # sort the PairedDates.
+        sortList = np.argsort(PairedYDates[:,0])
+        PairedTextDates = PairedTextDates[sortList].tolist()
+        PairedYDates = PairedYDates[sortList].tolist()
+        PairedXDates = PairedXDates[sortList].tolist()
+
+
+
         Text = [el.text_content() for el in WeekListNoDates]
-        TextY = [np.int16(el.get_attribute("y")) for el in WeekListNoDates]
+        TextYList = [np.int16(el.get_attribute("y")) for el in WeekListNoDates]
+        TextXList = [np.int16(el.get_attribute("x")) for el in WeekListNoDates]
 
-        IndexList = [next((i for i, (start, end) in enumerate(PairedYDates) if start <= element <= end), None) for element in TextY]
+        IndexList = []
 
+        for i, TextY in enumerate(TextYList):
+            TextEl = Text[i]
+            widthValue = round(len(TextEl)*9.5-14)
+            TextX = TextXList[i]+widthValue
+            #print(widthValue)
+
+            index = None
+            for i2, (startY, endY) in enumerate(PairedYDates):
+                startX = PairedXDates[i2][0]
+                extraForWidth = 6*len(TextEl)-1
+                endX = PairedXDates[i2][1]+extraForWidth
+                if startY <= TextY < endY and startX <= TextX< endX: # antaglig anledning är att det är salen som automatiskt hamnar utanför endX
+                    Index = i2
+                    break
+            IndexList.append(Index)
+             # kan nog göras genom att använda en approximation av hur många pixlar som ska läggas till.
         StructuredLectures = np.array(PairedTextDates).tolist()
         for TextIndex, DatesIndex in enumerate(IndexList):
+
+            if (TextIndex != len(Text)-1) and (Text[TextIndex] == 'JONWES,' and Text[TextIndex+1] == 'JOHOST,'):
+                Text[TextIndex] = Text[TextIndex]+'JOHOST,'
+                del Text[TextIndex+1]
+                del IndexList[TextIndex+1]
+
+                
             if Text[TextIndex][0:3] == Text[TextIndex][3:6]:
                 Text[TextIndex] = Text[TextIndex][3:]
             StructuredLectures[DatesIndex].append(Text[TextIndex])
@@ -78,12 +112,12 @@ def scrape_calendar(page):
     return Days, TotalWeekList
         
 
-def getData(page, startWeek, NumWeek: int = 1):
+def getData(page, startWeek, NumWeeks: int = None, stopWeek:int = None):
     dataSet = []
     daySet = []
     extraYearValue = 0
     extraWeekValue = 0
-    for i in range(NumWeek):
+    for i in range(NumWeeks):
         ChosenWeek = i+startWeek-extraWeekValue
         if ChosenWeek >= 53:
             extraWeekValue -= 52
