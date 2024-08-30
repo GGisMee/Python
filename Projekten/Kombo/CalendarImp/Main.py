@@ -18,8 +18,10 @@ else:
 if not numWeeks:
     if endWeek < startWeek:
         endWeek+=52
-    numWeeks = endWeek-startWeek+1    
-
+    numWeeks = endWeek-startWeek+1   
+else:
+    endWeek = startWeek+numWeeks-1 
+print(f'Imputed weeks: {startWeek} - {endWeek}')
 
 def start(playwright):
     """Creates the browser and opens the website and returns it"""
@@ -36,3 +38,4 @@ with sync_playwright() as playwright:
     FormatToICal(daySet, dataSet)
     page.close()
     print("Successfully ran through program")
+    print(f"Weeks {startWeek}-{endWeek} scraped")

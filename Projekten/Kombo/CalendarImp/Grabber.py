@@ -127,6 +127,7 @@ def getData(page, startWeek, NumWeeks: int = None, stopWeek:int = None):
             ChosenWeek-=52
             extraYearValue+=1
         insert_and_choose_in_list(page, info = r"placeholder='Vecka'",text=ChosenWeek, list_info="w-menu-item", extraYearValue=extraYearValue)
+        print(f'{ChosenWeek} scraped')
         page.wait_for_timeout(100)
         Days, WeekData = scrape_calendar(page)
         dataSet.append(WeekData)
