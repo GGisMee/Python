@@ -26,6 +26,8 @@ def FormatToICal(daySet:list, dataSet:list):
         for i2, dayData in enumerate(WeekData):
             for i3, activity in enumerate(dayData):
                 event = Event()
+                if len(activity) == 0:
+                    break
                 startTime = str(activity[0]).split(":")
                 endTime = str(activity[1]).split(":")
                 activityName = activity[2]

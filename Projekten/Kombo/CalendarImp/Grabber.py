@@ -23,6 +23,9 @@ def scrape_calendar(page):
 
     # # Removes empty elements
     text_elements = np.array([elem for elem in text_elements if elem.text_content()])
+    if len(text_elements) == 0:
+        emptyarray = [[[], [], [], [], [], []], [[], [], [], [], []], [[], [], [], [], [], []], [[], []], [[], [], [], [], [], [], [], [], [], []]]
+        return Days, emptyarray
     
     DevidedList = []
     # # Divide the remaining text elements into 5 weekly lists
@@ -123,8 +126,6 @@ def getData(page, startWeek, NumWeeks: int = None, stopWeek:int = None):
             extraWeekValue -= 52
             ChosenWeek-=52
             extraYearValue+=1
-        if ChosenWeek > 52:
-            pass
         insert_and_choose_in_list(page, info = r"placeholder='Vecka'",text=ChosenWeek, list_info="w-menu-item", extraYearValue=extraYearValue)
         page.wait_for_timeout(100)
         Days, WeekData = scrape_calendar(page)

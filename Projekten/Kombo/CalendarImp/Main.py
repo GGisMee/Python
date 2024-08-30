@@ -4,9 +4,9 @@ from Navigator import insert
 from Grabber import getData 
 
 
-startWeek: int = 35
-numWeeks: int = None
-endWeek: int = 10
+startWeek: int = 44
+numWeeks: int = 1
+endWeek: int = None
 klass = "2201"
 
 if ("s" in klass) or ("S" in klass):
@@ -23,7 +23,7 @@ if not numWeeks:
 
 def start(playwright):
     """Creates the browser and opens the website and returns it"""
-    browser = playwright.chromium.launch(headless=False)
+    browser = playwright.chromium.launch(headless=True)
     page = browser.new_page()
     page.goto("https://web.skola24.se/timetable/timetable-viewer/industritekniska.skola24.se/Hitachigymnasiet%20i%20V%C3%A4ster%C3%A5s/")  # Replace with the actual URL
     page.wait_for_load_state("networkidle")
@@ -35,3 +35,4 @@ with sync_playwright() as playwright:
     daySet, dataSet = getData(page, startWeek, numWeeks)
     FormatToICal(daySet, dataSet)
     page.close()
+    print("Successfully ran through program")
