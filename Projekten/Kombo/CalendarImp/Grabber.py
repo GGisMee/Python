@@ -9,7 +9,6 @@ def scrape_calendar(page):
     text_elements = np.array(page.query_selector_all('text'))
 
     line_elements = np.array(page.query_selector_all('line'))
-
     leftXOutline = int(line_elements[0].get_attribute("x2"))
     rightXOutline = int(line_elements[-1].get_attribute("x1"))
     Step = (rightXOutline-leftXOutline)/5
@@ -43,8 +42,10 @@ def scrape_calendar(page):
     for i2,WeekList in enumerate(DevidedList):
         WeekList = np.array(WeekList)
         Dates = np.array([el for el in WeekList if ":" in el.text_content()])
-        if len(Dates) % 2 == 1:
-            pass #! problem, det finns enbart ett 12:10 på onsdagen v 38 som SVA och SVE delar 
+        if (len(Dates) % 2) == 1:
+            print(f"Activity with same startdate, causing issue skipping day {Days[i2]}")
+            del Days[i2]
+            continue #! problem, det finns enbart ett 12:10 på onsdagen v 38 som SVA och SVE delar 
         YDates = np.array([np.int16(el.get_attribute("y")) for el in Dates])
 
 
@@ -80,8 +81,17 @@ def scrape_calendar(page):
 def getData(page, startWeek, NumWeek: int = 1):
     dataSet = []
     daySet = []
+    extraYearValue = 0
+    extraWeekValue = 0
     for i in range(NumWeek):
-        insert_and_choose_in_list(page, info = r"placeholder='Vecka'",text=startWeek+i, list_info="w-menu-item")
+        ChosenWeek = i+startWeek-extraWeekValue
+        if ChosenWeek >= 53:
+            extraWeekValue -= 52
+            ChosenWeek-=52
+            extraYearValue+=1
+        if ChosenWeek > 52:
+            pass
+        insert_and_choose_in_list(page, info = r"placeholder='Vecka'",text=ChosenWeek, list_info="w-menu-item", extraYearValue=extraYearValue)
         page.wait_for_timeout(100)
         Days, WeekData = scrape_calendar(page)
         dataSet.append(WeekData)
