@@ -110,12 +110,13 @@ def scrape_calendar(page):
                 Text[TextIndex] = Text[TextIndex][3:]
             StructuredLectures[DatesIndex].append(Text[TextIndex])
         for i, lecture in enumerate(StructuredLectures):
-            while len(lecture) < 5:
-                StructuredLectures[i].append("")
+            
             while len(lecture) > 5:
                 part = lecture[0:5]
                 del StructuredLectures[i][2:5]
                 StructuredLectures.insert(i+1, part)
+            while len(lecture) < 5:
+                StructuredLectures[i].append("")
         TotalWeekList.append(StructuredLectures)
     return Days, TotalWeekList
         
@@ -123,8 +124,8 @@ def scrape_calendar(page):
 def getData(page, startWeek, NumWeeks: int = None, stopWeek:int = None, year:int=datetime.datetime.now().year):
     dataSet = []
     daySet = []
-    extraYearValue = 0
-    extraWeekValue = datetime.datetime.now().year-year
+    extraYearValue = year-datetime.datetime.now().year
+    extraWeekValue = 0
     for i in range(NumWeeks):
         ChosenWeek = i+startWeek+extraWeekValue
         if ChosenWeek >= 53:
@@ -132,9 +133,9 @@ def getData(page, startWeek, NumWeeks: int = None, stopWeek:int = None, year:int
             ChosenWeek-=52
             extraYearValue+=1
         insert_and_choose_in_list(page, info = r"placeholder='Vecka'",text=ChosenWeek, list_info="w-menu-item", extraYearValue=extraYearValue)
-        print(f'{ChosenWeek} scraped')
         page.wait_for_timeout(100)
         Days, WeekData = scrape_calendar(page)
+        print(f'{ChosenWeek} scraped')
         dataSet.append(WeekData)
         daySet.append(Days)
     return daySet, dataSet

@@ -7,8 +7,9 @@ def insert(page, info, text):
 
 def insert_and_choose_in_list(page, info, text, list_info, extraYearValue):
     page.fill(f"input[{info}]", "")
-    page.type(f"input[{info}]", str(text))
+    page.type(f"input[{info}]", f'{text}')
     if len(str(text)) == 1:
         text = f"0{text}"
+    print(f"li[data-value='{2024+extraYearValue}{str(text)}']")
     page.click(f"li[data-value='{2024+extraYearValue}{str(text)}']")
 
