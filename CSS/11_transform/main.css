@@ -1,0 +1,34 @@
+
+#box1{
+    border: black;
+    border-radius: 5px;
+    border-style: ridge;
+    border-width: 5px;
+    margin: 10px;
+    text-align: center;
+    background-color: blue;
+
+
+        transform: translateX(50px);
+        transform: translateY(50px); /*Gör hur sned som en form av positioning*/
+
+}
+
+#box1 h1{
+    /*transform: rotate(35deg);*/
+    /*transform: scaleX(2);*/
+    /*transform: scaleZ(2);*/
+    /*transform: scaleY(2);*/
+    /*transform: skewX(56deg); vridning med bottenplan*/
+
+    transform: matrix(1, 0, 0, 1, 0, 0);
+    /*En kombo av
+    ScaleX()
+    skewY()
+    SkewX()
+    ScaleY()
+    translateX()
+    translateY()
+    */
+
+}

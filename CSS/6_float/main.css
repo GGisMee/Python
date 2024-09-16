@@ -1,0 +1,6 @@
+#pic{
+    float: left;
+}
+p{
+    clear: left; /* hur man stoppar en float från att flytta upp*/
+}
