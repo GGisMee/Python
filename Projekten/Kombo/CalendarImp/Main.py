@@ -3,11 +3,15 @@ from Formater import FormatToICal
 from Navigator import insert
 from Grabber import getData 
 
+#! fixa fel med skumma aktiveten vecka 5
+startWeek: int = 36
+year: int = 2024
+numWeeks: int = None
+endWeek: int = 10
+endWeekSave: int = endWeek
 
-startWeek: int = 44
-numWeeks: int = 1
-endWeek: int = None
 klass = "2201"
+print(f'Imputed weeks: {startWeek} - {endWeek}')
 
 if ("s" in klass) or ("S" in klass):
     klass = f"TES V{klass}"
@@ -21,7 +25,7 @@ if not numWeeks:
     numWeeks = endWeek-startWeek+1   
 else:
     endWeek = startWeek+numWeeks-1 
-print(f'Imputed weeks: {startWeek} - {endWeek}')
+
 
 def start(playwright):
     """Creates the browser and opens the website and returns it"""
@@ -34,8 +38,8 @@ def start(playwright):
 with sync_playwright() as playwright:
     page, browser = start(playwright)
     insert(page, info = r"placeholder='Klass'",text=klass)
-    daySet, dataSet = getData(page, startWeek, numWeeks)
+    daySet, dataSet = getData(page, startWeek, numWeeks, year = year)
     FormatToICal(daySet, dataSet)
     page.close()
     print("Successfully ran through program")
-    print(f"Weeks {startWeek}-{endWeek} scraped")
+    print(f"Weeks {startWeek}-{endWeekSave} scraped")
