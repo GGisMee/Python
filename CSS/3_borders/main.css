@@ -1,0 +1,14 @@
+h1{
+    border-bottom-style: dotted;
+    border-bottom-width: 4px;
+    /*Man lägger till sida och gör sedan  vanlig konfiguration*/
+
+}
+
+p{
+    border-style: solid; /*olika: solid, ridge, groove,  inset, outset*/
+    border-width: 3px;
+    border-color: gold;
+    border-radius: 4px;
+    padding: 10px;
+}
