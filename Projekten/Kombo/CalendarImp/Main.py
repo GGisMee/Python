@@ -31,7 +31,7 @@ def start(playwright):
     """Creates the browser and opens the website and returns it"""
     browser = playwright.chromium.launch(headless=True)
     page = browser.new_page()
-    page.goto("https://web.skola24.se/timetable/timetable-viewer/industritekniska.skola24.se/Hitachigymnasiet%20i%20V%C3%A4ster%C3%A5s/")  # Replace with the actual URL
+    page.goto("https://web.skola24.se/timetable/timetable-viewer/industritekniska.skola24.se/Hitachigymnasiet%20i%20V%C3%A4ster%C3%A5s/")
     page.wait_for_load_state("networkidle")
     return page, browser 
 
