@@ -4,10 +4,10 @@ from Navigator import insert
 from Grabber import getData 
 
 #! fixa fel med skumma aktiveten vecka 5
-startWeek: int = 36
-year: int = 2024
+startWeek: int = 2
+year: int = 2025
 numWeeks: int = None
-endWeek: int = 10
+endWeek: int =24
 endWeekSave: int = endWeek
 
 klass = "2201"
@@ -29,7 +29,7 @@ else:
 
 def start(playwright):
     """Creates the browser and opens the website and returns it"""
-    browser = playwright.chromium.launch(headless=True)
+    browser = playwright.chromium.launch(headless=False)
     page = browser.new_page()
     page.goto("https://web.skola24.se/timetable/timetable-viewer/industritekniska.skola24.se/Hitachigymnasiet%20i%20V%C3%A4ster%C3%A5s/")  # Replace with the actual URL
     page.wait_for_load_state("networkidle")

@@ -124,7 +124,7 @@ def scrape_calendar(page):
 def getData(page, startWeek, NumWeeks: int = None, stopWeek:int = None, year:int=datetime.datetime.now().year):
     dataSet = []
     daySet = []
-    extraYearValue = year-datetime.datetime.now().year
+    extraYearValue = year-2024
     extraWeekValue = 0
     for i in range(NumWeeks):
         ChosenWeek = i+startWeek+extraWeekValue
